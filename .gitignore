@@ -10,3 +10,7 @@ ProductManager.Service/obj/
 ProductManager.Tests/bin/
 
 ProductManager.Tests/obj/
+
+ProductManager.Data.EF/bin/
+
+ProductManager.Data.EF/obj/
