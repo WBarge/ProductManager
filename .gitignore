@@ -6,3 +6,7 @@ _ReSharper.Caches/
 ProductManager.Service/bin/
 
 ProductManager.Service/obj/
+
+ProductManager.Tests/bin/
+
+ProductManager.Tests/obj/
