@@ -1,8 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿// ***********************************************************************
+// Author           : Bill Barge
+// Created          : 07-10-2024
+//
+// Last Modified By : Bill Barge
+// Last Modified On : 07-12-2024
+// ***********************************************************************
+// <copyright file="RootComposition.cs" company="N/A">
+//     Copyright (c) N/A. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using Microsoft.EntityFrameworkCore;
+using ProductManager.Data.EF;
 
-namespace Contact.Service.Utilities
+namespace ProductManager.Service.Utilities
 {
     /// <summary>
     /// Class RootComposition.
@@ -18,10 +29,10 @@ namespace Contact.Service.Utilities
         /// <param name="configuration">The configuration.</param>
         public static void ConfigureDi(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddDbContextPool<ContactDbContext>(builder =>
-            //{
-            //    builder.UseSqlServer(configuration["ConnectionString"]);
-            //});
+            services.AddDbContextPool<ProductDbContext>(builder =>
+            {
+                builder.UseSqlServer(configuration["ConnectionString"]);
+            });
 
         }
     }

@@ -14,3 +14,7 @@ ProductManager.Tests/obj/
 ProductManager.Data.EF/bin/
 
 ProductManager.Data.EF/obj/
+
+ProductManager.Glue/obj/
+
+ProductManager.Glue/bin/

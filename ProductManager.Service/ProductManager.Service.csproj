@@ -32,4 +32,8 @@
     <Folder Include="Models\Request\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ProductManager.Data.EF\ProductManager.Data.EF.csproj" />
+  </ItemGroup>
+
 </Project>

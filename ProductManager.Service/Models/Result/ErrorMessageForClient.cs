@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace ProductManager.Models.Result
+namespace ProductManager.Service.Models.Result
 {
     /// <summary>
     /// Class ErrorMessageForClient.
