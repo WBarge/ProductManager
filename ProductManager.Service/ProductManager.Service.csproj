@@ -7,6 +7,8 @@
     <UserSecretsId>61b52824-4dad-4f5c-91f9-7be90924f719</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>D:\Src\Wbarge_GitHub\ProductManager\ProductManager.Service\ProductManager.Service.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Models\DTOs\" />
     <Folder Include="Models\Request\" />
   </ItemGroup>

@@ -54,8 +54,8 @@ namespace ProductManager
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ProductManager", Version = "v1"});
-                string filePath = Path.Combine(AppContext.BaseDirectory, "ProductManager.xml");
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ProductService", Version = "v1"});
+                string filePath = Path.Combine(AppContext.BaseDirectory, "ProductManager.Service.xml");
                 c.IncludeXmlComments(filePath);
             });
 
