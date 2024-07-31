@@ -5,13 +5,16 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Service", "ProductManager.Service\ProductManager.Service.csproj", "{A87D9BFB-14C7-4CF0-A1C7-19B7C8B54267}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Tests", "ProductManager.Tests\ProductManager.Tests.csproj", "{CCEB66A9-B19C-40BF-A40E-0AFD9ECA67AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Tests", "ProductManager.Tests\ProductManager.Tests.csproj", "{CCEB66A9-B19C-40BF-A40E-0AFD9ECA67AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Data.EF", "ProductManager.Data.EF\ProductManager.Data.EF.csproj", "{01D68BD2-143E-4093-81DC-5964B8C61D85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Data.EF", "ProductManager.Data.EF\ProductManager.Data.EF.csproj", "{01D68BD2-143E-4093-81DC-5964B8C61D85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Glue", "ProductManager.Glue\ProductManager.Glue.csproj", "{6515B987-8135-48BE-BD0A-A92FDFB5DC9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Glue", "ProductManager.Glue\ProductManager.Glue.csproj", "{6515B987-8135-48BE-BD0A-A92FDFB5DC9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A10D91C4-F1FD-4D9C-9FB6-A4EA4EDAA8F2}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

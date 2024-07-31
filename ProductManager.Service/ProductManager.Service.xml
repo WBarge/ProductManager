@@ -18,6 +18,34 @@
             </summary>
             <returns>IActionResult.</returns>
         </member>
+        <member name="T:ProductManager.Service.Controllers.ProductsController">
+            <summary>
+            Class ProductsController.
+            Implements the <see cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.ControllerBase" />
+        </member>
+        <member name="F:ProductManager.Service.Controllers.ProductsController.DATA_SIZE">
+            <summary>
+            The data size
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductsController.Get(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Gets the products using paging
+            </summary>
+            <param name="page" optional="true">The page number is one based. Will default to 1 if null or less than 1</param>
+            <param name="pageSize" optional="true">The number of items on a page. Will cause all data to be returned if null or less than 1</param>
+            <returns>IActionResult.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductsController.GenerateData(System.Int32,System.Int32)">
+            <summary>
+            Generates the data.
+            </summary>
+            <param name="page">The page.</param>
+            <param name="pageSize">Size of the page.</param>
+            <returns>IEnumerable&lt;TestData&gt;.</returns>
+        </member>
         <member name="T:ProductManager.Service.Middleware.UiExceptionHandler">
             <summary>
             Class UiExceptionHandler.
@@ -90,6 +118,30 @@
             Initializes a new instance of the <see cref="T:ProductManager.Service.Models.Result.ErrorMessageForClient"/> class.
             </summary>
             <param name="x">The x.</param>
+        </member>
+        <member name="T:ProductManager.Service.Models.Result.TestData">
+            <summary>
+            Class TestData.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Models.Result.TestData.#ctor(System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+            <param name="id"></param>
+        </member>
+        <member name="P:ProductManager.Service.Models.Result.TestData.Id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>The identifier.</value>
+        </member>
+        <member name="P:ProductManager.Service.Models.Result.TestData.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>The name.</value>
         </member>
         <member name="T:ProductManager.Service.Program">
             <summary>
