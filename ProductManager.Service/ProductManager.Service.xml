@@ -30,20 +30,21 @@
             The data size
             </summary>
         </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.Get(System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:ProductManager.Service.Controllers.ProductsController.GetProducts(ProductManager.Service.Models.Request.ProductListRequest)">
             <summary>
             Gets the products using paging
+            The request is a Post method - swagger does not currently support sending data in the body of a Get methods
             </summary>
-            <param name="page" optional="true">The page number is one based. Will default to 1 if null or less than 1</param>
-            <param name="pageSize" optional="true">The number of items on a page. Will cause all data to be returned if null or less than 1</param>
+            <param name="request"></param>
             <returns>IActionResult.</returns>
         </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.GenerateData(System.Int32,System.Int32)">
+        <member name="M:ProductManager.Service.Controllers.ProductsController.GenerateData(System.Int32,System.Int32,System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]})">
             <summary>
             Generates the data.
             </summary>
             <param name="page">The page.</param>
             <param name="pageSize">Size of the page.</param>
+            <param name="filters">Any filters that need to be applied to the data</param>
             <returns>IEnumerable&lt;TestData&gt;.</returns>
         </member>
         <member name="T:ProductManager.Service.Middleware.UiExceptionHandler">
@@ -90,6 +91,52 @@
             </summary>
             <param name="builder">The builder.</param>
             <returns>IApplicationBuilder.</returns>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.FilterMetaData">
+            <summary>
+            Class FilterMetaData.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FilterMetaData.SearchValue">
+            <summary>
+            Gets or sets the search value.
+            </summary>
+            <value>The search value.</value>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FilterMetaData.MatchMode">
+            <summary>
+            Gets or sets the match mode.
+            </summary>
+            <value>The match mode.</value>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FilterMetaData.LogicalOperator">
+            <summary>
+            Gets or sets the logical operator.
+            </summary>
+            <value>The logical operator.</value>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.ProductListRequest">
+            <summary>
+            Class ProductListRequest.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProductListRequest.Page">
+            <summary>
+            Gets or sets the page.
+            </summary>
+            <value>The page.</value>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProductListRequest.PageSize">
+            <summary>
+            Gets or sets the size of the page.
+            </summary>
+            <value>The size of the page.</value>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProductListRequest.Filters">
+            <summary>
+            Gets or sets the filters.
+            </summary>
+            <value>The filters.</value>
         </member>
         <member name="T:ProductManager.Service.Models.Result.ErrorMessageForClient">
             <summary>
@@ -160,6 +207,77 @@
             </summary>
             <param name="args">The arguments.</param>
             <returns>IHostBuilder.</returns>
+        </member>
+        <member name="T:ProductManager.Service.Utilities.FilteringEngine">
+            <summary>
+            Class FilteringEngine.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.Filter``1(System.Collections.Generic.List{``0},System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]})">
+            <summary>
+            Filters the specified filters.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="data">The data.</param>
+            <param name="filters">The filters.</param>
+            <returns>List&lt;T&gt;.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildWhereCallExpression(System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]},System.Type,System.Type,System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            Builds the where call expression.
+            </summary>
+            <param name="filters">The filters.</param>
+            <param name="dataType">Type of the data.</param>
+            <param name="queryableType">Type of the queryable.</param>
+            <param name="castCallExpression">The cast call expression.</param>
+            <returns>MethodCallExpression.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildExpressions(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]})">
+            <summary>
+            Builds the expressions.
+            </summary>
+            <param name="pe">The pe.</param>
+            <param name="filters">The filters.</param>
+            <returns>Expression.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildPropertyExpression(System.Linq.Expressions.Expression,System.String,System.String,System.Object)">
+            <summary>
+            Builds the property expression.
+            </summary>
+            <param name="pe">The pe.</param>
+            <param name="incomingProperty">The incoming property.</param>
+            <param name="comparisonOperation">The comparison operation.</param>
+            <param name="compareValue">The compare value.</param>
+            <returns>Expression.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildValueExpression(System.Linq.Expressions.Expression,System.String,System.String,System.Object)">
+            <summary>
+            Builds the value expression.
+            </summary>
+            <param name="workingExpression">The working expression.</param>
+            <param name="propertyName">Name of the property.</param>
+            <param name="comparisonOperation">The comparison operation.</param>
+            <param name="compareValue">The compare value.</param>
+            <returns>Expression.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildValueExpression(System.Object,System.Linq.Expressions.Expression@)">
+            <summary>
+            Builds the value expression.
+            </summary>
+            <param name="compareValue">The compare value.</param>
+            <param name="workingExpression">The working expression.</param>
+            <returns>Expression.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildComparisonExpression(System.String,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
+            <summary>
+            Builds the comparison expression.
+            </summary>
+            <param name="comparisonOperation">The comparison operation.</param>
+            <param name="workingExpression">The working expression.</param>
+            <param name="valueExpression">The value expression.</param>
+            <returns>Expression.</returns>
+            <exception cref="T:System.Exception">Malformed comparison</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">comparisonOperation - null</exception>
         </member>
         <member name="T:ProductManager.Service.Utilities.RootComposition">
             <summary>

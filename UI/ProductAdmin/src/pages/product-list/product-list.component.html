@@ -20,7 +20,9 @@ currentPageReportTemplate="{first}-{last} of {totalRecords}"
     </tr>
     <tr>
       <th>Id</th>
-      <th>Name</th>
+      <th>Name
+        <p-columnFilter type="text" field="name" display="menu" />
+      </th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>

@@ -11,9 +11,12 @@
 // <summary></summary>
 // ***********************************************************************
 
+using CrossCutting.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
+using ProductManager.Service.Models.Request;
 using ProductManager.Service.Models.Result;
+using ProductManager.Service.Utilities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -35,24 +38,26 @@ namespace ProductManager.Service.Controllers
 
         /// <summary>
         /// Gets the products using paging
+        /// The request is a Post method - swagger does not currently support sending data in the body of a Get methods
         /// </summary>
-        /// <param name="page" optional="true">The page number is one based. Will default to 1 if null or less than 1</param>
-        /// <param name="pageSize" optional="true">The number of items on a page. Will cause all data to be returned if null or less than 1</param>
+        /// <param name="request"></param>
         /// <returns>IActionResult.</returns>
-        [HttpGet]
-        public IActionResult Get(int? page,int? pageSize)
+        [HttpPost]
+        public IActionResult GetProducts([FromBody] ProductListRequest request)
         {
-            if (page is null or < 1 )
+            request ??= new ProductListRequest();
+
+            if (request.Page is null or < 1 )
             {
-                page = 1;
+                request.Page = 1;
             }
 
-            if (pageSize is null or < 1)
+            if (request.PageSize is null or < 1)
             {
-                pageSize = DATA_SIZE;
+                request.PageSize = DATA_SIZE;
             }
 
-            var returnValue = new { data = GenerateData(page.Value, pageSize.Value), totalRecordSize = DATA_SIZE };
+            var returnValue = new { data = GenerateData(request.Page.Value, request.PageSize.Value,request.Filters), totalRecordSize = DATA_SIZE };
             return new OkObjectResult(returnValue);
         }
 
@@ -61,14 +66,30 @@ namespace ProductManager.Service.Controllers
         /// </summary>
         /// <param name="page">The page.</param>
         /// <param name="pageSize">Size of the page.</param>
+        /// <param name="filters">Any filters that need to be applied to the data</param>
         /// <returns>IEnumerable&lt;TestData&gt;.</returns>
-        private static IEnumerable<TestData> GenerateData(int page,int pageSize)
+        private static IEnumerable<TestData> GenerateData(int page,int pageSize,Dictionary<string,FilterMetaData[]>? filters)
         {
             List<TestData> data = [];
             for (int i = 0; i < DATA_SIZE; i++)
             {
                 data.Add(new TestData (  i, (i+1).ToString()));
             }
+
+            //starts with
+            //contains
+            //not contains
+            //ends with
+            //equals
+            //not equals
+
+            if (filters!.IsNotEmpty())
+            {
+                data = data.Filter(filters!);
+            }
+
+
+
 
             return data.Skip((page-1)*pageSize).Take(pageSize);
         }

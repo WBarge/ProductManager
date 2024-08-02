@@ -1,4 +1,4 @@
-import { TestData } from "./test-data";
+import { TestData } from "../test-data";
 
 export class TestDataResult {
   public data!:TestData[];

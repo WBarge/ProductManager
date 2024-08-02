@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="Models\DTOs\" />
-    <Folder Include="Models\Request\" />
   </ItemGroup>
 
   <ItemGroup>
