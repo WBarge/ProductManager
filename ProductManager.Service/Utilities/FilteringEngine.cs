@@ -236,13 +236,7 @@ public static class FilteringEngine
         }
         else if (workingExpression.Type == typeof(string))
         {
-            Expression left = workingExpression;
-            ConstantExpression right = Expression.Constant(compareValue.ToString(), typeof(string));
-            workingExpression = Expression.Call(typeof(string),
-                "Compare",
-                null,
-                [left, right]);
-            valueExpression = Expression.Constant(0); // this will be the value
+            valueExpression = Expression.Constant(compareValue.ToString(), typeof(string));//Expression.Constant(0); // this will be the value
         }
         else
         {
@@ -264,8 +258,8 @@ public static class FilteringEngine
     private static Expression BuildComparisonExpression(string comparisonOperation, Expression workingExpression, Expression valueExpression)
     {
         Expression returnValue;
-#pragma warning disable IDE0066
-        // ReSharper disable once ConvertSwitchStatementToSwitchExpression
+        Expression left;
+        MethodInfo method;
         switch (comparisonOperation.Trim())
         {
             case "":
@@ -273,21 +267,41 @@ public static class FilteringEngine
             case "equals":
                 returnValue = Expression.Equal(workingExpression, valueExpression);
                 break;
-            case "not equals":
+            case "notEquals":
                 returnValue = Expression.NotEqual(workingExpression, valueExpression);
                 break;
-            //case "starts with":
-            //    returnValue = Expression.(workingExpression, valueExpression);
-            //    break;
-            //case "contains":
-            //    returnValue = Expression.LessThan(workingExpression, valueExpression);
-            //    break;
-            //case "not contains":
-            //    returnValue = Expression.GreaterThanOrEqual(workingExpression, valueExpression);
-            //    break;
-            //case "starts with":
-            //    returnValue = Expression.LessThanOrEqual(workingExpression, valueExpression);
-            //    break;
+            case "startsWith":
+                left = workingExpression;
+                method = typeof(string).GetMethods().First(m => m.Name == "StartsWith");
+                workingExpression = Expression.Call(left,
+                    method,
+                    valueExpression);
+                returnValue = workingExpression;
+                break;
+            case "contains":
+                left = workingExpression;
+                method = typeof(string).GetMethods().First(m => m.Name == "Contains");
+                workingExpression = Expression.Call(left,
+                    method,
+                    valueExpression);
+                returnValue = workingExpression;
+                break;
+            case "notContains":
+                left = workingExpression;
+                method = typeof(string).GetMethods().First(m => m.Name == "Contains");
+                workingExpression = Expression.Call(left,
+                    method,
+                    valueExpression);
+                returnValue = Expression.Not(workingExpression);
+                break;
+            case "endsWith":
+                left = workingExpression;
+                method = typeof(string).GetMethods().First(m => m.Name == "EndsWith");
+                workingExpression = Expression.Call(left,
+                    method,
+                    valueExpression);
+                returnValue = workingExpression;
+                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(comparisonOperation), comparisonOperation, null);
         }
