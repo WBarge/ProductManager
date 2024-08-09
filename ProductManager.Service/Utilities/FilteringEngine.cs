@@ -271,36 +271,64 @@ public static class FilteringEngine
                 returnValue = Expression.NotEqual(workingExpression, valueExpression);
                 break;
             case "startsWith":
-                left = workingExpression;
-                method = typeof(string).GetMethods().First(m => m.Name == "StartsWith");
-                workingExpression = Expression.Call(left,
-                    method,
-                    valueExpression);
-                returnValue = workingExpression;
+                if (valueExpression.Type == typeof(string))
+                {
+                    left = workingExpression;
+                    method = typeof(string).GetMethods().First(m => m.Name == "StartsWith");
+                    workingExpression = Expression.Call(left,
+                        method,
+                        valueExpression);
+                    returnValue = workingExpression;
+                }
+                else
+                {
+                    returnValue = Expression.Constant(true);
+                }
                 break;
             case "contains":
-                left = workingExpression;
-                method = typeof(string).GetMethods().First(m => m.Name == "Contains");
-                workingExpression = Expression.Call(left,
-                    method,
-                    valueExpression);
-                returnValue = workingExpression;
+                if (valueExpression.Type == typeof(string))
+                {
+                    left = workingExpression;
+                    method = typeof(string).GetMethods().First(m => m.Name == "Contains");
+                    workingExpression = Expression.Call(left,
+                        method,
+                        valueExpression);
+                    returnValue = workingExpression;
+                }
+                else
+                {
+                    returnValue = Expression.Constant(true);
+                }
                 break;
             case "notContains":
-                left = workingExpression;
-                method = typeof(string).GetMethods().First(m => m.Name == "Contains");
-                workingExpression = Expression.Call(left,
-                    method,
-                    valueExpression);
-                returnValue = Expression.Not(workingExpression);
+                if (valueExpression.Type == typeof(string))
+                {
+                    left = workingExpression;
+                    method = typeof(string).GetMethods().First(m => m.Name == "Contains");
+                    workingExpression = Expression.Call(left,
+                        method,
+                        valueExpression);
+                    returnValue = Expression.Not(workingExpression);
+                }
+                else
+                {
+                    returnValue = Expression.Constant(true);
+                }
                 break;
             case "endsWith":
-                left = workingExpression;
-                method = typeof(string).GetMethods().First(m => m.Name == "EndsWith");
-                workingExpression = Expression.Call(left,
-                    method,
-                    valueExpression);
-                returnValue = workingExpression;
+                if (valueExpression.Type == typeof(string))
+                {
+                    left = workingExpression;
+                    method = typeof(string).GetMethods().First(m => m.Name == "EndsWith");
+                    workingExpression = Expression.Call(left,
+                        method,
+                        valueExpression);
+                    returnValue = workingExpression;
+                }
+                else
+                {
+                    returnValue = Expression.Constant(true);
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(comparisonOperation), comparisonOperation, null);
