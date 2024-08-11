@@ -86,7 +86,10 @@ public static class FilteringEngine
 
         Type func = typeof(Func<,>);
         Type genericFunc = func.MakeGenericType(dataType, typeof(bool));
-
+        if (e1.IsEmpty())
+        {
+            e1 = Expression.Constant(true);
+        }
         LambdaExpression predicate = Expression.Lambda(genericFunc, e1, pe);
 
         //create the where clause
@@ -115,20 +118,6 @@ public static class FilteringEngine
     /// <returns>Expression.</returns>
     private static Expression BuildExpressions(ParameterExpression pe, Dictionary<string, FilterMetaData[]> filters)
     {
-        //if (string.IsNullOrEmpty(filters.Keys) || string.IsNullOrWhiteSpace(filters.Property))
-        //{
-        //    throw new Exception("Malformed filter");
-        //}
-        //if (filters.Comparison == CompareOperation.None)
-        //{
-        //    throw new Exception("Malformed filter");
-        //}
-        //if (filters.Operator != LogicalOperator.None && filters.SubFilter == null)
-        //{
-        //    throw new Exception("Malformed filter");
-        //}
-
-
         Expression returnValue = null!;
         Expression propertyExpression = null!;
         int keyCount = filters.Count;
@@ -139,6 +128,11 @@ public static class FilteringEngine
             for (int filterSub =0;filterSub<propertyFilters.Length;filterSub++ )
             {
                 FilterMetaData propertyFilter = propertyFilters[filterSub];
+                if (propertyFilter.SearchValue.IsEmpty())
+                {
+                    continue;
+                }
+
                 if ((propertyFilter.LogicalOperator ?? string.Empty).IsEmpty() || (propertyFilter.MatchMode ?? string.Empty).IsEmpty() ||
                     (propertyFilter.SearchValue ?? string.Empty).IsEmpty())
                 {
@@ -336,12 +330,4 @@ public static class FilteringEngine
 
         return returnValue;
     }
-
-
-    //starts with
-    //contains
-    //not contains
-    //ends with
-    //equals
-    //not equals
 }
