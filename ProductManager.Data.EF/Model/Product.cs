@@ -77,6 +77,31 @@ public class Product
     }
 
     /// <summary>
+    /// The sku
+    /// </summary>
+    private string _sku = string.Empty;
+
+    /// <summary>
+    /// The sku maximum size
+    /// </summary>
+    internal const int SKU_MAX_SIZE = 12;
+
+    /// <summary>
+    /// Gets or sets the sku.
+    /// Is limited to 12 characters - will be silently truncated if longer
+    /// </summary>
+    /// <value>The sku.</value>
+    public string Sku 
+    { 
+        get=>_sku;
+        set
+        {
+            
+            _sku = value.Truncate(SKU_MAX_SIZE); 
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the description.
     /// The full description of the product.
     /// Is optional

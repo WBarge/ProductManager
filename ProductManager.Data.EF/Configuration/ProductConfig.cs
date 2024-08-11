@@ -42,6 +42,9 @@ internal class ProductConfig :IEntityTypeConfiguration<Product>
             .IsRequired()
             .HasMaxLength(Product.SHORT_DESCRIPTION_MAX_SIZE)
             .HasField("_shortDescription");
+        builder.Property(p => p.Sku)
+            .HasMaxLength(Product.SKU_MAX_SIZE)
+            .HasField("_sku");
         builder.Property(p => p.Description);
         builder.Property(p => p.Price)
             .HasPrecision(10, 2);

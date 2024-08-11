@@ -219,7 +219,10 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="data">The data.</param>
-            <param name="filters">The filters.</param>
+            <param name="filters">The filters.
+                The result of the values associated with the keys have logical and applied to them.
+                The FilterMetaData contain the logical specification within the model for the list of values
+            </param>
             <returns>List&lt;T&gt;.</returns>
         </member>
         <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildWhereCallExpression(System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]},System.Type,System.Type,System.Linq.Expressions.MethodCallExpression)">

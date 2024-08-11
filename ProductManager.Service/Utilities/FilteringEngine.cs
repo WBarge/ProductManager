@@ -29,7 +29,10 @@ public static class FilteringEngine
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="data">The data.</param>
-    /// <param name="filters">The filters.</param>
+    /// <param name="filters">The filters.
+    ///     The result of the values associated with the keys have logical and applied to them.
+    ///     The FilterMetaData contain the logical specification within the model for the list of values
+    /// </param>
     /// <returns>List&lt;T&gt;.</returns>
     public static List<T> Filter<T>(this List<T> data, Dictionary<string, FilterMetaData[]> filters)
         where T : class
@@ -128,11 +131,6 @@ public static class FilteringEngine
             for (int filterSub =0;filterSub<propertyFilters.Length;filterSub++ )
             {
                 FilterMetaData propertyFilter = propertyFilters[filterSub];
-                if (propertyFilter.SearchValue.IsEmpty())
-                {
-                    continue;
-                }
-
                 if ((propertyFilter.LogicalOperator ?? string.Empty).IsEmpty() || (propertyFilter.MatchMode ?? string.Empty).IsEmpty() ||
                     (propertyFilter.SearchValue ?? string.Empty).IsEmpty())
                 {
