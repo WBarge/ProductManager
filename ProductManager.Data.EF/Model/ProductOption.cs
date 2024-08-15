@@ -11,6 +11,7 @@
 // <summary></summary>
 // ***********************************************************************
 using CrossCutting.Extensions;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Model;
 
@@ -18,7 +19,7 @@ namespace ProductManager.Data.EF.Model;
 /// Class ProductOption.
 /// Represents an option for a product - can cost extra
 /// </summary>
-public class ProductOption
+public class ProductOption : IProductOption
 {
     /// <summary>
     /// Gets or sets the identifier.
@@ -41,8 +42,6 @@ public class ProductOption
     /// The name maximum size
     /// </summary>
     internal const int NAME_MAX_SIZE = 128;
-
-
     /// <summary>
     /// Gets or sets the name.
     /// the name of the product
@@ -66,8 +65,6 @@ public class ProductOption
     /// The short description maximum size
     /// </summary>
     internal const int SHORT_DESCRIPTION_MAX_SIZE = 256;
-
-
     /// <summary>
     /// Gets or sets the short description.
     /// A short description for the product

@@ -30,6 +30,15 @@
             The data size
             </summary>
         </member>
+        <member name="M:ProductManager.Service.Controllers.ProductsController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.ProductsController},ProductManager.Glue.Interfaces.Services.IProductService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.ProductsController"/> class.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="productService">The product service.</param>
+            <exception cref="T:System.ArgumentNullException">logger</exception>
+            <exception cref="T:System.ArgumentNullException">productService</exception>
+        </member>
         <member name="M:ProductManager.Service.Controllers.ProductsController.GetProducts(ProductManager.Service.Models.Request.ProductListRequest)">
             <summary>
             Gets the products using paging
@@ -38,14 +47,12 @@
             <param name="request"></param>
             <returns>IActionResult.</returns>
         </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.GenerateData(System.Int32,System.Int32,System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]})">
+        <member name="M:ProductManager.Service.Controllers.ProductsController.TransformFilters(ProductManager.Service.Models.Request.ProductListRequest)">
             <summary>
-            Generates the data.
+            Transforms the filters.
             </summary>
-            <param name="page">The page.</param>
-            <param name="pageSize">Size of the page.</param>
-            <param name="filters">Any filters that need to be applied to the data</param>
-            <returns>IEnumerable&lt;TestData&gt;.</returns>
+            <param name="request">The request.</param>
+            <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
         </member>
         <member name="T:ProductManager.Service.Middleware.UiExceptionHandler">
             <summary>
@@ -213,29 +220,15 @@
             Class FilteringEngine.
             </summary>
         </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.Filter``1(System.Collections.Generic.List{``0},System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]})">
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildLambdaExpression``1(System.Collections.Generic.Dictionary{System.String,ProductManager.Glue.Interfaces.Models.IFilterMetaData[]})">
             <summary>
-            Filters the specified filters.
+            Builds the lambda expression used in a where clause.
             </summary>
             <typeparam name="T"></typeparam>
-            <param name="data">The data.</param>
-            <param name="filters">The filters.
-                The result of the values associated with the keys have logical and applied to them.
-                The FilterMetaData contain the logical specification within the model for the list of values
-            </param>
-            <returns>List&lt;T&gt;.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildWhereCallExpression(System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]},System.Type,System.Type,System.Linq.Expressions.MethodCallExpression)">
-            <summary>
-            Builds the where call expression.
-            </summary>
             <param name="filters">The filters.</param>
-            <param name="dataType">Type of the data.</param>
-            <param name="queryableType">Type of the queryable.</param>
-            <param name="castCallExpression">The cast call expression.</param>
-            <returns>MethodCallExpression.</returns>
+            <returns>Func&lt;T, System.Boolean&gt;.</returns>
         </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildExpressions(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.Dictionary{System.String,ProductManager.Service.Models.Request.FilterMetaData[]})">
+        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildExpressions(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.Dictionary{System.String,ProductManager.Glue.Interfaces.Models.IFilterMetaData[]})">
             <summary>
             Builds the expressions.
             </summary>

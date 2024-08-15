@@ -13,23 +13,87 @@
 
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using CrossCutting.Extensions;
+using Microsoft.EntityFrameworkCore;
 using ProductManager.Glue.Interfaces.Models;
 
-namespace ProductManager.Service.Utilities;
+[assembly:InternalsVisibleTo("ProductManager.Data.EF.Tests")]
+
+namespace ProductManager.Data.EF.Helpers;
 
 /// <summary>
 /// Class FilteringEngine.
 /// </summary>
 internal static class FilteringEngine
 {
+    public const string AND_LOGICAL_OPERATOR = "and";
+    public const string OR_LOGICAL_OPERATOR = "or";
+    public const string EQUALS_COMPARISON = "equals";
+    public const string NOT_EQUALS_COMPARISON = "notEquals";
+    public const string STARTS_WITH_COMPARISON = "startsWith";
+    public const string CONTAINS_COMPARISON = "contains";
+    public const string NOT_CONTAINS_COMPARISON = "notContains";
+    public const string ENDS_WITH_COMPARISON = "endsWith";
+
+
+    /// <summary>
+    /// Builds the filter query asynchronous.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="dbSet">The database set.</param>
+    /// <param name="filterCriteria">The filter criteria.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>Task&lt;IQueryable&lt;T&gt;&gt;.</returns>
+    public static Task<IQueryable<T>> BuildFilterQueryAsync<T>(this DbSet<T> dbSet,
+        Dictionary<string, IFilterMetaData[]> filterCriteria = null!, 
+        CancellationToken cancellationToken = default) where T : class
+    {
+        IQueryable<T> finalQuery = dbSet.AsQueryable();
+        Task task = Task.Run( () =>
+        {
+            IQueryable<T> query = dbSet.AsQueryable();
+
+
+            filterCriteria ??= new Dictionary<string, IFilterMetaData[]>();
+            LambdaExpression filterExpression = BuildLambdaExpression<T>(filterCriteria);
+
+
+            MethodInfo whereMethodRef = typeof(Queryable).GetMethods()
+                .First(m => m.Name == "Where" && m.IsGenericMethodDefinition && m.GetParameters().Length == 2);
+
+            MethodInfo whereMethod = whereMethodRef.MakeGenericMethod(typeof(T));
+
+            MethodCallExpression whereCallExpression = Expression.Call(
+                whereMethod,
+                query.Expression,
+                filterExpression);
+
+            finalQuery = query.Provider.CreateQuery<T>(whereCallExpression);
+            return Task.CompletedTask;
+        }, cancellationToken);
+        Task.WaitAll(task);
+        return Task.FromResult(finalQuery);
+    }
+    /// <summary>
+    /// Builds the lambda expression used in a where clause on a collection like a List&lt;T&gt;>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="filters">The filters.</param>
+    /// <returns>Func&lt;T, System.Boolean&gt;.</returns>
+    public static Func<T, bool> BuildLambdaExpressionForCollections<T>(Dictionary<string, IFilterMetaData[]> filters)
+    {
+        LambdaExpression filterExpression = BuildLambdaExpression<T>(filters);
+        return (Func<T, bool>)filterExpression.Compile();
+    }
+
     /// <summary>
     /// Builds the lambda expression used in a where clause.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="filters">The filters.</param>
     /// <returns>Func&lt;T, System.Boolean&gt;.</returns>
-    internal static Func<T, bool> BuildLambdaExpression<T>(Dictionary<string, IFilterMetaData[]> filters)
+    private static LambdaExpression BuildLambdaExpression<T>(Dictionary<string, IFilterMetaData[]> filters)
     {
         Type dataType = typeof(T);
         ParameterExpression pe = Expression.Parameter(dataType, dataType.Name[..1]);
@@ -41,7 +105,7 @@ internal static class FilteringEngine
             e1 = Expression.Constant(true);
         }
         LambdaExpression predicate = Expression.Lambda(func, e1, pe);
-        return (Func<T, bool>)predicate.Compile();
+        return predicate;
     }
 
     /// <summary>
@@ -59,7 +123,7 @@ internal static class FilteringEngine
         foreach (string propertyName in filters.Keys)
         {
             IFilterMetaData[] propertyFilters = filters[propertyName];
-            for (int filterSub = 0; filterSub < propertyFilters.Length; filterSub++)
+            for (int filterSub =0;filterSub<propertyFilters.Length;filterSub++ )
             {
                 IFilterMetaData propertyFilter = propertyFilters[filterSub];
                 if ((propertyFilter.LogicalOperator ?? string.Empty).IsEmpty() || (propertyFilter.MatchMode ?? string.Empty).IsEmpty() ||
@@ -73,10 +137,10 @@ internal static class FilteringEngine
                     // ReSharper disable once ConvertSwitchStatementToSwitchExpression
                     switch (propertyFilter.LogicalOperator)
                     {
-                        case "and":
+                        case AND_LOGICAL_OPERATOR:
                             propertyExpression = Expression.And(nodeExpression, propertyExpression);
                             break;
-                        case "or":
+                        case OR_LOGICAL_OPERATOR:
                             propertyExpression = Expression.Or(nodeExpression, propertyExpression);
                             break;
                     }
@@ -187,13 +251,13 @@ internal static class FilteringEngine
         {
             case "":
                 throw new Exception("Malformed comparison");
-            case "equals":
+            case EQUALS_COMPARISON:
                 returnValue = Expression.Equal(workingExpression, valueExpression);
                 break;
-            case "notEquals":
+            case NOT_EQUALS_COMPARISON:
                 returnValue = Expression.NotEqual(workingExpression, valueExpression);
                 break;
-            case "startsWith":
+            case STARTS_WITH_COMPARISON:
                 if (valueExpression.Type == typeof(string))
                 {
                     left = workingExpression;
@@ -208,7 +272,7 @@ internal static class FilteringEngine
                     returnValue = Expression.Constant(true);
                 }
                 break;
-            case "contains":
+            case CONTAINS_COMPARISON:
                 if (valueExpression.Type == typeof(string))
                 {
                     left = workingExpression;
@@ -223,7 +287,7 @@ internal static class FilteringEngine
                     returnValue = Expression.Constant(true);
                 }
                 break;
-            case "notContains":
+            case NOT_CONTAINS_COMPARISON:
                 if (valueExpression.Type == typeof(string))
                 {
                     left = workingExpression;
@@ -238,7 +302,7 @@ internal static class FilteringEngine
                     returnValue = Expression.Constant(true);
                 }
                 break;
-            case "endsWith":
+            case ENDS_WITH_COMPARISON:
                 if (valueExpression.Type == typeof(string))
                 {
                     left = workingExpression;

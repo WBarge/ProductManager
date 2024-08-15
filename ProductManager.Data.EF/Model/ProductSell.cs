@@ -11,7 +11,7 @@
 // <summary></summary>
 // ***********************************************************************
 using CrossCutting.Models;
-using Microsoft.Identity.Client;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Model;
 
@@ -19,7 +19,7 @@ namespace ProductManager.Data.EF.Model;
 /// Class ProductSell.
 /// represent a date range a product is on sell
 /// </summary>
-public class ProductSell
+public class ProductSell : IProductSell
 {
     /// <summary>
     /// Gets or sets the identifier.

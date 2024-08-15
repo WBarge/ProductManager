@@ -18,3 +18,19 @@ ProductManager.Data.EF/obj/
 ProductManager.Glue/obj/
 
 ProductManager.Glue/bin/
+
+ProductManager.Business/bin/
+
+ProductManager.Business/obj/
+
+ProductManager.Business.Tests/bin/
+
+ProductManager.Business.Tests/obj/
+
+ProductManager.Data.EF.Tests/bin/
+
+ProductManager.Data.EF.Tests/obj/
+
+ProductManager.Tool.EF/bin/
+
+ProductManager.Tool.EF/obj/

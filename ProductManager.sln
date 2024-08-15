@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Service", "ProductManager.Service\ProductManager.Service.csproj", "{A87D9BFB-14C7-4CF0-A1C7-19B7C8B54267}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Tests", "ProductManager.Tests\ProductManager.Tests.csproj", "{CCEB66A9-B19C-40BF-A40E-0AFD9ECA67AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Service.Tests", "ProductManager.Tests\ProductManager.Service.Tests.csproj", "{CCEB66A9-B19C-40BF-A40E-0AFD9ECA67AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Data.EF", "ProductManager.Data.EF\ProductManager.Data.EF.csproj", "{01D68BD2-143E-4093-81DC-5964B8C61D85}"
 EndProject
@@ -16,7 +16,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Tool.EF", "ProductManager.Tool.EF\ProductManager.Tool.EF.csproj", "{759219DB-6D21-48CA-BFAC-1EC720590030}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Tool.EF", "ProductManager.Tool.EF\ProductManager.Tool.EF.csproj", "{759219DB-6D21-48CA-BFAC-1EC720590030}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProductManager.Business", "ProductManager.Business\ProductManager.Business.csproj", "{5A1ECF71-9FAB-4E73-9692-41A2A669389E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Business.Tests", "ProductManager.Business.Tests\ProductManager.Business.Tests.csproj", "{F93693E9-9472-4DE6-8A89-104A2CCFF2F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductManager.Data.EF.Tests", "ProductManager.Data.EF.Tests\ProductManager.Data.EF.Tests.csproj", "{5C9278A7-F5AB-4C5D-95D0-61983C7F1638}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +50,18 @@ Global
 		{759219DB-6D21-48CA-BFAC-1EC720590030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{759219DB-6D21-48CA-BFAC-1EC720590030}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{759219DB-6D21-48CA-BFAC-1EC720590030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1ECF71-9FAB-4E73-9692-41A2A669389E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1ECF71-9FAB-4E73-9692-41A2A669389E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1ECF71-9FAB-4E73-9692-41A2A669389E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1ECF71-9FAB-4E73-9692-41A2A669389E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93693E9-9472-4DE6-8A89-104A2CCFF2F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93693E9-9472-4DE6-8A89-104A2CCFF2F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93693E9-9472-4DE6-8A89-104A2CCFF2F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93693E9-9472-4DE6-8A89-104A2CCFF2F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C9278A7-F5AB-4C5D-95D0-61983C7F1638}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C9278A7-F5AB-4C5D-95D0-61983C7F1638}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C9278A7-F5AB-4C5D-95D0-61983C7F1638}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C9278A7-F5AB-4C5D-95D0-61983C7F1638}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

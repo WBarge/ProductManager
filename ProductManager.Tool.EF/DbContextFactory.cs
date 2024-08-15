@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using ProductManager.Data.EF;
@@ -15,7 +14,7 @@ public class DbContextFactory: IDesignTimeDbContextFactory<ProductDbContext>
             .AddJsonFile("appsettings.json")
             .Build();
 
-        DbContextOptionsBuilder<ProductDbContext> dbContextBuilder = new DbContextOptionsBuilder<ProductDbContext>();
+        DbContextOptionsBuilder<ProductDbContext> dbContextBuilder = new();
 
         string? conStr = configurationRoot["ConnectionString"];
 

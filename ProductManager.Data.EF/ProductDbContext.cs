@@ -28,7 +28,6 @@ public class ProductDbContext : DbContext
     /// Initializes a new instance of the <see cref="ProductDbContext" /> class.
     /// </summary>
     /// <param name="options">The options.</param>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "Will always have options when creating the db context")]
     public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options) {}
 
     /// <summary>

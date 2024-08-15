@@ -11,6 +11,7 @@
 // <summary></summary>
 // ***********************************************************************
 using CrossCutting.Extensions;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Model;
 
@@ -18,7 +19,7 @@ namespace ProductManager.Data.EF.Model;
 /// Class Product.
 /// Represents a product
 /// </summary>
-public class Product 
+public class Product : IFullProduct
 {
     /// <summary>
     /// Gets or sets the identifier.

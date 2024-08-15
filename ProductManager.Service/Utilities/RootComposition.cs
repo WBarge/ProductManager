@@ -11,6 +11,7 @@
 // <summary></summary>
 // ***********************************************************************
 using Microsoft.EntityFrameworkCore;
+using ProductManager.Business;
 using ProductManager.Data.EF;
 
 namespace ProductManager.Service.Utilities
@@ -34,6 +35,8 @@ namespace ProductManager.Service.Utilities
                 builder.UseSqlServer(configuration["ConnectionString"]);
             });
 
+            DataDi.ConfigureDi(services);
+            BusinessDi.ConfigureDi(services);
         }
     }
 }

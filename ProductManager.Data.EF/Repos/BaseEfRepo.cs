@@ -12,6 +12,8 @@
 // ***********************************************************************
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using ProductManager.Data.EF.Helpers;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Repos;
 
@@ -33,7 +35,6 @@ public abstract class BaseEfRepo<T> where T : class
     /// </summary>
     /// <param name="dbContext">The database context.</param>
     /// <exception cref="ArgumentNullException">dbContext</exception>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "The context is always required")]
     protected BaseEfRepo(ProductDbContext dbContext)
     {
         DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
@@ -60,6 +61,28 @@ public abstract class BaseEfRepo<T> where T : class
         CancellationToken cancellationToken = default)
     {
         return await DbContext.Set<T>().Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToListAsync(cancellationToken);
+    }
+
+
+    /// <summary>
+    /// Find by condition paged as an asynchronous operation.
+    /// </summary>
+    /// <param name="filterCriteria"></param>
+    /// <param name="pageNumber">The page number.</param>
+    /// <param name="pageSize">Size of the page.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;List`1&gt; representing the asynchronous operation.</returns>
+    protected virtual async Task<List<T>> FindByConditionPagedAsync(Dictionary<string, IFilterMetaData[]> filterCriteria = null!, int pageNumber = 1,
+        int pageSize = 10, CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = await DbContext.Set<T>().BuildFilterQueryAsync(filterCriteria,cancellationToken);
+        List<T> results = await query.ToListAsync(cancellationToken: cancellationToken);
+        await Task.Run(() =>
+        {
+            results = results.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            return Task.CompletedTask;
+        }, cancellationToken);
+        return results;
     }
 
     /// <summary>

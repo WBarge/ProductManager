@@ -35,7 +35,5 @@ namespace ProductManager.Service.Controllers
         {
             return Ok();
         }
-
-
     }
 }

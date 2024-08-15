@@ -11,13 +11,14 @@
 // <summary></summary>
 // ***********************************************************************
 using Newtonsoft.Json;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Service.Models.Request;
 
 /// <summary>
 /// Class FilterMetaData.
 /// </summary>
-public class FilterMetaData
+public class FilterMetaData : IFilterMetaData
 {
     /// <summary>
     /// Gets or sets the search value.

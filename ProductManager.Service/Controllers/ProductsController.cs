@@ -10,15 +10,10 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using CrossCutting.Extensions;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using ProductManager.Service.Models.Request;
-using ProductManager.Service.Models.Result;
-using ProductManager.Service.Utilities;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using ProductManager.Glue.Interfaces.Models;
+using ProductManager.Glue.Interfaces.Services;
 
 namespace ProductManager.Service.Controllers
 {
@@ -27,14 +22,30 @@ namespace ProductManager.Service.Controllers
     /// Implements the <see cref="ControllerBase" />
     /// </summary>
     /// <seealso cref="ControllerBase" />
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
         /// <summary>
         /// The data size
         /// </summary>
-        const int DATA_SIZE = 1000;
+        const int DATA_SIZE = 100000;
+
+        private readonly ILogger<ProductsController> _logger;
+        private readonly IProductService _productService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductsController"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        /// <param name="productService">The product service.</param>
+        /// <exception cref="ArgumentNullException">logger</exception>
+        /// <exception cref="ArgumentNullException">productService</exception>
+        public ProductsController(ILogger<ProductsController> logger, IProductService productService)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _productService = productService ?? throw new ArgumentNullException(nameof(productService));
+        }
 
         /// <summary>
         /// Gets the products using paging
@@ -43,8 +54,9 @@ namespace ProductManager.Service.Controllers
         /// <param name="request"></param>
         /// <returns>IActionResult.</returns>
         [HttpPost]
-        public IActionResult GetProducts([FromBody] ProductListRequest request)
+        public async Task<IActionResult> GetProducts([FromBody] ProductListRequest request)
         {
+            _logger.LogDebug("request for short product list");
             request ??= new ProductListRequest();
 
             if (request.Page is null or < 1 )
@@ -57,42 +69,33 @@ namespace ProductManager.Service.Controllers
                 request.PageSize = DATA_SIZE;
             }
 
-            var returnValue = new { data = GenerateData(request.Page.Value, request.PageSize.Value,request.Filters), totalRecordSize = DATA_SIZE };
-            return new OkObjectResult(returnValue);
+            Dictionary<string, IFilterMetaData[]> filters = TransformFilters(request);
+
+            var returnValue = new
+                {
+                    data = await _productService.GetShortProductsAsync(filters,request.Page.Value, request.PageSize.Value),
+                    totalRecordSize = DATA_SIZE
+                };
+                return new OkObjectResult(returnValue);
+            
         }
 
         /// <summary>
-        /// Generates the data.
+        /// Transforms the filters.
         /// </summary>
-        /// <param name="page">The page.</param>
-        /// <param name="pageSize">Size of the page.</param>
-        /// <param name="filters">Any filters that need to be applied to the data</param>
-        /// <returns>IEnumerable&lt;TestData&gt;.</returns>
-        private static IEnumerable<TestData> GenerateData(int page,int pageSize,Dictionary<string,FilterMetaData[]>? filters)
+        /// <param name="request">The request.</param>
+        /// <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
+        private static Dictionary<string, IFilterMetaData[]> TransformFilters(ProductListRequest request)
         {
-            List<TestData> data = [];
-            for (int i = 0; i < DATA_SIZE; i++)
+            Dictionary<string, IFilterMetaData[]>? filters = null;
+            if (request.Filters != null)
             {
-                data.Add(new TestData (  i, (i+1).ToString()));
+                filters = request.Filters.
+                    ToDictionary(requestFilter => requestFilter.Key, 
+                        requestFilter => requestFilter.Value.Cast<IFilterMetaData>().ToArray());
             }
 
-            //starts with
-            //contains
-            //not contains
-            //ends with
-            //equals
-            //not equals
-
-            if (filters!.IsNotEmpty())
-            {
-                data = data.Filter(filters!);
-            }
-
-
-
-
-            return data.Skip((page-1)*pageSize).Take(pageSize);
+            return filters!;
         }
-
     }
 }

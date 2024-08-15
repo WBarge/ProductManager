@@ -11,6 +11,7 @@
 // <summary></summary>
 // ***********************************************************************
 using CrossCutting.Extensions;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Model;
 
@@ -21,7 +22,7 @@ namespace ProductManager.Data.EF.Model;
 /// Ram 16G
 /// Length 16"
 /// </summary>
-public class ProductCharacteristic
+public class ProductCharacteristic : IProductCharacteristic
 {
     /// <summary>
     /// Gets or sets the identifier.

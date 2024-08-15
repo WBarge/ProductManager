@@ -10,7 +10,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-using Microsoft.AspNetCore.Mvc;
+
 using Newtonsoft.Json;
 
 namespace ProductManager.Service.Models.Request;
