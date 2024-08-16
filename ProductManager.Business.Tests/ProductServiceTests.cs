@@ -15,14 +15,14 @@ namespace ProductManager.Business.Tests
         public void Constructor_RequiredILogger_Fail()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            Assert.Throws<ArgumentNullException>(() => new ProductService(null,new Mock<IProductRepo>().Object));
+            Assert.Throws<ArgumentNullException>(() => new ProductService(null!,new Mock<IProductRepo>().Object));
         }
 
         [Test, Description("Test required service object")]
         public void Constructor_RequiredIProductService_Fail()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            Assert.Throws<ArgumentNullException>(() => new ProductService(new Mock<ILogger<ProductService>>().Object  ,null));
+            Assert.Throws<ArgumentNullException>(() => new ProductService(new Mock<ILogger<ProductService>>().Object  ,null!));
         }
 
         [Test, Description("Test required objects")]
@@ -46,8 +46,8 @@ namespace ProductManager.Business.Tests
             Mock<ILogger<ProductService>> logger = new();
             Mock<IProductRepo> productRepo = new();
 
-            IEnumerable<IShortProduct> data = ProductFactory.BuildShortProductList();
-            productRepo.Setup(m=>m.FindPagedShortProductRecordsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
+            IEnumerable<IProduct> data = ProductFactory.BuildShortProductList();
+            productRepo.Setup(m=>m.FindPagedProductRecordsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
                     It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
 
@@ -60,13 +60,13 @@ namespace ProductManager.Business.Tests
             int pageSize = 10;
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            IEnumerable<IShortProduct> results = await sut.GetShortProductsAsync(filterParameter, page, pageSize);
+            IEnumerable<IShortProduct> results = await sut.GetProductsAsync(filterParameter, page, pageSize);
             
             await TestContext.Out.WriteLineAsync("Examining results");
             results.Should().NotBeNull();
             results.Should().NotBeEmpty();
             results.Should().HaveCount(2);
-            productRepo.Verify(m=>m.FindPagedShortProductRecordsAsync(filterParameter,page, 
+            productRepo.Verify(m=>m.FindPagedProductRecordsAsync(filterParameter,page, 
                 pageSize,It.IsAny<CancellationToken>()));
         }
     }

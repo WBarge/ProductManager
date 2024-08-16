@@ -4,9 +4,9 @@ namespace ProductManager.Service.Tests.DataFactories;
 
 public static class ProductFactory
 {
-    public static IEnumerable<IShortProduct> BuildShortProductList()
+    public static IEnumerable<IProduct> BuildProductList()
     {
-        List<IShortProduct> returnValue =
+        List<IProduct> returnValue =
         [
             new ShortP
             (
@@ -30,11 +30,12 @@ public static class ProductFactory
     }
 }
 
-internal class ShortP(Guid id, string name, string shortDescription, string sku, decimal price) : IShortProduct
+internal class ShortP(Guid id, string name, string shortDescription, string sku, decimal price) : IProduct
 {
     public Guid Id { get; set; } = id;
     public string Name { get; set; } = name;
     public string ShortDescription { get; set; } = shortDescription;
     public string Sku { get; set; } = sku;
     public decimal Price { get; set; } = price;
+    public string? Description { get; set; }
 }

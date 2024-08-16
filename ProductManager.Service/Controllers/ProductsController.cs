@@ -15,6 +15,7 @@ using ProductManager.Service.Models.Request;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Models.Transformers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProductManager.Service.Controllers
 {
@@ -55,7 +56,7 @@ namespace ProductManager.Service.Controllers
         /// <param name="request"></param>
         /// <returns>IActionResult.</returns>
         [HttpPost]
-        public async Task<IActionResult> GetProducts([FromBody] ProductListRequest request)
+        public async Task<IActionResult> GetProducts([FromBody] ProductListRequest? request)
         {
             _logger.LogDebug("request for short product list");
             request ??= new ProductListRequest();
@@ -71,11 +72,10 @@ namespace ProductManager.Service.Controllers
             }
 
             Dictionary<string, IFilterMetaData[]> filters = FilterTransformers.TransformFilters(request);
-
             var returnValue = new
                 {
-                    data = await _productService.GetShortProductsAsync(filters,request.Page.Value, request.PageSize.Value),
-                    totalRecordSize = DATA_SIZE
+                    data = await _productService.GetProductsAsync(filters, request.Page.Value, request.PageSize.Value),
+                    totalRecordSize = await _productService.GetProductCountAsync()
                 };
                 return new OkObjectResult(returnValue);
             

@@ -19,14 +19,14 @@ namespace ProductManager.Service.Tests.Contollers
         public void Constructor_RequiredILogger_Fail()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            Assert.Throws<ArgumentNullException>(() => new ProductsController(null,new Mock<IProductService>().Object));
+            Assert.Throws<ArgumentNullException>(() => new ProductsController(null!,new Mock<IProductService>().Object));
         }
 
         [Test, Description("Test required service object")]
         public void Constructor_RequiredIProductService_Fail()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            Assert.Throws<ArgumentNullException>(() => new ProductsController(new Mock<ILogger<ProductsController>>().Object  ,null));
+            Assert.Throws<ArgumentNullException>(() => new ProductsController(new Mock<ILogger<ProductsController>>().Object  ,null!));
         }
 
         [Test, Description("Test required objects")]
@@ -50,10 +50,12 @@ namespace ProductManager.Service.Tests.Contollers
             Mock<ILogger<ProductsController>> logger = new();
             Mock<IProductService> productService = new();
 
-            IEnumerable<IShortProduct> data = ProductFactory.BuildShortProductList();
-            productService.Setup(s => s.GetShortProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
+            IEnumerable<IProduct> data = ProductFactory.BuildProductList();
+            productService.Setup(s => s.GetProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
                     It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
+            productService.Setup(s=>s.GetProductCountAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(data.Count());
 
             ProductsController sut = new(logger.Object, productService.Object);
 
@@ -73,7 +75,7 @@ namespace ProductManager.Service.Tests.Contollers
             IEnumerable<IShortProduct>? returnedData = (IEnumerable<IShortProduct>?)f[0].GetValue(resultData);
             returnedData.Should().NotBeNull();
             returnedData!.Count().Should().Be(2);
-            int totalRecordSize = (int)(f[1].GetValue(resultData) ?? 0);
+            long totalRecordSize = (long)(f[1].GetValue(resultData) ?? 0);
             totalRecordSize.Should().BeGreaterThan(0);
         }
 
@@ -84,8 +86,8 @@ namespace ProductManager.Service.Tests.Contollers
             Mock<ILogger<ProductsController>> logger = new();
             Mock<IProductService> productService = new();
 
-            IEnumerable<IShortProduct> data = ProductFactory.BuildShortProductList();
-            productService.Setup(s => s.GetShortProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
+            IEnumerable<IProduct> data = ProductFactory.BuildProductList();
+            productService.Setup(s => s.GetProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
                     It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
 
@@ -105,7 +107,7 @@ namespace ProductManager.Service.Tests.Contollers
             OkObjectResult? castedResult = result as OkObjectResult;
             castedResult.Should().NotBeNull();
             castedResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            productService.Verify(s=>s.GetShortProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
+            productService.Verify(s=>s.GetProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
                 1, 1, It.IsAny<CancellationToken>()));
         }
     }

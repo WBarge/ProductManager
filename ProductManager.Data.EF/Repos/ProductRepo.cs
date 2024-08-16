@@ -28,16 +28,29 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// <param name="pageSize"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<IEnumerable<IShortProduct>> FindPagedShortProductRecordsAsync(
+    public async Task<IEnumerable<IProduct>> FindPagedProductRecordsAsync(
         Dictionary<string, IFilterMetaData[]> filterCriteria = null!,
         int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
-        IEnumerable<IShortProduct> results = null!;
+        IEnumerable<IProduct> results = null!;
         //filterCriteria ??= new Dictionary<string, IFilterMetaData[]>();
         //LambdaExpression filterExpression = FilteringEngine.BuildLambdaExpression<Product>(filterCriteria);
         results = await FindByConditionPagedAsync(filterCriteria, pageNumber, pageSize, cancellationToken);
         return results;
     }
-         
 
+    /// <summary>
+    /// Get a count of products as an asynchronous operation.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;System.Int64&gt; representing the asynchronous operation.</returns>
+    public async Task<long> GetProductCountAsync(CancellationToken cancellationToken)
+    {
+        long result = 0;
+        await Task.Run(()=>{
+            result = DbContext.Products.LongCount();
+            return Task.CompletedTask;
+        }, cancellationToken).WaitAsync(cancellationToken);
+        return result;
+    }
 }

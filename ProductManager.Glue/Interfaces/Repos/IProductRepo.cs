@@ -12,6 +12,8 @@ public interface IProductRepo
     /// <param name="pageSize"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IEnumerable<IShortProduct>> FindPagedShortProductRecordsAsync(Dictionary<string, IFilterMetaData[]> filterCriteria,
-        int pageNumber, int pageSize, CancellationToken cancellationToken = default);
+    Task<IEnumerable<IProduct>> FindPagedProductRecordsAsync(Dictionary<string, IFilterMetaData[]> filterCriteria = null!,
+        int pageNumber =1 , int pageSize = 10, CancellationToken cancellationToken = default);
+
+    Task<long> GetProductCountAsync(CancellationToken cancellationToken);
 }

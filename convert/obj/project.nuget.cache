@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "PVp7MtvgP4A=",
+  "success": true,
+  "projectFilePath": "D:\\Src\\Wbarge_GitHub\\ProductManager\\convert\\convert.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.21.0\\microsoft.visualstudio.azure.containers.tools.targets.1.21.0.nupkg.sha512"
+  ],
+  "logs": []
+}

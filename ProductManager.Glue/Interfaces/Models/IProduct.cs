@@ -5,7 +5,7 @@
 /// Extends the <see cref="IShortProduct" />
 /// </summary>
 /// <seealso cref="IShortProduct" />
-public interface IFullProduct :IShortProduct
+public interface IProduct :IShortProduct
 {
     /// <summary>
     /// Gets or sets the description.

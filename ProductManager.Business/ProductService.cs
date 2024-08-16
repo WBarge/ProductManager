@@ -32,12 +32,17 @@ public class ProductService : IProductService
     /// <param name="pageSize">Size of the page.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task&lt;IEnumerable`1&gt; representing the asynchronous operation.</returns>
-    public async Task<IEnumerable<IShortProduct>> GetShortProductsAsync(Dictionary<string, IFilterMetaData[]> filters,
+    public async Task<IEnumerable<IProduct>> GetProductsAsync(Dictionary<string, IFilterMetaData[]> filters,
         int page,
         int pageSize,
         CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetShortProductsAsync called");
-        return await _repo.FindPagedShortProductRecordsAsync(filters, page, pageSize, cancellationToken);
+        return await _repo.FindPagedProductRecordsAsync(filters, page, pageSize, cancellationToken);
+    }
+
+    public async Task<long> GetProductCountAsync(CancellationToken cancellationToken = default)
+    {
+        return await _repo.GetProductCountAsync(cancellationToken);
     }
 }

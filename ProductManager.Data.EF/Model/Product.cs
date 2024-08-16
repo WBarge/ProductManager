@@ -19,7 +19,7 @@ namespace ProductManager.Data.EF.Model;
 /// Class Product.
 /// Represents a product
 /// </summary>
-public class Product : IFullProduct
+public class Product : IProduct
 {
     /// <summary>
     /// Gets or sets the identifier.

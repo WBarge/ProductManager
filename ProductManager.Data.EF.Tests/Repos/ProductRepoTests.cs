@@ -69,7 +69,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     ProductRepo sut = new ProductRepo(context);
                     
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync();
+                    IEnumerable<IProduct> results = await sut.FindPagedProductRecordsAsync();
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     results.Should().NotBeEmpty("This test should return all products we seeded the db with");
@@ -90,7 +90,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     ProductRepo sut = new ProductRepo(context);
                     
                     await TestContext.Out.WriteLineAsync("Executing first test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(null!,1,1);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(null!,1,1);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     results.Should().NotBeEmpty("This test should return products we seeded the db with");
@@ -99,7 +99,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     firstRecord.Should().NotBeNull();
 
                     await TestContext.Out.WriteLineAsync("Executing second test");
-                    results = await sut.FindPagedShortProductRecordsAsync(null!,2,1);
+                    results = await sut.FindPagedProductRecordsAsync(null!,2,1);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     results.Should().NotBeEmpty("This test should return products we seeded the db with");
@@ -136,7 +136,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -172,7 +172,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -208,7 +208,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -244,7 +244,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -280,7 +280,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -316,7 +316,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -352,7 +352,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -388,7 +388,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -424,7 +424,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -460,7 +460,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -496,7 +496,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -532,7 +532,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -573,7 +573,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
@@ -614,7 +614,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Description",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     results.Should().NotBeNull("This test should return an empty product list when there are zero results and no error");
@@ -660,7 +660,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
 
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+                    IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(filter);
 
                     await TestContext.Out.WriteLineAsync("Examining results");
                     results.Should().NotBeNull("This test should return an empty product list when there are zero results and no error");

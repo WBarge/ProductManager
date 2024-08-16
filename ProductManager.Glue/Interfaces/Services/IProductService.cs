@@ -12,8 +12,9 @@ public interface IProductService
     /// <param name="pageSize">Size of the page.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task&lt;IEnumerable&lt;IShortProduct&gt;&gt;.</returns>
-    Task<IEnumerable<IShortProduct>> GetShortProductsAsync(Dictionary<string, IFilterMetaData[]> filters,
-        int page, 
-        int pageSize, 
+    Task<IEnumerable<IProduct>> GetProductsAsync(Dictionary<string, IFilterMetaData[]> filters,
+        int page,
+        int pageSize,
         CancellationToken cancellationToken = default);
+    Task<long> GetProductCountAsync(CancellationToken  cancellationToken = default);
 }
