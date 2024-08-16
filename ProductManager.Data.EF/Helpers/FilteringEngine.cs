@@ -75,6 +75,7 @@ internal static class FilteringEngine
         Task.WaitAll(task);
         return Task.FromResult(finalQuery);
     }
+   
     /// <summary>
     /// Builds the lambda expression used in a where clause on a collection like a List&lt;T&gt;>.
     /// </summary>

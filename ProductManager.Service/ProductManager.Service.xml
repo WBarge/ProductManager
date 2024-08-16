@@ -47,13 +47,6 @@
             <param name="request"></param>
             <returns>IActionResult.</returns>
         </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.TransformFilters(ProductManager.Service.Models.Request.ProductListRequest)">
-            <summary>
-            Transforms the filters.
-            </summary>
-            <param name="request">The request.</param>
-            <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
-        </member>
         <member name="T:ProductManager.Service.Middleware.UiExceptionHandler">
             <summary>
             Class UiExceptionHandler.
@@ -197,6 +190,18 @@
             </summary>
             <value>The name.</value>
         </member>
+        <member name="T:ProductManager.Service.Models.Transformers.FilterTransformers">
+            <summary>
+            Class FilterTransformers.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Models.Transformers.FilterTransformers.TransformFilters(ProductManager.Service.Models.Request.ProductListRequest)">
+            <summary>
+            Transforms the filters.
+            </summary>
+            <param name="request">The request.</param>
+            <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
+        </member>
         <member name="T:ProductManager.Service.Program">
             <summary>
             Class Program.
@@ -214,66 +219,6 @@
             </summary>
             <param name="args">The arguments.</param>
             <returns>IHostBuilder.</returns>
-        </member>
-        <member name="T:ProductManager.Service.Utilities.FilteringEngine">
-            <summary>
-            Class FilteringEngine.
-            </summary>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildLambdaExpression``1(System.Collections.Generic.Dictionary{System.String,ProductManager.Glue.Interfaces.Models.IFilterMetaData[]})">
-            <summary>
-            Builds the lambda expression used in a where clause.
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="filters">The filters.</param>
-            <returns>Func&lt;T, System.Boolean&gt;.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildExpressions(System.Linq.Expressions.ParameterExpression,System.Collections.Generic.Dictionary{System.String,ProductManager.Glue.Interfaces.Models.IFilterMetaData[]})">
-            <summary>
-            Builds the expressions.
-            </summary>
-            <param name="pe">The pe.</param>
-            <param name="filters">The filters.</param>
-            <returns>Expression.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildPropertyExpression(System.Linq.Expressions.Expression,System.String,System.String,System.Object)">
-            <summary>
-            Builds the property expression.
-            </summary>
-            <param name="pe">The pe.</param>
-            <param name="incomingProperty">The incoming property.</param>
-            <param name="comparisonOperation">The comparison operation.</param>
-            <param name="compareValue">The compare value.</param>
-            <returns>Expression.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildValueExpression(System.Linq.Expressions.Expression,System.String,System.String,System.Object)">
-            <summary>
-            Builds the value expression.
-            </summary>
-            <param name="workingExpression">The working expression.</param>
-            <param name="propertyName">Name of the property.</param>
-            <param name="comparisonOperation">The comparison operation.</param>
-            <param name="compareValue">The compare value.</param>
-            <returns>Expression.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildValueExpression(System.Object,System.Linq.Expressions.Expression@)">
-            <summary>
-            Builds the value expression.
-            </summary>
-            <param name="compareValue">The compare value.</param>
-            <param name="workingExpression">The working expression.</param>
-            <returns>Expression.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Utilities.FilteringEngine.BuildComparisonExpression(System.String,System.Linq.Expressions.Expression,System.Linq.Expressions.Expression)">
-            <summary>
-            Builds the comparison expression.
-            </summary>
-            <param name="comparisonOperation">The comparison operation.</param>
-            <param name="workingExpression">The working expression.</param>
-            <param name="valueExpression">The value expression.</param>
-            <returns>Expression.</returns>
-            <exception cref="T:System.Exception">Malformed comparison</exception>
-            <exception cref="T:System.ArgumentOutOfRangeException">comparisonOperation - null</exception>
         </member>
         <member name="T:ProductManager.Service.Utilities.RootComposition">
             <summary>

@@ -41,7 +41,7 @@ namespace ProductManager.Data.EF.Tests.Repos
         public void Constructor_RequiredContext_Fail()
         {
             // ReSharper disable once AssignNullToNotNullAttribute
-            Assert.Throws<ArgumentNullException>(() => new ProductRepo(null));
+            Assert.Throws<ArgumentNullException>(() => new ProductRepo(null!));
         }
 
         [Test, Description("Test required context object")]
@@ -112,11 +112,9 @@ namespace ProductManager.Data.EF.Tests.Repos
         }
 
         [Test, Description("Test to see filtered records are returned")]
-        public async Task FindPagedShortProductRecords_ReturnsFilteredRecords_Success()
+        public async Task FindPagedShortProductRecords_FilterEqualWithAndForSingleField_Success()
         {
-            await TestContext.Out.WriteLineAsync("Setting up test");
-
-
+            await TestContext.Out.WriteLineAsync("Setting up and test");
             using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
@@ -144,8 +142,533 @@ namespace ProductManager.Data.EF.Tests.Repos
                     await TestContext.Out.WriteLineAsync(results.Count().ToString());
                     results.Should().NotBeEmpty("This test should return the products we are searching for");
                     results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
                 }
             }
         }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterEqualWithOrForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "T125",
+                            MatchMode = FilteringEngine.EQUALS_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+         [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterNotEqualWithAndForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 4;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "T125",
+                            MatchMode = FilteringEngine.NOT_EQUALS_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterNotEqualWithOrForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 4;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "T125",
+                            MatchMode = FilteringEngine.NOT_EQUALS_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterStartsWithAndForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test three",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterStartsWithOrForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test three",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+         [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterEndsWithAndForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "four Product",
+                            MatchMode = FilteringEngine.ENDS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterEndsWithOrForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "four Product",
+                            MatchMode = FilteringEngine.ENDS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterContainsWithAndForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "five",
+                            MatchMode = FilteringEngine.CONTAINS_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterContainsWithOrForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "five",
+                            MatchMode = FilteringEngine.CONTAINS_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterNotContainsWithAndForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 4;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "five",
+                            MatchMode = FilteringEngine.NOT_CONTAINS_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterNotContainsWithOrForSingleField_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 4;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "five",
+                            MatchMode = FilteringEngine.NOT_CONTAINS_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterWithOrForTwoFieldValues_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 2;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test four",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        },
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test five",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await TestContext.Out.WriteLineAsync(results.Count().ToString());
+                    results.Should().NotBeEmpty("This test should return the products we are searching for");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterWithAndForTwoFieldValues_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 0;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test four",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        },
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test five",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR
+                        }
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    results.Should().NotBeNull("This test should return an empty product list when there are zero results and no error");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
+        [Test, Description("Test to see filtered records are returned")]
+        public async Task FindPagedShortProductRecords_FilterWithOrForTwoDifferentFieldValues_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    //two different fields naturally creates a logical and situation
+                    const int EXPECTED_RECORD_COUNT = 1;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    List<FilterMetaData> filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "A Test five",
+                            MatchMode = FilteringEngine.STARTS_WITH_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+                    ];
+                    filter.Add("Description",filterList.ToArray<IFilterMetaData>());
+
+                    filterList =
+                    [
+                        new FilterMetaData()
+                        {
+                            SearchValue = "T5",
+                            MatchMode = FilteringEngine.EQUALS_COMPARISON,
+                            LogicalOperator = FilteringEngine.OR_LOGICAL_OPERATOR
+                        }
+                    ];
+                    filter.Add("Sku",filterList.ToArray<IFilterMetaData>());
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IEnumerable<IShortProduct> results = await sut.FindPagedShortProductRecordsAsync(filter);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    results.Should().NotBeNull("This test should return an empty product list when there are zero results and no error");
+                    results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
+                    
+                }
+            }
+        }
+
     }
 }

@@ -44,6 +44,7 @@ namespace ProductManager.Data.EF.Tests
                 Description = "A Test two Product",
                 Price = 12.99M
             };
+            context.Products.Add(p1);
             Product p3 = new Product
             {
                 Id = Guid.NewGuid(),

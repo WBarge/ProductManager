@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProductManager.Service.Models.Request;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
+using ProductManager.Service.Models.Transformers;
 
 namespace ProductManager.Service.Controllers
 {
@@ -69,7 +70,7 @@ namespace ProductManager.Service.Controllers
                 request.PageSize = DATA_SIZE;
             }
 
-            Dictionary<string, IFilterMetaData[]> filters = TransformFilters(request);
+            Dictionary<string, IFilterMetaData[]> filters = FilterTransformers.TransformFilters(request);
 
             var returnValue = new
                 {
@@ -80,22 +81,5 @@ namespace ProductManager.Service.Controllers
             
         }
 
-        /// <summary>
-        /// Transforms the filters.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
-        private static Dictionary<string, IFilterMetaData[]> TransformFilters(ProductListRequest request)
-        {
-            Dictionary<string, IFilterMetaData[]>? filters = null;
-            if (request.Filters != null)
-            {
-                filters = request.Filters.
-                    ToDictionary(requestFilter => requestFilter.Key, 
-                        requestFilter => requestFilter.Value.Cast<IFilterMetaData>().ToArray());
-            }
-
-            return filters!;
-        }
     }
 }
