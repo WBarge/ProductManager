@@ -3,6 +3,7 @@
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using ProductManager.Data.EF.Helpers;
+using ProductManager.Data.EF.Model;
 using ProductManager.Data.EF.Repos;
 using ProductManager.Glue.Interfaces.Models;
 
@@ -65,7 +66,7 @@ namespace ProductManager.Data.EF.Tests.Repos
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
-                    int expectedRecordCount = context.Products.Count();
+                    int expectedRecordCount = context.Products.Count(p => p.Deleted == false);
                     ProductRepo sut = new ProductRepo(context);
                     
                     await TestContext.Out.WriteLineAsync("Executing test");
@@ -666,6 +667,103 @@ namespace ProductManager.Data.EF.Tests.Repos
                     results.Should().NotBeNull("This test should return an empty product list when there are zero results and no error");
                     results.Count().Should().Be(EXPECTED_RECORD_COUNT, "The query should return the same record count as the dbSet");
                     
+                }
+            }
+        }
+
+        [Test, Description("Test to see records count returned")]
+        public async Task GetProductCount_ReturnsCount_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const int EXPECTED_RECORD_COUNT = 5;
+                    ProductRepo sut = new ProductRepo(context);
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    long results = await sut.GetProductCountAsync();
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    results.Should().Be(EXPECTED_RECORD_COUNT);
+
+                }
+            }
+        }
+
+        [Test, Description("Test an instance is returned")]
+        public async Task GetInstance_ReturnsAnInstanceOfIProduct_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    ProductRepo sut = new ProductRepo(context);
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IProduct result = sut.GetInstance();
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    result.Should().NotBeNull();
+                }
+            }
+        }
+
+        [Test, Description("Test an instance is returned")]
+        public async Task AddMinimumProductAsync_InsertsTheProduct_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    const string  TEST_NAME = "TestValue";
+                    ProductRepo sut = new ProductRepo(context);
+                    IProduct data = sut.GetInstance();
+                    data.Should().NotBeNull();
+                    data.Name = TEST_NAME;
+                    data.Sku = TEST_NAME;
+                    data.ShortDescription =TEST_NAME;
+                    data.Description=TEST_NAME;
+                    data.Price = 123M;
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.AddMinimumProductAsync(data);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    Product? p =context.Products.FirstOrDefault(p => p.Name == TEST_NAME && p.Sku == TEST_NAME);
+                    p.Should().NotBeNull();
+
+                }
+            }
+        }
+
+        [Test, Description("Test an instance is returned")]
+        public async Task DeleteAsync_MarksTheProductDeleted_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    Product p = context.Products.First();
+                    p.Should().NotBeNull();
+                    p.Deleted = true;
+                    await context.SaveChangesAsync();
+
+                    ProductRepo sut = new(context);
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.DeleteAsync(p.Id);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    p = context.Products.First(pr=>pr.Id == p.Id);
+                    p.Should().NotBeNull();
+                    p.Deleted.Should().BeTrue();
+
                 }
             }
         }

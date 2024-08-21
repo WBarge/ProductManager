@@ -3,7 +3,7 @@
 // Created          : 07-29-2024
 //
 // Last Modified By : Bill Barge
-// Last Modified On : 07-29-2024
+// Last Modified On : 08-20-2024
 // ***********************************************************************
 // <copyright file="ProductsController.cs" company="N/A">
 //     Copyright (c) N/A. All rights reserved.
@@ -15,7 +15,6 @@ using ProductManager.Service.Models.Request;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Models.Transformers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProductManager.Service.Controllers
 {
@@ -33,11 +32,17 @@ namespace ProductManager.Service.Controllers
         /// </summary>
         const int DATA_SIZE = 100000;
 
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<ProductsController> _logger;
+        /// <summary>
+        /// The product service
+        /// </summary>
         private readonly IProductService _productService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductsController"/> class.
+        /// Initializes a new instance of the <see cref="ProductsController" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="productService">The product service.</param>
@@ -53,7 +58,7 @@ namespace ProductManager.Service.Controllers
         /// Gets the products using paging
         /// The request is a Post method - swagger does not currently support sending data in the body of a Get methods
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="request">The request.</param>
         /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> GetProducts([FromBody] ProductListRequest? request)
@@ -79,6 +84,32 @@ namespace ProductManager.Service.Controllers
                 };
                 return new OkObjectResult(returnValue);
             
+        }
+
+        /// <summary>
+        /// end point which adds the minimum viable product
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost]
+        [Route(nameof(QuickAdd))]
+        public async  Task<IActionResult> QuickAdd([FromBody] QuickProductRequest request)
+        {
+            await _productService.CreateMinimumViableProductAsync(request.Sku, request.Name, request.ShortDescription,
+                request.Price);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Deletes the product.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpDelete("{id}")]
+        public async  Task<IActionResult> DeleteProduct(Guid id)
+        {
+            await this._productService.DeleteProductAsync(id);
+            return Ok();
         }
 
     }

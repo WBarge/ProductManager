@@ -25,7 +25,7 @@ namespace ProductManager.Data.EF.Tests
         public static void SeedData(this IServiceScope serviceScope)
         {
             ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ?? throw new InvalidOperationException();
-            Product p = new Product
+            Product p = new Product()
             {
                 Id = Guid.NewGuid(),
                 Name = "Test Product",
@@ -45,6 +45,17 @@ namespace ProductManager.Data.EF.Tests
                 Price = 12.99M
             };
             context.Products.Add(p1);
+            Product p2 = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test2 Product",
+                ShortDescription = "Test2",
+                Sku = "T124",
+                Description = "A Test two Product",
+                Price = 12.99M,
+                Deleted = true
+            };
+            context.Products.Add(p2);
             Product p3 = new Product
             {
                 Id = Guid.NewGuid(),

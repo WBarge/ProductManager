@@ -51,13 +51,11 @@ namespace ProductManager.Business.Tests
                     It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
 
+            ProductService sut = new(logger.Object, productRepo.Object);
 
-
-            ProductService sut = new ProductService(logger.Object, productRepo.Object);
-
-            Dictionary<string,IFilterMetaData[]> filterParameter = new Dictionary<string,IFilterMetaData[]>();
-            int page = 1;
-            int pageSize = 10;
+            Dictionary<string,IFilterMetaData[]> filterParameter = new();
+            const int page = 1;
+            const int pageSize = 10;
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IEnumerable<IShortProduct> results = await sut.GetProductsAsync(filterParameter, page, pageSize);
@@ -68,6 +66,44 @@ namespace ProductManager.Business.Tests
             results.Should().HaveCount(2);
             productRepo.Verify(m=>m.FindPagedProductRecordsAsync(filterParameter,page, 
                 pageSize,It.IsAny<CancellationToken>()));
+        }
+
+        [Test, Description("The get product count should call the repo to get the number of products")]
+        public async Task GetProductCountAsync_CallsRepoProductCount_Successfully()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up test");
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+
+            productRepo.Setup(m => m.GetProductCountAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(25);
+
+
+
+            ProductService sut = new(logger.Object, productRepo.Object);
+
+            await TestContext.Out.WriteLineAsync("Executing test");
+            long results = await sut.GetProductCountAsync();
+            results.Should().BeGreaterOrEqualTo(1, "The mock is set up to return 25");
+            productRepo.Verify();
+        }
+
+        [Test, Description("The get product count should call the repo to get the number of products")]
+        public async Task DeleteProductAsync_CallsRepoProductDelete_Successfully()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up test");
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+
+            productRepo.Setup(m => m.DeleteAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>()));
+
+
+
+            ProductService sut = new(logger.Object, productRepo.Object);
+
+            await TestContext.Out.WriteLineAsync("Executing test");
+            await sut.DeleteProductAsync(Guid.NewGuid());
+            productRepo.Verify();
         }
     }
 }

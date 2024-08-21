@@ -17,4 +17,6 @@ public interface IProductService
         int pageSize,
         CancellationToken cancellationToken = default);
     Task<long> GetProductCountAsync(CancellationToken  cancellationToken = default);
+    Task CreateMinimumViableProductAsync(string sku, string name, string shortDescription, decimal price,CancellationToken cancellationToken = default);
+    Task DeleteProductAsync(Guid id,CancellationToken cancellationToken = default);
 }

@@ -110,5 +110,53 @@ namespace ProductManager.Service.Tests.Contollers
             productService.Verify(s=>s.GetProductsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
                 1, 1, It.IsAny<CancellationToken>()));
         }
+
+        [Test, Description("Ensure QuickAdd calls the product service")]
+        public async Task QuickAdd_Successfully_Returns()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up test");
+            Mock<ILogger<ProductsController>> logger = new();
+            Mock<IProductService> productService = new();
+
+            productService.Setup(s => s.CreateMinimumViableProductAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<decimal>(),
+                It.IsAny<CancellationToken>()));
+
+            ProductsController sut = new(logger.Object, productService.Object);
+
+            await TestContext.Out.WriteLineAsync("Executing test");
+            QuickProductRequest request = new()
+            {
+                Sku = string.Empty,
+                Name = string.Empty,
+                ShortDescription = string.Empty,
+                Price = 0M
+            };
+            IActionResult result = await sut.QuickAdd(request);
+            await TestContext.Out.WriteLineAsync("Examining results");
+            productService.Verify();
+        }
+
+        [Test, Description("Ensure delete calls the product service")]
+        public async Task DeleteProduct_Successfully_Returns()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up test");
+            Mock<ILogger<ProductsController>> logger = new();
+            Mock<IProductService> productService = new();
+
+            productService.Setup(s => s.DeleteProductAsync(
+                It.IsAny<Guid>(),
+                It.IsAny<CancellationToken>()));
+
+            ProductsController sut = new(logger.Object, productService.Object);
+
+            await TestContext.Out.WriteLineAsync("Executing test");
+            IActionResult result = await sut.DeleteProduct(Guid.NewGuid());
+            await TestContext.Out.WriteLineAsync("Examining results");
+            productService.Verify();
+        }
     }
 }

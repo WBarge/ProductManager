@@ -1,5 +1,47 @@
 <p-toast position="top-center" [life]="2000"></p-toast>
-Product list
+<br>
+<p-fieldset legend="Quick Create">
+  <p-table>
+    <ng-template pTemplate="header">
+    <tr>
+      <td>
+        <br>
+        <p-floatLabel>
+          <input id="sku" type="text" pInputText [(ngModel)]="newProduct.sku" />
+          <label for="sku">SKU</label>
+        </p-floatLabel>
+      </td>
+      <td>
+        <br>
+        <p-floatLabel>
+          <input id="name" type="text" pInputText [(ngModel)]="newProduct.name" />
+          <label for="name">Name</label>
+        </p-floatLabel>
+      </td>
+      <td>
+        <br>
+        <p-floatLabel>
+          <input id="description" type="text" pInputText [(ngModel)]="newProduct.shortDescription" />
+          <label for="description">Quick Description</label>
+        </p-floatLabel>
+      </td>
+      <td>
+        <br>
+        <p-floatLabel>
+          <p-inputNumber inputId="price" [(ngModel)]="newProduct.price" mode="currency" currency="USD" locale="en-US" />
+          <label for="price">Price</label>
+        </p-floatLabel>
+      </td>
+      <td>
+        <br>
+        <button type="button" pButton label="Create" (click)="submit(newProduct)"></button>
+      </td>
+    </tr>
+    </ng-template>
+  </p-table>
+
+</p-fieldset>
+<br>
 <p-table id="productTable" #productTable
 [value]="products"
 [paginator]="true"
@@ -16,19 +58,30 @@ currentPageReportTemplate="{first}-{last} of {totalRecords}"
 >
   <ng-template pTemplate="header">
     <tr>
-      <th colspan="2" style="text-align: center;">Products</th>
+      <th colspan="5" style="text-align: center;">Products</th>
     </tr>
     <tr>
-      <th>Id</th>
+      <th>SKU</th>
       <th>Name
         <p-columnFilter type="text" field="name" display="menu" />
       </th>
+      <th>Description
+        <p-columnFilter type="text" field="shortDescription" display="menu" />
+      </th>
+      <th>Price</th>
+      <th></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-product>
     <tr>
-      <td>{{product.id}}</td>
+      <td>{{product.sku}}</td>
       <td>{{product.name}}</td>
+      <td>{{product.shortDescription}}</td>
+      <td>{{product.price | currency}}</td>
+      <td>
+        <button type="button" pButton (click)="delete(product)" icon="pi pi-trash"></button>
+    </td>
     </tr>
   </ng-template>
 </p-table>
+

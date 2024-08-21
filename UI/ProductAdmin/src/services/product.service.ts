@@ -3,15 +3,17 @@ import { ErrorHandlerService, HandleError } from './error-handler.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { LocationService } from './location.service';
 import { catchError, Observable } from 'rxjs';
-import { TestDataResult } from '../models/results/test-data-result';
+import { ProductsListResult } from '../models/results/productsListResult';
 import { FilterDetail, FilterDictionary } from '../models/requests/filter-detail';
 import { ProductListRequest } from '../models/requests/product-list-request';
+import { Product } from '../models/results/product';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
+
 
   private productServiceLocation:string;
   private handleError: HandleError;
@@ -24,44 +26,35 @@ export class ProductService {
    getProducts( currentPage: number =1 ,
                 pageSize: number = 10 ,
                 filters?:FilterDictionary
-              ):Observable<TestDataResult>{
+              ):Observable<ProductsListResult>{
     var filtersAsObject:any = null;
-    if(filters && filters?.size>0)
-    {
+    if(filters && filters?.size>0){
       filtersAsObject = {};
       filters?.forEach((value:FilterDetail[],key:string)=>{
         var tempObj = {[key]:value};
         filtersAsObject = Object.assign(filtersAsObject,tempObj);
       });
-
     }
+
     var request:ProductListRequest = {
       page: currentPage,
       pageSize: pageSize,
       filters:  filtersAsObject
     };
-    var temp:string = JSON.stringify(request);
-    return this.http.post<TestDataResult>(this.productServiceLocation,request)
+    return this.http.post<ProductsListResult>(this.productServiceLocation,request)
     .pipe(
-      catchError(this.handleError<TestDataResult>('getProducts'))
+      catchError(this.handleError<ProductsListResult>('getProducts'))
     );
+  }
 
-    function replacer(key:any, value:FilterDictionary) {
-      if(value instanceof Map && value.size > 0) {
-//        var returnValue:object = {};
-//        value.forEach((value:FilterDetail[],key:string)=>{
-          return { [key]:JSON.stringify(value)};
-//          returnValue = Object.assign(returnValue,tempVar);
-//        });
-//        return returnValue;
+  quickAdd(newProduct:Product):Observable<any>{
+    return this.http.post(this.productServiceLocation+'/QuickAdd',newProduct).pipe(
+      catchError(this.handleError<any>('quickAdd'))
+    );
+  }
 
-//        {
-//          dataType: 'Map',
-//          value: Array.from(value.entries()), // or with spread: value: [...value]
-//        };
-      } else {
-        return;
-      }
-    }
+  deleteProduct(productToDelete: Product):Observable<any> {
+    var requestURl = this.productServiceLocation+'/'+productToDelete.id
+    return this.http.delete(requestURl).pipe(catchError(this.handleError<any>('deleteProduct')));
   }
 }

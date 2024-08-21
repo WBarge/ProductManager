@@ -226,6 +226,15 @@ internal static class FilteringEngine
         {
             valueExpression = Expression.Constant(compareValue.ToString(), typeof(string));//Expression.Constant(0); // this will be the value
         }
+        else if (workingExpression.Type == typeof(bool))
+        {
+            if (bool.TryParse((string?)compareValue, out bool value) == false)
+            {
+                value = false;
+            }
+
+            valueExpression = Expression.Constant(value);
+        }
         else
         {
             valueExpression = Expression.Constant(compareValue); // this will be the value
