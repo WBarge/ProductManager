@@ -2,53 +2,54 @@ create table #ids (id uniqueidentifier);
 Declare @10PizId as uniqueidentifier;
 Declare @12PizId as uniqueidentifier;
 Declare @14PizId as uniqueidentifier;
+Declare @ToppingName as nvarchar(128);
 
 insert into Product (Name,ShortDescription,Sku,Description,Price)
 output inserted.Id into #ids
 values('10 Pizza','A 10" Pizza','P1045','A 10" Pizza',3.99);
-select @10PizId=id from #ids
-delete #ids
+select @10PizId=id from #ids;
+delete #ids;
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@10PizId,'Crust','Hand-Tossed')
+values(@10PizId,'Crust','Hand-Tossed');
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@10PizId,'Crust','Thin')
+values(@10PizId,'Crust','Thin');
 
 insert into Product (Name,ShortDescription,Sku,Description,Price)
 output inserted.Id into #ids
-values('12 Pizza','A 12" Pizza','P1245','A 12" Pizza',6.99)
-select @12PizId=id from #ids
-delete #ids
+values('12 Pizza','A 12" Pizza','P1245','A 12" Pizza',6.99);
+select @12PizId=id from #ids;
+delete #ids;
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@12PizId,'Crust','Hand-Tossed')
+values(@12PizId,'Crust','Hand-Tossed');
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@12PizId,'Crust','Thin')
+values(@12PizId,'Crust','Thin');
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@12PizId,'Crust','Pan')
+values(@12PizId,'Crust','Pan');
 
 
 
 insert into Product (Name,ShortDescription,Sku,Description,Price)
 output inserted.Id into #ids
-values('14 Pizza','A 14" Pizza','P1445','A 14" Pizza',12.99)  -- 01F46E2A-DE69-43AE-A9A5-33E7B346DFA7
-select @14PizId=id from #ids
-delete #ids
+values('14 Pizza','A 14" Pizza','P1445','A 14" Pizza',12.99);
+select @14PizId=id from #ids;
+delete #ids;
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@14PizId,'Crust','Hand-Tossed')
+values(@14PizId,'Crust','Hand-Tossed');
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@14PizId,'Crust','Thin')
+values(@14PizId,'Crust','Thin');
 
 insert into ProductCharacteristic(ProductId,Name,CharacteristicValue)
-values(@14PizId,'Crust','Pan')
+values(@14PizId,'Crust','Pan');
 
 
-drop table #ids
+drop table #ids;
 
 select p.Name,p.Sku,p.ShortDescription,pc.CharacteristicValue from Product p inner join ProductCharacteristic pc on (p.id = pc.ProductId)
-order by p.Name , pc.CharacteristicValue
+order by p.Name , pc.CharacteristicValue;
