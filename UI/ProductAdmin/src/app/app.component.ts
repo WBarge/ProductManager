@@ -4,11 +4,12 @@ import { PrimeNGConfig } from 'primeng/api'
 import { MenuItem } from 'primeng/api';
 import { MenubarModule} from 'primeng/menubar';
 import { LocationService } from '../services/location.service';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,MenubarModule],
+  imports: [RouterOutlet,MenubarModule,ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

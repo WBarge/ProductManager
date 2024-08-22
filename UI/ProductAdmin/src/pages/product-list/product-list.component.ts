@@ -1,6 +1,5 @@
 import { Component,OnInit } from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
-import { ToastModule } from 'primeng/toast';
 import { FilterMetadata, MessageService } from 'primeng/api';
 import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 import { ProductService } from '../../services/product.service';
@@ -19,8 +18,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [ToastModule,
-            TableModule,
+  imports: [TableModule,
             ButtonModule,
             CurrencyPipe,
             FieldsetModule,

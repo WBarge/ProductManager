@@ -7,7 +7,6 @@ import { HttpClient } from '@angular/common/http';
 import { ProductService } from '../../services/product.service';
 import { FilterTransformerService } from '../../services/transformers/filter-transformer.service';
 import { Product } from '../../models/results/product';
-import { of } from 'rxjs';
 import { ProductsListResult } from '../../models/results/productsListResult';
 
 describe('ProductListComponent', () => {
@@ -60,11 +59,11 @@ describe('ProductListComponent', () => {
     httpClient = TestBed.inject<any>(HttpClient);
     productService = TestBed.inject<any>(ProductService);
     filterService = TestBed.inject<any>(FilterTransformerService);
-
     fixture = TestBed.createComponent(ProductListComponent);
   });
 
   it('should create', () => {
+    fixture.detectChanges();
     component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });

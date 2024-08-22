@@ -1,10 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { MessageService } from 'primeng/api';
+import { createSpyFromClass,Spy } from 'jasmine-auto-spies';
 
 describe('AppComponent', () => {
+  let msgServcie: Spy<MessageService>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers:[
+        {provide:MessageService, useValue: createSpyFromClass(MessageService)}
+      ]
+
     }).compileComponents();
   });
 
