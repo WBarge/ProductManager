@@ -50,6 +50,7 @@ export class ProductListComponent implements OnInit{
   public ngOnInit(): void {
 
   }
+
   loadProducts(){
     this.sendMessage('info','System Message','Loading Products');
     var transFormedFilters = this.filterTransformer?.transformGridFilters(this.filters);
