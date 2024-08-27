@@ -38,7 +38,7 @@ describe('ErrorHandlerService', () => {
 
     let errorHandler:HandleError = service.createHandleError('unitTests');
 
-    let errorMessage:SystemError = {message:'This is a test error message from an unit test',exceptionType:'testException'}
+    let errorMessage:SystemError = {message:'This is an expected error message from a unit test',exceptionType:'testException'}
     errorHandler<any>('testing',{})(new HttpErrorResponse({error:errorMessage})).subscribe(
       ()=>{
         expect(messageService.add).toHaveBeenCalled();
