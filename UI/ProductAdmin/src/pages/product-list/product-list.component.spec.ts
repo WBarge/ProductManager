@@ -12,8 +12,8 @@ import { of } from 'rxjs';
 
 describe('ProductListComponent', () => {
   let msgServcie: Spy<MessageService>;
-  let httpClient: Spy<HttpClient>;
-  let productService  =  jasmine.createSpyObj('ProductService',['getProducts']);
+  let httpClientSpy=  jasmine.createSpyObj('HttpClient',['post']);// Spy<HttpClient>;
+  let productServiceSpy  =  jasmine.createSpyObj('ProductService',['getProducts']);
   let filterService: Spy<FilterTransformerService>;
   let component: ProductListComponent;
   let fixture: ComponentFixture<ProductListComponent>;
@@ -48,8 +48,8 @@ describe('ProductListComponent', () => {
       imports: [ProductListComponent],
       providers:[provideAnimations(),
         {provide:MessageService, useValue: createSpyFromClass(MessageService)},
-        {provide:HttpClient, useValue: createSpyFromClass(HttpClient)},
-        {provide:ProductService, useValue: productService},
+        {provide:HttpClient, useValue: httpClientSpy},
+        {provide:ProductService, useValue: productServiceSpy},
         {provide:FilterTransformerService, useValue: createSpyFromClass(FilterTransformerService)}
 
       ]
@@ -57,26 +57,29 @@ describe('ProductListComponent', () => {
     .compileComponents();
 
     msgServcie = TestBed.inject<any>(MessageService);
-    httpClient = TestBed.inject<any>(HttpClient);
-    productService = TestBed.inject(ProductService);
+    httpClientSpy = TestBed.inject(HttpClient);
+    productServiceSpy = TestBed.inject(ProductService);
     filterService = TestBed.inject<any>(FilterTransformerService);
     fixture = TestBed.createComponent(ProductListComponent);
   });
+
 
   it('should create', () => {
     component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 
-  it('should load products automatically',()=>{
-    productService.getProducts.and.returnValue(of(fakeGetResult));
+  it('should load products automatically',((done:DoneFn)=>{
+    httpClientSpy.post.and.returnValue(of(fakeGetResult));
+    productServiceSpy.getProducts.and.returnValue(of(fakeGetResult));
     component = fixture.componentInstance;
     fixture.detectChanges();
     fixture.whenStable().then(()=>{
-      expect(productService.getProducts).toHaveBeenCalled;
+      expect(productServiceSpy.getProducts).toHaveBeenCalled;
       expect(component.products.length).toEqual(fakeGetResult.data.length)
       expect(component.products[0].id).toEqual(fakeGetResult.data[0].id);
       expect(component.totalItems).toEqual(fakeGetResult.totalRecordSize);
+      done();
     });
-  });
+  }));
 });

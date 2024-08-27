@@ -10,7 +10,7 @@ import { Observable, of } from 'rxjs';
 
 describe('ProductService', () => {
   let service: ProductService;
-  let httpSpy: Spy<HttpClient>;
+  let httpSpy=  jasmine.createSpyObj('HttpClient',['post']);// Spy<HttpClient>;
   let errorHandler:Spy<ErrorHandlerService>;
   let configService:Spy<LocationService>;
   let testLocation:string = 'someLocation';
@@ -18,7 +18,7 @@ describe('ProductService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers:[
-        {provide:HttpClient, useValue: createSpyFromClass(HttpClient)},
+        {provide:HttpClient, useValue: httpSpy},
         {provide:ErrorHandlerService, useValue: createSpyFromClass(ErrorHandlerService)},
         {provide:MessageService, useValue: createSpyFromClass(MessageService)},
         {provide:LocationService, useValue: createSpyFromClass(LocationService)},
