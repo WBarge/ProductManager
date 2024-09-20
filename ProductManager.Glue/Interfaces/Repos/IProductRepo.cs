@@ -39,14 +39,14 @@ public interface IProductRepo
     /// Gets the instance.
     /// </summary>
     /// <returns>IProduct.</returns>
-    IProduct GetInstance();
+    IProduct CreateInstance();
     /// <summary>
     /// Adds the minimum product asynchronous.
     /// </summary>
     /// <param name="product">The product.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task.</returns>
-    Task AddMinimumProductAsync(IProduct product,CancellationToken cancellationToken = default);
+    Task<Guid> AddMinimumProductAsync(IProduct product,CancellationToken cancellationToken = default);
     /// <summary>
     /// Deletes the asynchronous.
     /// </summary>

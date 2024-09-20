@@ -83,16 +83,16 @@ public class ProductService : IProductService
     /// <param name="price">The price.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public async Task CreateMinimumViableProductAsync(string sku, string name, string shortDescription, decimal price,
+    public async Task<Guid> CreateMinimumViableProductAsync(string sku, string name, string shortDescription, decimal price,
         CancellationToken cancellationToken = default)
     {
-        IProduct p = _repo.GetInstance();
+        IProduct p = _repo.CreateInstance();
         p.Name = name;
         p.ShortDescription = shortDescription;
         p.Sku = sku;
         p.Price = price;
         p.Description = "Currently unavailable";
-        await _repo.AddMinimumProductAsync(p, cancellationToken);
+        return await _repo.AddMinimumProductAsync(p, cancellationToken);
     }
 
     /// <summary>

@@ -95,9 +95,8 @@ namespace ProductManager.Service.Controllers
         [Route(nameof(QuickAdd))]
         public async  Task<IActionResult> QuickAdd([FromBody] QuickProductRequest request)
         {
-            await _productService.CreateMinimumViableProductAsync(request.Sku, request.Name, request.ShortDescription,
-                request.Price);
-            return Ok();
+           Guid newId =  await _productService.CreateMinimumViableProductAsync(request.Sku, request.Name, request.ShortDescription, request.Price);
+           return new OkObjectResult(newId);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { FilterTransformerService } from '../../services/transformers/filter-transformer.service';
 import { Product } from '../../models/results/product';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 
 
@@ -25,6 +26,7 @@ import { FormsModule } from '@angular/forms';
             FloatLabelModule,
             InputTextModule,
             FormsModule,
+            RouterLink,
             InputNumberModule],
 
   providers:[ProductService,FilterTransformerService],
@@ -72,7 +74,8 @@ export class ProductListComponent implements OnInit{
   }
 
   submit(productToAdd:Product){
-    this.dataService.quickAdd(productToAdd).subscribe(()=>{
+    this.dataService.quickAdd(productToAdd).subscribe((newId:any)=>{
+      productToAdd.id = newId;
       this.products.push(productToAdd);
     });
     this.newProduct = new Product();

@@ -78,8 +78,11 @@ currentPageReportTemplate="{first}-{last} of {totalRecords}"
       <td>{{product.shortDescription}}</td>
       <td>{{product.price | currency}}</td>
       <td>
-        <button type="button" pButton (click)="delete(product)" icon="pi pi-trash"></button>
-    </td>
+        <div class="rightAlign">
+          <p-button [link]="true" [routerLink]="['/product',product.id]" icon="pi pi-pencil"/>
+          <p-button (click)="delete(product)" icon="pi pi-trash" [text]="true"/>
+        </div>
+      </td>
     </tr>
   </ng-template>
 </p-table>

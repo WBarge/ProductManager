@@ -65,7 +65,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// Gets the instance.
     /// </summary>
     /// <returns>IProduct.</returns>
-    public IProduct GetInstance()
+    public IProduct CreateInstance()
     {
         return Create();
     }
@@ -76,7 +76,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// <param name="product">The product.</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public async Task AddMinimumProductAsync(IProduct product,CancellationToken cancellationToken = default)
+    public async Task<Guid> AddMinimumProductAsync(IProduct product,CancellationToken cancellationToken = default)
     {
         Product p = Create();
         p.Name = product.Name;
@@ -86,6 +86,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
         p.Description = product.Description;
         await InsertAsync(p);
         await SaveAsync(cancellationToken);
+        return p.Id;
     }
 
     /// <summary>

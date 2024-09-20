@@ -52,7 +52,7 @@ namespace ProductManager.Data.EF.Tests.Repos
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
                     sut.Should().NotBeNull();
                 }
             }
@@ -67,7 +67,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     int expectedRecordCount = context.Products.Count(p => p.Deleted == false);
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
                     
                     await TestContext.Out.WriteLineAsync("Executing test");
                     IEnumerable<IProduct> results = await sut.FindPagedProductRecordsAsync();
@@ -88,7 +88,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
                     
                     await TestContext.Out.WriteLineAsync("Executing first test");
                     IEnumerable<IShortProduct> results = await sut.FindPagedProductRecordsAsync(null!,1,1);
@@ -121,9 +121,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -157,9 +157,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -193,9 +193,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 4;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -229,9 +229,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 4;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -265,9 +265,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -301,9 +301,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -337,9 +337,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -373,9 +373,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -409,9 +409,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -445,9 +445,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -481,9 +481,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 4;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -517,9 +517,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 4;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -553,9 +553,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 2;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -594,9 +594,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 0;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -635,9 +635,9 @@ namespace ProductManager.Data.EF.Tests.Repos
                 {
                     //two different fields naturally creates a logical and situation
                     const int EXPECTED_RECORD_COUNT = 1;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
-                    Dictionary<string, IFilterMetaData[]> filter = new Dictionary<string, IFilterMetaData[]>();
+                    Dictionary<string, IFilterMetaData[]> filter = new();
                     List<FilterMetaData> filterList =
                     [
                         new FilterMetaData()
@@ -681,7 +681,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const int EXPECTED_RECORD_COUNT = 5;
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
 
                     await TestContext.Out.WriteLineAsync("Executing test");
                     long results = await sut.GetProductCountAsync();
@@ -702,9 +702,9 @@ namespace ProductManager.Data.EF.Tests.Repos
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
-                    ProductRepo sut = new ProductRepo(context);
+                    ProductRepo sut = new(context);
                     await TestContext.Out.WriteLineAsync("Executing test");
-                    IProduct result = sut.GetInstance();
+                    IProduct result = sut.CreateInstance();
                     await TestContext.Out.WriteLineAsync("Examining results");
                     result.Should().NotBeNull();
                 }
@@ -721,8 +721,8 @@ namespace ProductManager.Data.EF.Tests.Repos
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     const string  TEST_NAME = "TestValue";
-                    ProductRepo sut = new ProductRepo(context);
-                    IProduct data = sut.GetInstance();
+                    ProductRepo sut = new(context);
+                    IProduct data = sut.CreateInstance();
                     data.Should().NotBeNull();
                     data.Name = TEST_NAME;
                     data.Sku = TEST_NAME;

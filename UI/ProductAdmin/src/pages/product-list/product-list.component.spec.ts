@@ -9,9 +9,11 @@ import { FilterTransformerService } from '../../services/transformers/filter-tra
 import { Product } from '../../models/results/product';
 import { ProductsListResult } from '../../models/results/productsListResult';
 import { of } from 'rxjs';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 describe('ProductListComponent', () => {
   let msgServcie: Spy<MessageService>;
+  let routerLink: Spy<ActivatedRoute>;
   let httpClientSpy=  jasmine.createSpyObj('HttpClient',['post']);// Spy<HttpClient>;
   let productServiceSpy  =  jasmine.createSpyObj('ProductService',['getProducts']);
   let filterService: Spy<FilterTransformerService>;
@@ -47,6 +49,7 @@ describe('ProductListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProductListComponent],
       providers:[provideAnimations(),
+        {provide:ActivatedRoute, useValue: createSpyFromClass(ActivatedRoute)},
         {provide:MessageService, useValue: createSpyFromClass(MessageService)},
         {provide:HttpClient, useValue: httpClientSpy},
         {provide:ProductService, useValue: productServiceSpy},

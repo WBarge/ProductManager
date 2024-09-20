@@ -48,7 +48,8 @@ export class ProductService {
   }
 
   quickAdd(newProduct:Product):Observable<any>{
-    return this.http.post(this.productServiceLocation+'/QuickAdd',newProduct).pipe(
+    return this.http.post(this.productServiceLocation+'/QuickAdd',newProduct)
+    .pipe(
       catchError(this.handleError<any>('quickAdd'))
     );
   }
