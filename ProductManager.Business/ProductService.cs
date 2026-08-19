@@ -60,7 +60,7 @@ public class ProductService : IProductService
         int pageSize,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogDebug("GetShortProductsAsync called");
+        _logger.LogDebug("GetProductsAsync called");
         return await _repo.FindPagedProductRecordsAsync(filters, page, pageSize, cancellationToken);
     }
 
@@ -104,5 +104,17 @@ public class ProductService : IProductService
     public async Task DeleteProductAsync(Guid id,CancellationToken cancellationToken = default)
     {
         await _repo.DeleteAsync(id, cancellationToken);
+    }
+
+    /// <summary>
+    /// Get product as an asynchronous operation.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A Task&lt;IFullProduct&gt; representing the asynchronous operation.</returns>
+    public async Task<IFullProduct?> GetProductAsync(Guid id,CancellationToken cancellationToken = default)
+    {
+       
+       return await _repo.GetProductAsync(id, cancellationToken);
     }
 }

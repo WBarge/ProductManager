@@ -61,6 +61,7 @@ namespace ProductManager.Service.Controllers
         /// <param name="request">The request.</param>
         /// <returns>IActionResult.</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProducts([FromBody] ProductListRequest? request)
         {
             _logger.LogDebug("request for short product list");
@@ -86,30 +87,8 @@ namespace ProductManager.Service.Controllers
             
         }
 
-        /// <summary>
-        /// end point which adds the minimum viable product
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <returns>IActionResult.</returns>
-        [HttpPost]
-        [Route(nameof(QuickAdd))]
-        public async  Task<IActionResult> QuickAdd([FromBody] QuickProductRequest request)
-        {
-           Guid newId =  await _productService.CreateMinimumViableProductAsync(request.Sku, request.Name, request.ShortDescription, request.Price);
-           return new OkObjectResult(newId);
-        }
-
-        /// <summary>
-        /// Deletes the product.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>IActionResult.</returns>
-        [HttpDelete("{id}")]
-        public async  Task<IActionResult> DeleteProduct(Guid id)
-        {
-            await this._productService.DeleteProductAsync(id);
-            return Ok();
-        }
+      
+       
 
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductManager.Data.EF.Helpers;
 using ProductManager.Data.EF.Model;
+using ProductManager.Data.EF.Transformers;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Repos;
 
@@ -35,7 +36,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
         int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
         filterCriteria ??= new Dictionary<string, IFilterMetaData[]>();
-        IFilterMetaData[] list = new IFilterMetaData[1];
+        var list = new IFilterMetaData[1];
         list[0] = new FilterCriteria(){SearchValue = "False",
             MatchMode = FilteringEngine.EQUALS_COMPARISON,
             LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR};
@@ -78,7 +79,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task<Guid> AddMinimumProductAsync(IProduct product,CancellationToken cancellationToken = default)
     {
-        Product p = Create();
+        var p = Create();
         p.Name = product.Name;
         p.Sku = product.Sku;
         p.ShortDescription = product.ShortDescription;
@@ -97,12 +98,29 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        Product p = await this.DbContext.Products.FirstAsync(p => p.Id == id, cancellationToken: cancellationToken);
+        var p = await this.DbContext.Products.FirstAsync(p => p.Id == id, cancellationToken: cancellationToken);
         if (p.IsNotEmpty())
         {
             p.Deleted = true;
             Update(p);
             await SaveAsync(cancellationToken);
         }
+    }
+
+    /// <summary>
+    /// Gets the product with all details
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<IFullProduct?> GetProductAsync(Guid id, CancellationToken cancellationToken)
+    {
+        IFullProduct? returnValue = null;
+        Product? p = await DbContext.Products.FirstOrDefaultAsync(p => p.Id == id,cancellationToken);
+        if (p.IsNotEmpty())
+        {
+            returnValue = ProductTransformer.Transform(p);
+        }
+        return returnValue;
     }
 }

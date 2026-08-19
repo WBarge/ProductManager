@@ -18,6 +18,51 @@
             </summary>
             <returns>IActionResult.</returns>
         </member>
+        <member name="T:ProductManager.Service.Controllers.ProductController">
+            <summary>
+            Controller for crud operations on a single product
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.ProductController._logger">
+            <summary>
+            The logger
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.ProductController._productService">
+            <summary>
+            The product service
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.ProductController},ProductManager.Glue.Interfaces.Services.IProductService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.ProductsController" /> class.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="productService">The product service.</param>
+            <exception cref="T:System.ArgumentNullException">logger</exception>
+            <exception cref="T:System.ArgumentNullException">productService</exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductController.Get(System.Guid)">
+            <summary>
+            Gets the product with full details.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>The product</returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductController.QuickAdd(ProductManager.Service.Models.Request.QuickProductRequest)">
+            <summary>
+            end point which adds the minimum viable product
+            </summary>
+            <param name="request">The request.</param>
+            <returns>IActionResult.</returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductController.DeleteProduct(System.Guid)">
+            <summary>
+            Deletes the product.
+            </summary>
+            <param name="id">The identifier.</param>
+            <returns>IActionResult.</returns>
+        </member>
         <member name="T:ProductManager.Service.Controllers.ProductsController">
             <summary>
             Class ProductsController.
@@ -55,20 +100,6 @@
             The request is a Post method - swagger does not currently support sending data in the body of a Get methods
             </summary>
             <param name="request">The request.</param>
-            <returns>IActionResult.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.QuickAdd(ProductManager.Service.Models.Request.QuickProductRequest)">
-            <summary>
-            end point which adds the minimum viable product
-            </summary>
-            <param name="request">The request.</param>
-            <returns>IActionResult.</returns>
-        </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.DeleteProduct(System.Guid)">
-            <summary>
-            Deletes the product.
-            </summary>
-            <param name="id">The identifier.</param>
             <returns>IActionResult.</returns>
         </member>
         <member name="T:ProductManager.Service.Middleware.UiExceptionHandler">

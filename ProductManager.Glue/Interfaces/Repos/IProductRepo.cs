@@ -54,4 +54,12 @@ public interface IProductRepo
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>Task.</returns>
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Gets the product asynchronous.
+    /// </summary>
+    /// <param name="id">The identifier.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>IProduct.</returns>
+    Task<IFullProduct?> GetProductAsync(Guid id, CancellationToken cancellationToken);
 }
