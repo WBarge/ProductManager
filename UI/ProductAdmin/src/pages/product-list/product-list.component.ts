@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
 import { FilterMetadata, MessageService } from 'primeng/api';
 import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
@@ -29,6 +29,7 @@ import { RouterLink } from '@angular/router';
         InputNumberModule],
     providers: [ProductService, FilterTransformerService],
     templateUrl: './product-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit{

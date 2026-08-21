@@ -1,4 +1,4 @@
-import { Component,OnInit,ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PrimeNGConfig } from 'primeng/api'
 import { MenuItem } from 'primeng/api';
@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
     selector: 'app-root',
     imports: [RouterOutlet, MenubarModule, ToastModule],
     templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
