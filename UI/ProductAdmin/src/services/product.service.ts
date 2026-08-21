@@ -15,11 +15,13 @@ import { Product } from '../models/results/product';
 export class ProductService {
 
 
+  private productsServiceLocation:string;
   private productServiceLocation:string;
   private handleError: HandleError;
 
   constructor(private http: HttpClient,private location:LocationService,httpErrorHandler: ErrorHandlerService) {
-    this.productServiceLocation = this.location.getLocationUrl()+'Products';
+    this.productsServiceLocation = this.location.getLocationUrl()+'Products';
+    this.productServiceLocation = this.location.getLocationUrl()+'Product';
     this.handleError = httpErrorHandler.createHandleError('ProductService');
   }
 
@@ -41,7 +43,7 @@ export class ProductService {
       pageSize: pageSize,
       filters:  filtersAsObject
     };
-    return this.http.post<ProductsListResult>(this.productServiceLocation,request)
+    return this.http.post<ProductsListResult>(this.productsServiceLocation,request)
     .pipe(
       catchError(this.handleError<ProductsListResult>('getProducts'))
     );

@@ -5,6 +5,7 @@ import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 import { ProductService } from '../../services/product.service';
 import { ProductsListResult } from '../../models/results/productsListResult';
 import { FieldsetModule } from 'primeng/fieldset';
+import { ToolbarModule } from 'primeng/toolbar';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule} from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -22,6 +23,7 @@ import { RouterLink } from '@angular/router';
         ButtonModule,
         CurrencyPipe,
         FieldsetModule,
+        ToolbarModule,
         IftaLabelModule,
         InputTextModule,
         FormsModule,
