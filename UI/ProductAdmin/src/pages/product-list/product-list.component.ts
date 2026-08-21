@@ -17,21 +17,19 @@ import { RouterLink } from '@angular/router';
 
 
 @Component({
-  selector: 'app-product-list',
-  standalone: true,
-  imports: [TableModule,
-            ButtonModule,
-            CurrencyPipe,
-            FieldsetModule,
-            FloatLabelModule,
-            InputTextModule,
-            FormsModule,
-            RouterLink,
-            InputNumberModule],
-
-  providers:[ProductService,FilterTransformerService],
-  templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+    selector: 'app-product-list',
+    imports: [TableModule,
+        ButtonModule,
+        CurrencyPipe,
+        FieldsetModule,
+        FloatLabelModule,
+        InputTextModule,
+        FormsModule,
+        RouterLink,
+        InputNumberModule],
+    providers: [ProductService, FilterTransformerService],
+    templateUrl: './product-list.component.html',
+    styleUrl: './product-list.component.css'
 })
 export class ProductListComponent implements OnInit{
   products!:Product[];
