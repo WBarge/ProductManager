@@ -119,8 +119,6 @@ internal static class FilteringEngine
     {
         Expression returnValue = null!;
         Expression propertyExpression = null!;
-        int keyCount = filters.Count;
-        int keySub = 0;
         foreach (string propertyName in filters.Keys)
         {
             IFilterMetaData[] propertyFilters = filters[propertyName];
@@ -152,7 +150,7 @@ internal static class FilteringEngine
                 }
             }
 
-            if (keySub > 0 && keyCount > 1)
+            if (returnValue != null)
             {
                 returnValue = Expression.And(propertyExpression, returnValue);
             }
@@ -160,8 +158,6 @@ internal static class FilteringEngine
             {
                 returnValue = propertyExpression;
             }
-
-            keySub++;
         }
 
         return returnValue;
