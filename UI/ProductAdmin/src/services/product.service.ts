@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service,inject } from '@angular/core';
 import { ErrorHandlerService, HandleError } from './error-handler.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { LocationService } from './location.service';
@@ -9,20 +9,22 @@ import { ProductListRequest } from '../models/requests/product-list-request';
 import { Product } from '../models/results/product';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Service()
 export class ProductService {
-
+  private http=inject(HttpClient);
+  private location=inject(LocationService);
+  private httpErrorHandler=inject( ErrorHandlerService);
 
   private productsServiceLocation:string;
   private productServiceLocation:string;
   private handleError: HandleError;
 
-  constructor(private http: HttpClient,private location:LocationService,httpErrorHandler: ErrorHandlerService) {
+
+
+  constructor() {
     this.productsServiceLocation = this.location.getLocationUrl()+'Products';
     this.productServiceLocation = this.location.getLocationUrl()+'Product';
-    this.handleError = httpErrorHandler.createHandleError('ProductService');
+    this.handleError = this.httpErrorHandler.createHandleError('ProductService');
   }
 
    getProducts( currentPage: number =1 ,

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service,inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
@@ -10,14 +10,14 @@ import { SystemError } from '../models/system-error';
 export type HandleError =
   <T> (operation?: string, result?: T) => (error: HttpErrorResponse) => Observable<T>;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ErrorHandlerService {
 
-  constructor(private messageService: MessageService) { }
+  private messageService = inject(MessageService);
 
-   /** Create curried handleError function that already knows the service name */
+  constructor() { }
+
+   /** Create curried handleError function that already knows the service name aka a factory*/
   createHandleError = (serviceName = '') =>
     <T>(operation = 'operation', result = {} as T) =>
       this.handleError(serviceName, operation, result);

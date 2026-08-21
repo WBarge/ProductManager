@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy,inject } from '@angular/core';
 import {CurrencyPipe} from '@angular/common';
 import { FilterMetadata, MessageService } from 'primeng/api';
 import { ProductService } from '../../services/product.service';
@@ -46,11 +46,14 @@ export class ProductListComponent implements OnInit{
   filters?: {
     [s: string]: FilterMetadata | FilterMetadata[] | undefined;
   };
+
+  private msgService=inject(MessageService);
+  private dataService=inject(ProductService);
+  private filterTransformer=inject(FilterTransformerService);
+
   newProduct: Product;
 
-  constructor(private msgService:MessageService,
-              private dataService:ProductService,
-              private filterTransformer:FilterTransformerService)  {
+  constructor()  {
       this.newProduct = new Product();
     }
 
