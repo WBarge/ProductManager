@@ -1,6 +1,5 @@
 import { Component, OnInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PrimeNGConfig } from 'primeng/api'
 import { MenuItem } from 'primeng/api';
 import { MenubarModule} from 'primeng/menubar';
 import { LocationService } from '../services/location.service';
@@ -17,7 +16,7 @@ export class AppComponent implements OnInit {
   public items: MenuItem[];
   public title: any = "Product Admin";
 
-  constructor (private primengConfig: PrimeNGConfig,private locationService:LocationService,private elementRef: ElementRef,){
+  constructor (private locationService:LocationService,private elementRef: ElementRef,){
     this.items = [
        { label: 'Products', routerLink: ['/products'] },
        { label: 'About', routerLink: ['/about'] }
@@ -25,7 +24,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.primengConfig.ripple = true;
+//      this.primengConfig.ripple = true;
       this.locationService.setLocationUrl(this.elementRef.nativeElement.getAttribute('serviceUrl'));
   }
 }

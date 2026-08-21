@@ -5,7 +5,7 @@ import { TableLazyLoadEvent, TableModule, TablePageEvent } from 'primeng/table';
 import { ProductService } from '../../services/product.service';
 import { ProductsListResult } from '../../models/results/productsListResult';
 import { FieldsetModule } from 'primeng/fieldset';
-import  {FloatLabelModule } from 'primeng/floatlabel';
+import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule} from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
         ButtonModule,
         CurrencyPipe,
         FieldsetModule,
-        FloatLabelModule,
+        IftaLabelModule,
         InputTextModule,
         FormsModule,
         RouterLink,

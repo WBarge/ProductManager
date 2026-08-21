@@ -5,31 +5,31 @@
     <tr>
       <td>
         <br>
-        <p-floatLabel>
+        <p-iftalabel>
           <input id="sku" type="text" pInputText [(ngModel)]="newProduct.sku" />
           <label for="sku">SKU</label>
-        </p-floatLabel>
+        </p-iftalabel>
       </td>
       <td>
         <br>
-        <p-floatLabel>
+        <p-iftalabel>
           <input id="name" type="text" pInputText [(ngModel)]="newProduct.name" />
           <label for="name">Name</label>
-        </p-floatLabel>
+        </p-iftalabel>
       </td>
       <td>
         <br>
-        <p-floatLabel>
+        <p-iftalabel>
           <input id="description" type="text" pInputText [(ngModel)]="newProduct.shortDescription" />
           <label for="description">Quick Description</label>
-        </p-floatLabel>
+        </p-iftalabel>
       </td>
       <td>
         <br>
-        <p-floatLabel>
+        <p-iftalabel>
           <p-inputNumber inputId="price" [(ngModel)]="newProduct.price" mode="currency" currency="USD" locale="en-US" />
           <label for="price">Price</label>
-        </p-floatLabel>
+        </p-iftalabel>
       </td>
       <td>
         <br>
@@ -46,7 +46,6 @@
 [paginator]="true"
 [alwaysShowPaginator]="true"
 [totalRecords]="totalItems"
-[autoLayout]="true"
 [lazy]="true"
 (onLazyLoad)="loadProductsLazy($event)"
 (onPage)="pageChange($event)"
@@ -62,10 +61,10 @@ currentPageReportTemplate="{first}-{last} of {totalRecords}"
     <tr>
       <th>SKU</th>
       <th>Name
-        <p-columnFilter type="text" field="name" display="menu" />
+        <p-column-filter type="text" field="name" display="menu" />
       </th>
       <th>Description
-        <p-columnFilter type="text" field="shortDescription" display="menu" />
+        <p-column-filter type="text" field="shortDescription" display="menu" />
       </th>
       <th>Price</th>
       <th></th>
