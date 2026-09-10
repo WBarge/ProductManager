@@ -2,6 +2,7 @@
 using ProductManager.Business.Models;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Repos;
+using ProductManager.Glue.Interfaces.Services;
 
 namespace ProductManager.Business;
 /// <summary>
@@ -9,7 +10,7 @@ namespace ProductManager.Business;
 /// Implements the <see cref="ICharacteristicService" />
 /// </summary>
 /// <seealso cref="ICharacteristicService" />
-public class CharacteristicService 
+public class CharacteristicService : ICharacteristicService
 {
     /// <summary>
     /// The logger
