@@ -11,15 +11,17 @@
 // <summary></summary>
 // ***********************************************************************
 using ProductManager.Glue.Interfaces.Models;
+using System.Runtime.CompilerServices;
 
-namespace ProductManager.Data.EF.Model
+[assembly:InternalsVisibleTo("ProductManager.Service.Tests")]
+namespace ProductManager.Data.EF.Transformers.InternalModels
 {
     /// <summary>
     /// Class FullProduct.
     /// Implements the <see cref="IFullProduct" />
     /// </summary>
     /// <seealso cref="IFullProduct" />
-    public class FullProduct : IFullProduct
+    internal class FullProduct : IFullProduct
     {
         /// <summary>
         /// 

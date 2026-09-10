@@ -4,7 +4,6 @@ using Moq;
 using ProductManager.Business.Tests.DataFactories;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Repos;
-using ProductManager.Glue.Interfaces.Services;
 
 namespace ProductManager.Business.Tests
 {

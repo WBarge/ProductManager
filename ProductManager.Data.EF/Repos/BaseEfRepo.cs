@@ -98,6 +98,19 @@ public abstract class BaseEfRepo<T> where T : class
     }
 
     /// <summary>
+    /// Find a record by the primary key
+    /// assumes the ids are guids
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    protected virtual async Task<T?> FindByIdAsync(Guid id,CancellationToken token=default)
+    {
+        // ReSharper disable once MethodSupportsCancellation
+        return await DbContext.Set<T>().FindAsync(id, token);
+    }
+
+    /// <summary>
     /// Creates this instance.
     /// </summary>
     /// <returns>T.</returns>
@@ -107,10 +120,11 @@ public abstract class BaseEfRepo<T> where T : class
     /// insert as an asynchronous operation.
     /// </summary>
     /// <param name="entity">The entity.</param>
+    /// <param name="token"></param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    protected virtual async Task InsertAsync(T entity)
+    protected virtual async Task InsertAsync(T entity, CancellationToken token = default)
     {
-        await DbContext.Set<T>().AddAsync(entity);
+        await DbContext.Set<T>().AddAsync(entity,token);
     }
 
     /// <summary>

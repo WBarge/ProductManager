@@ -85,7 +85,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
         p.ShortDescription = product.ShortDescription;
         p.Price = product.Price;
         p.Description = product.Description;
-        await InsertAsync(p);
+        await InsertAsync(p,cancellationToken);
         await SaveAsync(cancellationToken);
         return p.Id;
     }
@@ -116,7 +116,11 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     public async Task<IFullProduct?> GetProductAsync(Guid id, CancellationToken cancellationToken)
     {
         IFullProduct? returnValue = null;
-        Product? p = await DbContext.Products.FirstOrDefaultAsync(p => p.Id == id,cancellationToken);
+        Product? p = await DbContext.Products
+            .Include(x=>x.Characteristics)
+            .Include(x=>x.Options)
+            .Include(x=>x.Reductions)
+            .FirstOrDefaultAsync(p => p.Id == id,cancellationToken);
         if (p.IsNotEmpty())
         {
             returnValue = ProductTransformer.Transform(p);

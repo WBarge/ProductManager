@@ -1,6 +1,7 @@
 ﻿
 
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProductManager.Data.EF.Helpers;
 using ProductManager.Data.EF.Model;
@@ -764,6 +765,32 @@ namespace ProductManager.Data.EF.Tests.Repos
                     p.Should().NotBeNull();
                     p.Deleted.Should().BeTrue();
 
+                }
+            }
+        }
+
+        [Test, Description("Test to retrieve a product with all details")]
+        public async Task GetProductAsync_ReturnsFullProduct_Success()
+        {
+            //note the seeded data does not have any characteristics, options or sells, so we are just testing the retrieval of the product itself
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    // Arrange
+                    Product? existingProduct = await context.Products
+                        .FirstOrDefaultAsync(TestContext.CurrentContext.CancellationToken);
+                    existingProduct.Should().NotBeNull("There should be at least one product in the database.");
+                    ProductRepo sut = new(context);
+                    // Act
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    IFullProduct? result = await sut.GetProductAsync(existingProduct!.Id, CancellationToken.None);
+                    // Assert
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    result.Should().NotBeNull("The method should return a full product.");
+                    result!.Id.Should().Be(existingProduct.Id);
                 }
             }
         }

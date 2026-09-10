@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Reflection.PortableExecutable;
-
-namespace ProductManager.Glue.Interfaces.Models
+﻿namespace ProductManager.Glue.Interfaces.Models
 {
     public interface IFullProduct :IProduct
     {

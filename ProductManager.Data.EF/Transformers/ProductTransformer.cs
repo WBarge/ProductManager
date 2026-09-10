@@ -1,4 +1,5 @@
 ﻿using ProductManager.Data.EF.Model;
+using ProductManager.Data.EF.Transformers.InternalModels;
 using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Transformers

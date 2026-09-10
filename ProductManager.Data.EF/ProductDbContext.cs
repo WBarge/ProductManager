@@ -67,12 +67,26 @@ public class ProductDbContext : DbContext
     /// Gets or sets the characteristics.
     /// </summary>
     /// <value>The characteristics.</value>
-    public DbSet<ProductCharacteristic> Characteristics { get; set; }
+    public DbSet<ProductCharacteristic> ProductCharacteristics { get; set; }
 
     /// <summary>
     /// Gets or sets the sells.
     /// </summary>
     /// <value>The sells.</value>
     public DbSet<ProductSell> Sells { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the collection of characteristic values.
+    /// </summary>
+    /// <remarks>
+    /// This property represents a <see cref="DbSet{TEntity}" /> of <see cref="Characteristic" /> entities.
+    /// It is used to query and save instances of <see cref="Characteristic" /> in the database.
+    /// </remarks>
+    public DbSet<Characteristic> Characteristics { get; set; }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public DbSet<CharacteristicValue> CharacteristicValues { get; set; }
 
 }

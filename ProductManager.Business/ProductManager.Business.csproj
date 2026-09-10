@@ -15,8 +15,4 @@
     <ProjectReference Include="..\ProductManager.Glue\ProductManager.Glue.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

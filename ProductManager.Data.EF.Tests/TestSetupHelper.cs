@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProductManager.Data.EF.Model;
 
@@ -89,6 +88,71 @@ namespace ProductManager.Data.EF.Tests
             context.SaveChanges();
 
         }
+
+        public static void SeedDataForCharacteristics(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ?? throw new InvalidOperationException();
+            // Create Characteristics
+            Characteristic characteristic1 = new Characteristic
+            {
+                Id = Guid.NewGuid(),
+                Name = "Color",
+                Values = new List<CharacteristicValue>
+                {
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Red" },
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Blue" },
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Green" }
+                }
+            };
+            Characteristic characteristic2 = new Characteristic
+            {
+                Id = Guid.NewGuid(),
+                Name = "Size",
+                Values = new List<CharacteristicValue>
+                {
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Small" },
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Medium" },
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Large" }
+                }
+            };
+            Characteristic characteristic3 = new Characteristic
+            {
+                Id = Guid.NewGuid(),
+                Name = "Material",
+                Values = new List<CharacteristicValue>
+                {
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Cotton" },
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Polyester" },
+                    new CharacteristicValue { Id = Guid.NewGuid(), Value = "Wool" }
+                }
+            };
+            // Add Characteristics to the context
+            context.Characteristics.Add(characteristic1);
+            context.Characteristics.Add(characteristic2);
+            context.Characteristics.Add(characteristic3);
+            // Save changes to the database
+            context.SaveChanges();
+        }
+
+        public static void RemoveCharacteristicData(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ?? throw new InvalidOperationException();
+            // Retrieve all Characteristics and their associated CharacteristicValues
+            List<Characteristic> characteristics = context.Characteristics.Include(c => c.Values).ToList();
+            // Remove associated CharacteristicValues first
+            foreach (Characteristic characteristic in characteristics)
+            {
+                if (characteristic.Values!.Any())
+                {
+                    context.CharacteristicValues.RemoveRange(characteristic.Values!);
+                }
+            }
+            // Remove Characteristics
+            context.Characteristics.RemoveRange(characteristics);
+            // Save changes to the database
+            context.SaveChanges();
+        }
+
 
         public static void RemoveData(this IServiceScope serviceScope)
         {

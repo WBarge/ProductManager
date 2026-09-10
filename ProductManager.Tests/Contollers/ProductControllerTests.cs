@@ -1,10 +1,9 @@
-﻿using Castle.Core.Logging;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework.Internal;
 using ProductManager.Data.EF.Model;
+using ProductManager.Data.EF.Transformers.InternalModels;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Controllers;
@@ -62,7 +61,7 @@ namespace ProductManager.Service.Tests.Contollers
                 "test",
                 "P12343",
                 1200.00m,
-                "Full Test", null, null, null);
+                "Full Test", null!, null!, null!);
             productService.Setup(s => s.GetProductAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(product);
 
             var sut = new ProductController(logger.Object, productService.Object);
