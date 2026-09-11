@@ -1,16 +1,16 @@
-﻿using System.Net;
-using System.Reflection;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ProductManager.Service.Controllers;
 using Moq;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
+using ProductManager.Service.Controllers;
 using ProductManager.Service.Models.Request;
 using ProductManager.Service.Tests.DataFactories;
+using System.Net;
+using System.Reflection;
 
-namespace ProductManager.Service.Tests.Contollers
+namespace ProductManager.Service.Tests.Controllers
 {
     [TestFixture, Description("Tests of the ProductsController")]
     public class ProductsControllerTests

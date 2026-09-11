@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using ProductManager.Data.EF.Model;
 using ProductManager.Data.EF.Transformers.InternalModels;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
@@ -10,7 +9,7 @@ using ProductManager.Service.Controllers;
 using ProductManager.Service.Models.Request;
 using System.Net;
 
-namespace ProductManager.Service.Tests.Contollers
+namespace ProductManager.Service.Tests.Controllers
 {
     [TestFixture, Description("Tests of the ProductController")]
 
@@ -54,7 +53,7 @@ namespace ProductManager.Service.Tests.Contollers
             Mock<ILogger<ProductController>> logger = new();
             Mock<IProductService> productService = new();
 
-            var productId = Guid.NewGuid();
+            Guid productId = Guid.NewGuid();
             IFullProduct product = new FullProduct(
                 productId,
                 "Laptop",
@@ -64,7 +63,7 @@ namespace ProductManager.Service.Tests.Contollers
                 "Full Test", null!, null!, null!);
             productService.Setup(s => s.GetProductAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(product);
 
-            var sut = new ProductController(logger.Object, productService.Object);
+            ProductController sut = new ProductController(logger.Object, productService.Object);
             // Act
             IActionResult result = await sut.Get(productId);
 
@@ -84,11 +83,11 @@ namespace ProductManager.Service.Tests.Contollers
             Mock<ILogger<ProductController>> logger = new();
             Mock<IProductService> productService = new();
 
-            var productId = Guid.NewGuid();
+            Guid productId = Guid.NewGuid();
             productService.Setup(s => s.GetProductAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((IFullProduct?)null);
 
-            var sut = new ProductController(logger.Object, productService.Object);
+            ProductController sut = new ProductController(logger.Object, productService.Object);
             // Act
             IActionResult result = await sut.Get(productId);
 

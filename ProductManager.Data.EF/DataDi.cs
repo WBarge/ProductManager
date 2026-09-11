@@ -16,5 +16,6 @@ public static class DataDi
     public static void ConfigureDi(IServiceCollection services)
     {
         services.AddTransient<IProductRepo, ProductRepo>();
+        services.AddTransient<ICharacteristicRepo, CharacteristicRepo>();
     }
 }

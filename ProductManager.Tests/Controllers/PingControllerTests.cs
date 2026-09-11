@@ -1,9 +1,8 @@
-﻿using ProductManager.Service.Controllers;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using ProductManager.Service.Controllers;
 
-
-namespace ProductManager.Service.Tests.Contollers
+namespace ProductManager.Service.Tests.Controllers
 {
 
     [TestFixture, Description("Tests of the PingController")]

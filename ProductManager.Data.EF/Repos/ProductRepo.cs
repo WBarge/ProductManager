@@ -36,7 +36,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
         int pageNumber = 1, int pageSize = 10, CancellationToken cancellationToken = default)
     {
         filterCriteria ??= new Dictionary<string, IFilterMetaData[]>();
-        var list = new IFilterMetaData[1];
+        IFilterMetaData[] list = new IFilterMetaData[1];
         list[0] = new FilterCriteria(){SearchValue = "False",
             MatchMode = FilteringEngine.EQUALS_COMPARISON,
             LogicalOperator = FilteringEngine.AND_LOGICAL_OPERATOR};
@@ -79,7 +79,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task<Guid> AddMinimumProductAsync(IProduct product,CancellationToken cancellationToken = default)
     {
-        var p = Create();
+        Product p = Create();
         p.Name = product.Name;
         p.Sku = product.Sku;
         p.ShortDescription = product.ShortDescription;
@@ -98,7 +98,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     /// <returns>A Task representing the asynchronous operation.</returns>
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var p = await this.DbContext.Products.FirstAsync(p => p.Id == id, cancellationToken: cancellationToken);
+        Product p = await this.DbContext.Products.FirstAsync(p => p.Id == id, cancellationToken: cancellationToken);
         if (p.IsNotEmpty())
         {
             p.Deleted = true;

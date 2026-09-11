@@ -72,5 +72,16 @@ namespace ProductManager.Glue.Interfaces.Repos
         /// <c>true</c> if the record was successfully deleted; otherwise, <c>false</c>.
         /// </returns>
         Task<bool> Delete(Guid id,CancellationToken token);
+
+        /// <summary>
+        /// Gets the full characteristic information by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the characteristic to retrieve.</param>
+        /// <param name="token">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains the full characteristic information.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken token);
     }
 }

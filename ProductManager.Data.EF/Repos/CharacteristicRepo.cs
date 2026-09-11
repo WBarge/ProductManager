@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductManager.Data.EF.Model;
 using ProductManager.Data.EF.Transformers;
+using ProductManager.Data.EF.Transformers.InternalModels;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Repos;
+using System.Reflection.PortableExecutable;
 
 namespace ProductManager.Data.EF.Repos
 {
@@ -81,7 +83,7 @@ namespace ProductManager.Data.EF.Repos
                 throw new ArgumentNullException(nameof(recordToAdd));
             }
 
-            var entity = new Characteristic { Id = recordToAdd.Id, Name = recordToAdd.Name };
+            Characteristic entity = new Characteristic { Id = recordToAdd.Id, Name = recordToAdd.Name };
 
             await InsertAsync(entity,token);
             await SaveAsync(token);
@@ -151,6 +153,27 @@ namespace ProductManager.Data.EF.Repos
             base.Delete(recordToDelete);
             await SaveAsync(token);
             return true;
+        }
+
+
+        /// <summary>
+        /// Gets the full characteristic information by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the characteristic to retrieve.</param>
+        /// <param name="token">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains the full characteristic information.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException"></exception>
+        public async Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken token)
+        {
+            Characteristic? characteristic = await FindByIdAsync(id, token);
+            if (characteristic == null)
+            {
+                throw new KeyNotFoundException($"Characteristic with ID {id} not found.");
+            }
+            IFullCharacteristic fullCharacteristic = CharacteristicTransformer.Transform(characteristic)!;
+            return fullCharacteristic;
         }
     }
 }

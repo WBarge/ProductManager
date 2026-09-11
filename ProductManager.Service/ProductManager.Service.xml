@@ -4,6 +4,73 @@
         <name>ProductManager.Service</name>
     </assembly>
     <members>
+        <member name="T:ProductManager.Service.Controllers.CharacteristicController">
+            <summary>
+            Represents the characteristic controller.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.CharacteristicController},ProductManager.Glue.Interfaces.Services.ICharacteristicService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.CharacteristicController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="characteristicService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicController.GetCharacteristic(System.Guid)">
+            <summary>
+            Gets the characteristic by ID.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicController.CreateCharacteristic(System.String)">
+            <summary>
+            Creates a new characteristic.
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProductManager.Service.Controllers.CharacteristicsController">
+            <summary>
+            Represents the characteristics controller.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicsController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.CharacteristicsController},ProductManager.Glue.Interfaces.Services.ICharacteristicService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.CharacteristicsController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="characteristicService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicsController.GetAllCharacteristics">
+            <summary>
+            Gets all characteristics.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:ProductManager.Service.Controllers.CharacteristicValueController">
+            <summary>
+            Represents a controller for managing characteristic values.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicValueController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.CharacteristicValueController},ProductManager.Glue.Interfaces.Services.ICharacteristicService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.CharacteristicValueController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="characteristicService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicValueController.Post(System.Guid,System.String)">
+            <summary>
+            Adds a value to a characteristic
+            </summary>
+            <param name="id"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
         <member name="T:ProductManager.Service.Controllers.PingController">
             <summary>
             Class PingController.

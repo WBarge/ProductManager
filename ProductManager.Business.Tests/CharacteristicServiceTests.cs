@@ -25,15 +25,14 @@ namespace ProductManager.Business.Tests
         public async Task GetAllCharacteristicsAsync_ReturnsAllCharacteristics()
         {
             // Arrange
-            var mockCharacteristics = new List<IFullCharacteristic>
+            List<IFullCharacteristic> mockCharacteristics = new List<IFullCharacteristic>
             {
-                new Mock<IFullCharacteristic>().Object,
-                new Mock<IFullCharacteristic>().Object
+                new Mock<IFullCharacteristic>().Object, new Mock<IFullCharacteristic>().Object
             };
             _repoMock.Setup(repo => repo.GetAll(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mockCharacteristics);
             // Act
-            var result = await _sut.GetAllCharacteristicsAsync();
+            IEnumerable<IFullCharacteristic> result = await _sut.GetAllCharacteristicsAsync();
             // Assert
             result.Should().BeEquivalentTo(mockCharacteristics);
             _repoMock.Verify(repo => repo.GetAll(It.IsAny<CancellationToken>()), Times.Once);
@@ -43,7 +42,7 @@ namespace ProductManager.Business.Tests
         public async Task CreateCharacteristicAsync_CreatesNewCharacteristic()
         {
             // Arrange
-            var characteristicId = Guid.NewGuid();
+            Guid characteristicId = Guid.NewGuid();
             _repoMock.Setup(repo => repo.CreateInstance())
                 .Returns(new Mock<ICharacteristic>().Object);
             _repoMock.Setup(repo => repo.Add(It.IsAny<ICharacteristic>(), It.IsAny<CancellationToken>()));
@@ -58,7 +57,7 @@ namespace ProductManager.Business.Tests
         public async Task DeleteCharacteristicAsync_DeletesCharacteristicById()
         {
             // Arrange
-            var characteristicId = Guid.NewGuid();
+            Guid characteristicId = Guid.NewGuid();
             _repoMock.Setup(repo => repo.Delete(characteristicId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
             // Act
@@ -71,14 +70,53 @@ namespace ProductManager.Business.Tests
         public async Task AddValueToCharacteristicAsync_AddsValueToCharacteristic()
         {
             // Arrange
-            var characteristicId = Guid.NewGuid();
-            var value = "Test Value";
+            Guid characteristicId = Guid.NewGuid();
+            string value = "Test Value";
             _repoMock.Setup(repo => repo.AddValue(It.IsAny<ICharacteristicValue>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
             // Act
             await _sut.AddValueToCharacteristicAsync(characteristicId, value);
             // Assert
-            _repoMock.Verify(repo => repo.AddValue(It.Is<ICharacteristicValue>(v => v.CharacteristicId == characteristicId && v.Value == value), It.IsAny<CancellationToken>()), Times.Once);
+            _repoMock.Verify(
+                repo => repo.AddValue(
+                    It.Is<ICharacteristicValue>(v => v.CharacteristicId == characteristicId && v.Value == value),
+                    It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Test, Description("GetFullCharacteristicAsync should return the full characteristic by ID")]
+        public async Task GetFullCharacteristicAsync_ReturnsFullCharacteristicById()
+        {
+            // Arrange
+            Guid characteristicId = Guid.NewGuid();
+            IFullCharacteristic mockCharacteristic = new Mock<IFullCharacteristic>().Object;
+            _repoMock
+                .Setup(repo => repo.GetFullCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(mockCharacteristic);
+            // Act
+            IFullCharacteristic result = await _sut.GetFullCharacteristicAsync(characteristicId);
+            // Assert
+            result.Should().Be(mockCharacteristic);
+            _repoMock.Verify(
+                repo => repo.GetFullCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()),
+                Times.Once);
+        }
+
+        [Test, Description("GetFullCharacteristicAsync should throw an exception when the characteristic is not found")]
+        public void GetFullCharacteristicAsync_ThrowsException_WhenCharacteristicNotFound()
+        {
+            // Arrange
+            Guid characteristicId = Guid.NewGuid();
+            _repoMock
+                .Setup(repo => repo.GetFullCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new KeyNotFoundException($"Characteristic with ID {characteristicId} not found."));
+            // Act
+            Func<Task> act = async () => await _sut.GetFullCharacteristicAsync(characteristicId);
+            // Assert
+            act.Should().ThrowAsync<KeyNotFoundException>()
+                .WithMessage($"Characteristic with ID {characteristicId} not found.");
+            _repoMock.Verify(
+                repo => repo.GetFullCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()),
+                Times.Once);
         }
     }
 }

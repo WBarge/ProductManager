@@ -15,5 +15,6 @@ public static class BusinessDi
     public static void ConfigureDi(IServiceCollection services)
     {
         services.AddTransient<IProductService, ProductService>();
+        services.AddTransient<ICharacteristicService, CharacteristicService>();
     }
 }

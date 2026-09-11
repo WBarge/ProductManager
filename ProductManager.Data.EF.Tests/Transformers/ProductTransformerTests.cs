@@ -12,7 +12,7 @@ namespace ProductManager.Data.EF.Tests.Transformers
         public void Transform_NullInput_ReturnsNull()
         {
             // Act
-            var result = ProductTransformer.Transform(null!);
+            IFullProduct? result = ProductTransformer.Transform(null!);
             // Assert
             result.Should().BeNull();
         }
@@ -22,7 +22,7 @@ namespace ProductManager.Data.EF.Tests.Transformers
         {
             // Arrange
             Guid id = Guid.NewGuid();
-            var product = new Product
+            Product product = new Product
             {
                 Id = id,
                 Name = "Test Product",
@@ -42,7 +42,7 @@ namespace ProductManager.Data.EF.Tests.Transformers
         {
             // Arrange
             Guid id = Guid.NewGuid();
-            var product = new Product
+            Product product = new Product
             {
                 Id = id,
                 Name = null!,
@@ -62,7 +62,7 @@ namespace ProductManager.Data.EF.Tests.Transformers
         {
             // Arrange
             Guid id = Guid.NewGuid();
-            var product = new Product
+            Product product = new Product
             {
                 Id = id,
                 Name = "Free Product",
@@ -82,7 +82,7 @@ namespace ProductManager.Data.EF.Tests.Transformers
         {
             // Arrange
             Guid id = Guid.NewGuid();
-            var product = new Product
+            Product product = new Product
             {
                 Id = id,
                 Name = "Discounted Product",

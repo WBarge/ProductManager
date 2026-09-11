@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using ProductManager.Data.EF.Model;
 using ProductManager.Data.EF.Transformers;
+using ProductManager.Glue.Interfaces.Models;
 
 namespace ProductManager.Data.EF.Tests.Transformers
 {
@@ -11,7 +12,7 @@ namespace ProductManager.Data.EF.Tests.Transformers
         public void Transform_NullInput_ReturnsNull()
         {
             // Act
-            var result = CharacteristicTransformer.Transform(null!);
+            IFullCharacteristic? result = CharacteristicTransformer.Transform(null!);
             // Assert
             result.Should().BeNull();
         }
@@ -21,14 +22,14 @@ namespace ProductManager.Data.EF.Tests.Transformers
         {
             // Arrange
             Guid id = Guid.NewGuid();
-            var characteristic = new Characteristic
+            Characteristic characteristic = new Characteristic
             {
                 Id = id,
                 Name = "EmptyCharacteristic",
                 Values = null
             };
             // Act
-            var result = CharacteristicTransformer.Transform(characteristic);
+            IFullCharacteristic? result = CharacteristicTransformer.Transform(characteristic);
             // Assert
             result.Should().NotBeNull();
             result!.Id.Should().Be(characteristic.Id);
@@ -41,19 +42,19 @@ namespace ProductManager.Data.EF.Tests.Transformers
             // Arrange
             Guid id1 = Guid.NewGuid();
             Guid id2 = Guid.NewGuid();
-            var characteristicValues = new List<CharacteristicValue>
+            List<CharacteristicValue> characteristicValues = new List<CharacteristicValue>
             {
                 new CharacteristicValue { Id = id1, Value = "Value1" },
                 new CharacteristicValue { Id = id2, Value = "Value2" }
             };
-            var characteristic = new Characteristic
+            Characteristic characteristic = new Characteristic
             {
                 Id = id2,
                 Name = "CharacteristicWithValues",
                 Values = characteristicValues
             };
             // Act
-            var result = CharacteristicTransformer.Transform(characteristic);
+            IFullCharacteristic? result = CharacteristicTransformer.Transform(characteristic);
             // Assert
             result.Should().NotBeNull();
             result!.Id.Should().Be(characteristic.Id);
@@ -66,14 +67,14 @@ namespace ProductManager.Data.EF.Tests.Transformers
         public void Transform_EmptyValuesList_ReturnsFullCharacteristicWithEmptyValues()
         {
             // Arrange
-            var characteristic = new Characteristic
+            Characteristic characteristic = new Characteristic
             {
                 Id = Guid.NewGuid(),
                 Name = "EmptyValuesList",
                 Values = new List<CharacteristicValue>()
             };
             // Act
-            var result = CharacteristicTransformer.Transform(characteristic);
+            IFullCharacteristic? result = CharacteristicTransformer.Transform(characteristic);
             // Assert
             result.Should().NotBeNull();
             result!.Id.Should().Be(characteristic.Id);

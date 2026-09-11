@@ -89,4 +89,16 @@ public class CharacteristicService : ICharacteristicService
         };
         await _repo.AddValue(newValue, cancellationToken);
     }
+
+    /// <summary>
+    /// Gets the full characteristic information by its unique identifier as an asynchronous operation.
+    /// </summary>
+    /// <param name="id">The unique identifier of the characteristic to retrieve.</param>
+    /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the full characteristic information.</returns>
+    public async Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug($"GetFullCharacteristicAsync called for ID: {id}");
+        return await _repo.GetFullCharacteristicAsync(id, cancellationToken);
+    }
 }

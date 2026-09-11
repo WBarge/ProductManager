@@ -21,7 +21,8 @@ namespace ProductManager.Data.EF.Tests.Repos
         [SetUp]
         public void Setup()
         {
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.SeedDataForCharacteristics();
             }
@@ -30,7 +31,8 @@ namespace ProductManager.Data.EF.Tests.Repos
         [TearDown]
         public void TearDown()
         {
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.RemoveCharacteristicData();
             }
@@ -45,7 +47,8 @@ namespace ProductManager.Data.EF.Tests.Repos
         [Test, Description("Test required context object")]
         public void Constructor_RequiredContext_Success()
         {
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
@@ -58,14 +61,16 @@ namespace ProductManager.Data.EF.Tests.Repos
         [Test, Description("Test to retrieve all characteristics")]
         public async Task GetAll_ReturnsAllCharacteristics_Success()
         {
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     CharacteristicRepo sut = new(context);
                     IEnumerable<IFullCharacteristic> results = await sut.GetAll(CancellationToken.None);
                     results.Should().NotBeEmpty("This test should return all characteristics seeded in the database.");
-                    results.Count().Should().Be(context.Characteristics.Count(), "The query should return the same record count as the dbSet.");
+                    results.Count().Should().Be(context.Characteristics.Count(),
+                        "The query should return the same record count as the dbSet.");
                 }
             }
         }
@@ -74,7 +79,8 @@ namespace ProductManager.Data.EF.Tests.Repos
         public async Task Add_AddsNewCharacteristic_Success()
         {
             // Create the initial service scope and context
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
@@ -90,10 +96,13 @@ namespace ProductManager.Data.EF.Tests.Repos
                     result.Should().NotBeNull();
                 }
             }
+
             // Create a new service scope and context to validate the changes
-            using (IServiceScope validationScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope validationScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                using (ProductDbContext validationContext = validationScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                using (ProductDbContext validationContext =
+                       validationScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     // Validate that the new characteristic exists in the database
                     validationContext.Characteristics
@@ -108,7 +117,8 @@ namespace ProductManager.Data.EF.Tests.Repos
         public async Task AddValue_AddsNewCharacteristicValue_Success()
         {
             // Create the initial service scope and context
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
@@ -118,8 +128,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     Characteristic existingCharacteristic = context.Characteristics.First();
                     ICharacteristicValue newValue = new CharacteristicValue
                     {
-                        CharacteristicId = existingCharacteristic.Id,
-                        Value = "New Value"
+                        CharacteristicId = existingCharacteristic.Id, Value = "New Value"
                     };
                     // Add the new characteristic value
                     bool result = await sut.AddValue(newValue, CancellationToken.None);
@@ -127,10 +136,13 @@ namespace ProductManager.Data.EF.Tests.Repos
                     result.Should().BeTrue();
                 }
             }
+
             // Create a new service scope and context to validate the changes
-            using (IServiceScope validationScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope validationScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                using (ProductDbContext validationContext = validationScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                using (ProductDbContext validationContext =
+                       validationScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     // Validate that the new characteristic value exists in the database
                     validationContext.CharacteristicValues
@@ -146,7 +158,8 @@ namespace ProductManager.Data.EF.Tests.Repos
         {
             Guid existingID = Guid.Empty;
             // Create the initial service scope and context
-            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
@@ -161,17 +174,69 @@ namespace ProductManager.Data.EF.Tests.Repos
                     result.Should().BeTrue();
                 }
             }
+
             // Create a new service scope and context to validate the changes
-            using (IServiceScope validationScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            using (IServiceScope validationScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                using (ProductDbContext validationContext = validationScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                using (ProductDbContext validationContext =
+                       validationScope.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
                     // Validate that the characteristic no longer exists in the database
-                    validationContext.Characteristics.FirstOrDefault(c=>c.Id == existingID)
+                    validationContext.Characteristics.FirstOrDefault(c => c.Id == existingID)
                         .Should()
                         .BeNull("The characteristic should be removed from the database.");
                 }
             }
         }
+
+        [Test, Description("Test to retrieve a full characteristic by ID")]
+        public async Task GetFullCharacteristicAsync_ReturnsFullCharacteristic_Success()
+        {
+            Guid existingID;
+            // Create the initial service scope and context
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    // Get an existing characteristic
+                    Characteristic existingCharacteristic = context.Characteristics.Include(c => c.Values).First();
+                    existingID = existingCharacteristic.Id;
+                    // Create the repository
+                    CharacteristicRepo sut = new(context);
+                    // Retrieve the full characteristic
+                    IFullCharacteristic result =
+                        await sut.GetFullCharacteristicAsync(existingID, CancellationToken.None);
+                    // Assert the result is not null and matches the expected data
+                    result.Should().NotBeNull();
+                    result.Id.Should().Be(existingID);
+                    result.Name.Should().Be(existingCharacteristic.Name);
+                    result.Values.Should().BeEquivalentTo(existingCharacteristic.Values);
+                }
+            }
+        }
+
+        [Test, Description("Test to retrieve a full characteristic by ID that does not exist")]
+        public void GetFullCharacteristicAsync_ThrowsKeyNotFoundException_WhenCharacteristicNotFound()
+        {
+            Guid nonExistentID = Guid.NewGuid();
+            // Create the initial service scope and context
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    // Create the repository
+                    CharacteristicRepo sut = new(context);
+                    // Act & Assert
+                    Func<Task> act = async () =>
+                        await sut.GetFullCharacteristicAsync(nonExistentID, CancellationToken.None);
+                    act.Should().ThrowAsync<KeyNotFoundException>()
+                        .WithMessage($"Characteristic with ID {nonExistentID} not found.");
+                }
+            }
+        }
+
     }
 }
