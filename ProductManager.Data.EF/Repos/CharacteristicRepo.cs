@@ -167,7 +167,9 @@ namespace ProductManager.Data.EF.Repos
         /// <exception cref="KeyNotFoundException"></exception>
         public async Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken token)
         {
-            Characteristic? characteristic = await FindByIdAsync(id, token);
+            Characteristic? characteristic = await DbContext.Characteristics
+                .Include(c => c.Values)
+                .FirstOrDefaultAsync(c => c.Id == id, token);
             if (characteristic == null)
             {
                 throw new KeyNotFoundException($"Characteristic with ID {id} not found.");

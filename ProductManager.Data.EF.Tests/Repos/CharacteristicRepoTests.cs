@@ -194,25 +194,37 @@ namespace ProductManager.Data.EF.Tests.Repos
         public async Task GetFullCharacteristicAsync_ReturnsFullCharacteristic_Success()
         {
             Guid existingID;
-            // Create the initial service scope and context
-            using (IServiceScope serviceScope =
-                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            string expectedName;
+            int expectedValueCount;
+
+            // Step 1: Get an ID from one context
+            using (IServiceScope scope1 = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                using (ProductDbContext context1 = scope1.ServiceProvider.GetRequiredService<ProductDbContext>())
                 {
-                    // Get an existing characteristic
-                    Characteristic existingCharacteristic = context.Characteristics.Include(c => c.Values).First();
-                    existingID = existingCharacteristic.Id;
-                    // Create the repository
-                    CharacteristicRepo sut = new(context);
+                    Characteristic characteristic = context1.Characteristics.Include(c => c.Values).First();
+                    existingID = characteristic.Id;
+                    expectedName = characteristic.Name;
+                    expectedValueCount = characteristic.Values.Count;
+                }
+            }
+
+            // Step 2: Use a fresh context for the repository call to ensure values are loaded correctly
+            using (IServiceScope scope2 = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context2 = scope2.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    CharacteristicRepo sut = new(context2);
+                    
                     // Retrieve the full characteristic
-                    IFullCharacteristic result =
-                        await sut.GetFullCharacteristicAsync(existingID, CancellationToken.None);
-                    // Assert the result is not null and matches the expected data
+                    IFullCharacteristic result = await sut.GetFullCharacteristicAsync(existingID, CancellationToken.None);
+                    
+                    // Assert
                     result.Should().NotBeNull();
                     result.Id.Should().Be(existingID);
-                    result.Name.Should().Be(existingCharacteristic.Name);
-                    result.Values.Should().BeEquivalentTo(existingCharacteristic.Values);
+                    result.Name.Should().Be(expectedName);
+                    result.Values.Should().NotBeNull();
+                    result.Values.Count().Should().Be(expectedValueCount, "Values should be loaded from the database even in a fresh context");
                 }
             }
         }
