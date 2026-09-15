@@ -22,7 +22,11 @@ namespace ProductManager.Data.EF.Configuration
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(Characteristic.NAME_MAX_SIZE);
-            
+            builder.Property(p => p.Created)
+                .ValueGeneratedOnAdd();
+            builder.Property(p => p.Modified)
+                .ValueGeneratedOnUpdate();
+
             builder.HasMany(e => e.Values)
                 .WithOne(e => e.Characteristic)
                 .HasForeignKey(e => e.CharacteristicId);

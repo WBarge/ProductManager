@@ -93,7 +93,7 @@ namespace ProductManager.Service.Tests.Controllers
 
             ProductsController sut = new(logger.Object, productService.Object);
 
-            ProductListRequest request = new()
+            ListRequest request = new()
             {
                 Page = 1,
                 PageSize = 1,

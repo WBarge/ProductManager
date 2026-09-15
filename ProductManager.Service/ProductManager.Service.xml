@@ -71,6 +71,92 @@
             <param name="value"></param>
             <returns></returns>
         </member>
+        <member name="T:ProductManager.Service.Controllers.OptionController">
+            <summary>
+            Represents the Option controller.
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.OptionController._logger">
+            <summary>
+            The logger
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.OptionController._optionService">
+            <summary>
+            The option service
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.OptionController},ProductManager.Glue.Interfaces.Services.IOptionService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.OptionController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="optionService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionController.Get(System.Guid)">
+            <summary>
+            Gets an option by its ID.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionController.Post(ProductManager.Service.Models.Request.OptionRequest)">
+            <summary>
+            Creates a new option.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionController.Put(ProductManager.Service.Models.Request.OptionRequest)">
+            <summary>
+            Updates an existing option.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionController.Delete(System.Guid)">
+            <summary>
+            Deletes an existing option.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:ProductManager.Service.Controllers.OptionsController">
+            <summary>
+            Represents the Options controller.
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.OptionsController.DATA_SIZE">
+            <summary>
+            The data size
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.OptionsController._logger">
+            <summary>
+            The logger
+            </summary>
+        </member>
+        <member name="F:ProductManager.Service.Controllers.OptionsController._optionService">
+            <summary>
+            The option service
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionsController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.OptionsController},ProductManager.Glue.Interfaces.Services.IOptionService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.OptionsController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="optionService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.OptionsController.GetOptions(ProductManager.Service.Models.Request.ListRequest)">
+            <summary>
+            Gets a list of options.
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="T:ProductManager.Service.Controllers.PingController">
             <summary>
             Class PingController.
@@ -161,7 +247,7 @@
             <exception cref="T:System.ArgumentNullException">logger</exception>
             <exception cref="T:System.ArgumentNullException">productService</exception>
         </member>
-        <member name="M:ProductManager.Service.Controllers.ProductsController.GetProducts(ProductManager.Service.Models.Request.ProductListRequest)">
+        <member name="M:ProductManager.Service.Controllers.ProductsController.GetProducts(ProductManager.Service.Models.Request.ListRequest)">
             <summary>
             Gets the products using paging
             The request is a Post method - swagger does not currently support sending data in the body of a Get methods
@@ -237,28 +323,53 @@
             </summary>
             <value>The logical operator.</value>
         </member>
-        <member name="T:ProductManager.Service.Models.Request.ProductListRequest">
+        <member name="T:ProductManager.Service.Models.Request.ListRequest">
             <summary>
             Class ProductListRequest.
             </summary>
         </member>
-        <member name="P:ProductManager.Service.Models.Request.ProductListRequest.Page">
+        <member name="P:ProductManager.Service.Models.Request.ListRequest.Page">
             <summary>
             Gets or sets the page.
             </summary>
             <value>The page.</value>
         </member>
-        <member name="P:ProductManager.Service.Models.Request.ProductListRequest.PageSize">
+        <member name="P:ProductManager.Service.Models.Request.ListRequest.PageSize">
             <summary>
             Gets or sets the size of the page.
             </summary>
             <value>The size of the page.</value>
         </member>
-        <member name="P:ProductManager.Service.Models.Request.ProductListRequest.Filters">
+        <member name="P:ProductManager.Service.Models.Request.ListRequest.Filters">
             <summary>
             Gets or sets the filters.
             </summary>
             <value>The filters.</value>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.OptionRequest">
+            <summary>
+            Represents the request model for an option.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.OptionRequest.Id">
+            <summary>
+            Gets or sets the identifier of the option.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.OptionRequest.Name">
+            <summary>
+            Gets or sets the name of the option.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.OptionRequest.Description">
+            <summary>
+            Gets or sets the description of the option.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.OptionRequest.Price">
+            <summary>
+            Gets or sets the price of the option.
+            </summary>
         </member>
         <member name="T:ProductManager.Service.Models.Request.QuickProductRequest">
             <summary>
@@ -346,7 +457,7 @@
             Class FilterTransformers.
             </summary>
         </member>
-        <member name="M:ProductManager.Service.Models.Transformers.FilterTransformers.TransformFilters(ProductManager.Service.Models.Request.ProductListRequest)">
+        <member name="M:ProductManager.Service.Models.Transformers.FilterTransformers.TransformFilters(ProductManager.Service.Models.Request.ListRequest)">
             <summary>
             Transforms the filters.
             </summary>

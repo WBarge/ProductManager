@@ -51,6 +51,14 @@ export class ProductService {
     );
   }
 
+  getProductById(productId:string):Observable<Product>{
+    var requestURl = this.productServiceLocation+'/'+productId;
+    return this.http.get<Product>(requestURl)
+    .pipe(
+      catchError(this.handleError<Product>('getProductById'))
+    );
+  }
+
   quickAdd(newProduct:Product):Observable<any>{
     return this.http.post(this.productServiceLocation+'/QuickAdd',newProduct)
     .pipe(

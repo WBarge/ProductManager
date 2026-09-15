@@ -1,2 +1,66 @@
-<p>product works!</p>
-<div> {{pId}} is the id value</div>
+<p-splitter class="product-splitter">
+  <p-splitter-panel class="form-panel">
+    <div class="field">
+      <label for="name">Name</label>
+      <input
+        id="name"
+        type="text"
+        pInputText
+        placeholder="Name"
+        [ngModel]="_productObj?.name"
+        (ngModelChange)="_productObj && (_productObj.name = $event)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="sku">SKU</label>
+      <input
+        id="sku"
+        type="text"
+        pInputText
+        placeholder="SKU"
+        [ngModel]="_productObj?.sku"
+        (ngModelChange)="_productObj && (_productObj.sku = $event)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="quickDescription">Quick Description</label>
+      <input
+        id="quickDescription"
+        type="text"
+        pInputText
+        placeholder="Quick Description"
+        [ngModel]="_productObj?.shortDescription"
+        (ngModelChange)="_productObj && (_productObj.shortDescription = $event)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="price">Price</label>
+      <p-inputnumber
+        inputId="price"
+        placeholder="Price"
+        [ngModel]="_productObj?.price"
+        (ngModelChange)="_productObj && (_productObj.price = $event)"
+        mode="currency"
+        currency="USD"
+        locale="en-US"
+      />
+    </div>
+
+    <div class="field">
+      <label for="description">Description</label>
+      <textarea rows="5" cols="30" pTextarea
+        id="description"
+        placeholder="Full Description"
+        [ngModel]="_productObj?.description"
+        (ngModelChange)="_productObj && (_productObj.description = $event)"></textarea>
+    </div>
+  </p-splitter-panel>
+
+  <p-splitter-panel class="form-panel">
+    <!-- second panel content -->
+  </p-splitter-panel>
+</p-splitter>
+<button type="button" pButton (click)="submit(_productObj!)">Done</button>

@@ -62,10 +62,10 @@ namespace ProductManager.Service.Controllers
         /// <returns>IActionResult.</returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProducts([FromBody] ProductListRequest? request)
+        public async Task<IActionResult> GetProducts([FromBody] ListRequest? request)
         {
             _logger.LogDebug("request for short product list");
-            request ??= new ProductListRequest();
+            request ??= new ListRequest();
 
             if (request.Page is null or < 1 )
             {
@@ -86,9 +86,6 @@ namespace ProductManager.Service.Controllers
                 return new OkObjectResult(returnValue);
             
         }
-
-      
-       
 
     }
 }

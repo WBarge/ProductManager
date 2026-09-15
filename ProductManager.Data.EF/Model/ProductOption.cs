@@ -35,58 +35,10 @@ public class ProductOption : IProductOption
     public Guid ProductId { get; set; }
 
     /// <summary>
-    /// The name backing field
+    /// Gets or sets the option identifier.
     /// </summary>
-    private string _name = string.Empty;
-    /// <summary>
-    /// The name maximum size
-    /// </summary>
-    internal const int NAME_MAX_SIZE = 128;
-    /// <summary>
-    /// Gets or sets the name.
-    /// the name of the product
-    /// Is limited to 128 characters - will be silently truncated if longer
-    /// </summary>
-    /// <value>The name.</value>
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            _name = value.Truncate(NAME_MAX_SIZE);
-        }
-    }
-
-    /// <summary>
-    /// The short description backing field
-    /// </summary>
-    private string _shortDescription = string.Empty;
-    /// <summary>
-    /// The short description maximum size
-    /// </summary>
-    internal const int SHORT_DESCRIPTION_MAX_SIZE = 256;
-    /// <summary>
-    /// Gets or sets the short description.
-    /// A short description for the product
-    /// Is limited to 256 characters - will be silently truncated if longer
-    /// </summary>
-    /// <value>The short description.</value>
-    public string ShortDescription
-    {
-        get => _shortDescription;
-        set
-        {
-            _shortDescription = value.Truncate(SHORT_DESCRIPTION_MAX_SIZE);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the description.
-    /// The full description of the product.
-    /// Is optional
-    /// </summary>
-    /// <value>The description.</value>
-    public string? Description { get; set; }
+    /// <value>The option identifier.</value>
+    public Guid OptionId { get; set; }
 
     /// <summary>
     /// Gets or sets the price.
@@ -121,4 +73,10 @@ public class ProductOption : IProductOption
     /// </summary>
     /// <value>The product.</value>
     public Product Product { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the option.
+    /// </summary>
+    /// <value>The option.</value>
+    public Option Option { get; set; } = null!;
 }

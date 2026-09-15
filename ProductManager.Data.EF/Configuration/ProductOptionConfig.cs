@@ -34,15 +34,8 @@ internal class ProductOptionConfig:IEntityTypeConfiguration<ProductOption>
         builder.Property(p => p.Id)
             .IsRequired()
             .ValueGeneratedOnAdd();
-        builder.Property(p => p.Name)
-            .IsRequired()
-            .HasMaxLength(ProductOption.NAME_MAX_SIZE)
-            .HasField("_name");
-        builder.Property(p => p.ShortDescription)
-            .IsRequired()
-            .HasMaxLength(ProductOption.SHORT_DESCRIPTION_MAX_SIZE)
-            .HasField("_shortDescription");
-        builder.Property(p => p.Description);
+        builder.Property(p=>p.OptionId)
+            .IsRequired();
         builder.Property(p => p.Price)
             .HasPrecision(10, 2);
         builder.Property(p => p.Deleted)
@@ -54,5 +47,7 @@ internal class ProductOptionConfig:IEntityTypeConfiguration<ProductOption>
             .ValueGeneratedOnUpdate();
         builder.HasOne<Product>(po => po.Product)
             .WithMany(p => p.Options);
+        builder.HasOne<Option>(po => po.Option)
+            .WithMany();
     }
 }

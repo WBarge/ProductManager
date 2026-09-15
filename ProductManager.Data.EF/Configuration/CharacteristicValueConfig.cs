@@ -25,6 +25,10 @@ namespace ProductManager.Data.EF.Configuration
 
             builder.Property(cv => cv.CharacteristicId)
                 .IsRequired();
+            builder.Property(p => p.Created)
+                .ValueGeneratedOnAdd();
+            builder.Property(p => p.Modified)
+                .ValueGeneratedOnUpdate();
 
             builder.HasOne(cv => cv.Characteristic)
                 .WithMany(c => c.Values)

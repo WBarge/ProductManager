@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProductManager.Data.EF;
 
@@ -11,9 +12,11 @@ using ProductManager.Data.EF;
 namespace ProductManager.Data.EF.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    partial class ProductDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260915161044_StandAloneOptions")]
+    partial class StandAloneOptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -227,8 +230,6 @@ namespace ProductManager.Data.EF.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OptionId");
-
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductOption", (string)null);
@@ -297,19 +298,11 @@ namespace ProductManager.Data.EF.Migrations
 
             modelBuilder.Entity("ProductManager.Data.EF.Model.ProductOption", b =>
                 {
-                    b.HasOne("ProductManager.Data.EF.Model.Option", "Option")
-                        .WithMany()
-                        .HasForeignKey("OptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ProductManager.Data.EF.Model.Product", "Product")
                         .WithMany("Options")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Option");
 
                     b.Navigation("Product");
                 });

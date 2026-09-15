@@ -39,6 +39,20 @@ namespace ProductManager.Data.EF.Model
         }
 
         /// <summary>
+        /// Gets or sets the created.
+        /// represents when the record was created
+        /// </summary>
+        /// <value>The created.</value>
+        public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Gets or sets the modified.
+        /// represents when the record was last changed
+        /// </summary>
+        /// <value>The modified.</value>
+        public DateTime? Modified { get; set; }
+
+        /// <summary>
         /// Gets or sets the associated <see cref="Characteristic"/> entity.
         /// </summary>
         /// <remarks>

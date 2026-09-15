@@ -18,7 +18,7 @@ namespace ProductManager.Service.Models.Request;
 /// <summary>
 /// Class ProductListRequest.
 /// </summary>
-public class ProductListRequest
+public class ListRequest
 {
     /// <summary>
     /// Gets or sets the page.

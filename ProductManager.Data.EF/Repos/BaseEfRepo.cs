@@ -11,9 +11,11 @@
 // <summary></summary>
 // ***********************************************************************
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ProductManager.Data.EF.Helpers;
 using ProductManager.Glue.Interfaces.Models;
+using System.Linq.Expressions;
 
 namespace ProductManager.Data.EF.Repos;
 
@@ -124,6 +126,8 @@ public abstract class BaseEfRepo<T> where T : class
     /// <returns>A Task representing the asynchronous operation.</returns>
     protected virtual async Task InsertAsync(T entity, CancellationToken token = default)
     {
+        Type entityType = typeof(T);
+        entityType.GetProperty("Created")?.SetValue(entity, DateTime.UtcNow);
         await DbContext.Set<T>().AddAsync(entity,token);
     }
 
@@ -133,6 +137,8 @@ public abstract class BaseEfRepo<T> where T : class
     /// <param name="entity">The entity.</param>
     protected virtual void Update(T entity)
     {
+        Type entityType = typeof(T);
+        entityType.GetProperty("Modified")?.SetValue(entity, DateTime.UtcNow);
         DbContext.Set<T>().Update(entity);
     }
 

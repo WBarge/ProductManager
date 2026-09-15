@@ -16,5 +16,6 @@ public static class BusinessDi
     {
         services.AddTransient<IProductService, ProductService>();
         services.AddTransient<ICharacteristicService, CharacteristicService>();
+        services.AddTransient<IOptionService, OptionService>();
     }
 }

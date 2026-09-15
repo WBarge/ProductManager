@@ -13,7 +13,7 @@ public static class FilterTransformers
     /// </summary>
     /// <param name="request">The request.</param>
     /// <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
-    public static Dictionary<string, IFilterMetaData[]> TransformFilters(ProductListRequest request)
+    public static Dictionary<string, IFilterMetaData[]> TransformFilters(ListRequest request)
     {
         Dictionary<string, IFilterMetaData[]>? filters = null;
         if (request.Filters != null)

@@ -164,5 +164,70 @@ namespace ProductManager.Data.EF.Tests
             context.SaveChanges();
 
         }
+
+        public static void SeedDataForOptions(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ?? throw new InvalidOperationException();
+            Option o = new Option()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Option",
+                Description = "A Test Option",
+                Price = 12.99M
+            };
+            context.Options.Add(o);
+            Option o1 = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test2 Option",
+                Description = "A Test two Option",
+                Price = 12.99M
+            };
+            context.Options.Add(o1);
+            Option o2 = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test2 Option",
+                Description = "A Test two Option",
+                Price = 12.99M,
+                Deleted = true
+            };
+            context.Options.Add(o2);
+            Option o3 = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test3 Option",
+                Description = "A Test three Option",
+                Price = 12.99M
+            };
+            context.Options.Add(o3);
+            Option o4 = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test4 Option",
+                Description = "A Test four Option",
+                Price = 12.99M
+            };
+            context.Options.Add(o4);
+            Option o5 = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test5 Option",
+                Description = "A Test five Option",
+                Price = 15.99M
+            };
+            context.Options.Add(o5);
+            context.SaveChanges();
+        }
+
+        public static void RemoveOptionData(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ?? throw new InvalidOperationException();
+            foreach (Option contextOption in context.Options)
+            {
+                context.Remove(contextOption);
+            }
+            context.SaveChanges();
+        }
     }
 }

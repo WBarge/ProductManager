@@ -28,14 +28,15 @@ public static class ProductFactory
         ];
         return returnValue;
     }
-}
 
-internal class ShortP(Guid id, string name, string shortDescription, string sku, decimal price) : IProduct
-{
-    public Guid Id { get; set; } = id;
-    public string Name { get; set; } = name;
-    public string ShortDescription { get; set; } = shortDescription;
-    public string Sku { get; set; } = sku;
-    public decimal Price { get; set; } = price;
-    public string? Description { get; set; }
+
+    private class ShortP(Guid id, string name, string shortDescription, string sku, decimal price) : IProduct
+    {
+        public Guid Id { get; set; } = id;
+        public string Name { get; set; } = name;
+        public string ShortDescription { get; set; } = shortDescription;
+        public string Sku { get; set; } = sku;
+        public decimal Price { get; set; } = price;
+        public string? Description { get; set; }
+    }
 }

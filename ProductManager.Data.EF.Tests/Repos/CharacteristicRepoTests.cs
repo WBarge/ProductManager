@@ -205,7 +205,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     Characteristic characteristic = context1.Characteristics.Include(c => c.Values).First();
                     existingID = characteristic.Id;
                     expectedName = characteristic.Name;
-                    expectedValueCount = characteristic.Values.Count;
+                    expectedValueCount = characteristic.Values!.Count;
                 }
             }
 

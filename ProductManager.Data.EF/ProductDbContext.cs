@@ -58,10 +58,15 @@ public class ProductDbContext : DbContext
     public DbSet<Product> Products { get; set; }
 
     /// <summary>
-    /// Gets or sets the options.
+    /// Gets or sets the options assigned to a product.
     /// </summary>
     /// <value>The options.</value>
-    public DbSet<ProductOption> Options { get; set; }
+    public DbSet<ProductOption> ProductOptions { get; set; }
+
+    /// <summary>
+    /// Gets or sets the options.
+    /// </summary>
+    public DbSet<Option> Options { get; set; }
 
     /// <summary>
     /// Gets or sets the characteristics.
