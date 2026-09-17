@@ -17,6 +17,7 @@ public interface IProductOption
     /// <value>The product identifier.</value>
     Guid ProductId { get; set; }
 
+
     /// <summary>
     /// Gets or sets the price.
     /// How much the product costs.

@@ -20,4 +20,9 @@ public interface IProductService
     Task<Guid> CreateMinimumViableProductAsync(string sku, string name, string shortDescription, decimal price,CancellationToken cancellationToken = default);
     Task DeleteProductAsync(Guid id,CancellationToken cancellationToken = default);
     Task<IFullProduct?> GetProductAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> AddProductOptionAsync(Guid productId, Guid optionId, decimal priceOverride, CancellationToken cancellationToken = default);
+    Task DeleteProductOptionAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<IProductCharacteristic>> ListProductCharacteristicsAsync(Guid productId, CancellationToken cancellationToken = default);
+    Task<Guid> AddProductCharacteristic(Guid productId, string name, string value, CancellationToken cancellationToken = default);
+    Task DeleteProductCharacteristicAsync(Guid id, CancellationToken cancellationToken = default);
 }

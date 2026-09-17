@@ -27,7 +27,7 @@ namespace ProductManager.Data.EF.Transformers
                     product.Price,
                     product.Description,
                     (product.Characteristics ?? new List<ProductCharacteristic>()).Cast<IProductCharacteristic>(),
-                    (product.Options ?? new List<ProductOption>()).Cast<IProductOption>(),
+                    (product.Options ?? new List<ProductOption>()).Select(ProductOptionTransformer.Transform).Cast<IFullProductOption>(),
                     (product.Reductions ?? new List<ProductSell>()).Cast<IProductSell>());
             }
             return returnValue;

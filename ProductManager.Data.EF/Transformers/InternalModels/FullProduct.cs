@@ -42,7 +42,7 @@ namespace ProductManager.Data.EF.Transformers.InternalModels
             decimal price, 
             string? description, 
             IEnumerable<IProductCharacteristic> characteristics, 
-            IEnumerable<IProductOption> options, 
+            IEnumerable<IFullProductOption> options, 
             IEnumerable<IProductSell> sells)
         {
             Id = id;
@@ -106,7 +106,7 @@ namespace ProductManager.Data.EF.Transformers.InternalModels
         /// Gets or sets the options.
         /// </summary>
         /// <value>The options.</value>
-        public IEnumerable<IProductOption> Options { get; set; }
+        public IEnumerable<IFullProductOption> Options { get; set; }
         /// <summary>
         /// Gets or sets the sells.
         /// </summary>

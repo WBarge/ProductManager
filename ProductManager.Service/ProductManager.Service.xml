@@ -171,6 +171,36 @@
             </summary>
             <returns>IActionResult.</returns>
         </member>
+        <member name="T:ProductManager.Service.Controllers.ProductCharacteristicController">
+            <summary>
+            provides a controller for managing product characteristics.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductCharacteristicController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.ProductCharacteristicController},ProductManager.Glue.Interfaces.Services.IProductService)">
+            <summary>
+            creates a new instance of the <see cref="T:ProductManager.Service.Controllers.ProductCharacteristicController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="productService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductCharacteristicController.Get(System.Guid,System.Guid)">
+            <summary>
+            Gets the product characteristic by ID.
+            </summary>
+            <param name="productId"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductCharacteristicController.Post(System.Guid,ProductManager.Service.Models.Request.CharacteristicRequest)">
+            <summary>
+            Adds a product characteristic.
+            </summary>
+            <param name="productId"></param>
+            <param name="name"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
         <member name="T:ProductManager.Service.Controllers.ProductController">
             <summary>
             Controller for crud operations on a single product
@@ -215,6 +245,34 @@
             </summary>
             <param name="id">The identifier.</param>
             <returns>IActionResult.</returns>
+        </member>
+        <member name="T:ProductManager.Service.Controllers.ProductOptionController">
+            <summary>
+            Represents a controller for managing product options.
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductOptionController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.ProductOptionController},ProductManager.Glue.Interfaces.Services.IProductService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:ProductManager.Service.Controllers.ProductOptionController"/> class.
+            </summary>
+            <param name="logger"></param>
+            <param name="productService"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductOptionController.Post(System.Guid,System.Guid,System.Decimal)">
+            <summary>
+            Creates a new product option.
+            </summary>
+            <param name="productId">from url</param>
+            <param name="id">from url</param>
+            <param name="priceOverride">from body - the number by itself</param>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductOptionController.Delete(System.Guid)">
+            <summary>
+            Deletes a product option.
+            </summary>
+            <param name="id"></param>
+            <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="T:ProductManager.Service.Controllers.ProductsController">
             <summary>

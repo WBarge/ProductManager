@@ -18,5 +18,7 @@ public static class DataDi
         services.AddTransient<IProductRepo, ProductRepo>();
         services.AddTransient<ICharacteristicRepo, CharacteristicRepo>();
         services.AddTransient<IOptionRepo, OptionRepo>();
+        services.AddTransient<IProductOptionRepo, ProductOptionRepo>();
+        services.AddTransient<IProductCharacteristicRepo, ProductCharacteristicRepo>();
     }
 }

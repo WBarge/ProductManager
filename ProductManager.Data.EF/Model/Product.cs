@@ -142,20 +142,20 @@ public class Product : IProduct
     /// represents the options available for the product
     /// </summary>
     /// <value>The options.</value>
-    public ICollection<ProductOption>? Options { get; set; } = null;
+    public ICollection<ProductOption> Options { get; set; } = new List<ProductOption>();
 
     /// <summary>
     /// Gets or sets the characteristics.
     /// represents the characteristics of the product
     /// </summary>
     /// <value>The characteristics.</value>
-    public ICollection<ProductCharacteristic>? Characteristics { get; set; } = null;
+    public ICollection<ProductCharacteristic> Characteristics { get; set; } = new List<ProductCharacteristic>();
 
     /// <summary>
     /// Gets or sets the reductions.
     /// Represents time periods in which a product is on sale
     /// </summary>
     /// <value>The reductions.</value>
-    public ICollection<ProductSell>? Reductions { get; set; } = null;
+    public ICollection<ProductSell> Reductions { get; set; } = new List<ProductSell>();
 
 }

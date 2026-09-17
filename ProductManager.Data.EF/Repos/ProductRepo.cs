@@ -119,6 +119,7 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
         Product? p = await DbContext.Products
             .Include(x=>x.Characteristics)
             .Include(x=>x.Options)
+            .ThenInclude(x=>x.Option)
             .Include(x=>x.Reductions)
             .FirstOrDefaultAsync(p => p.Id == id,cancellationToken);
         if (p.IsNotEmpty())
