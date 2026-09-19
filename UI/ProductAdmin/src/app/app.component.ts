@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   constructor (private locationService:LocationService,private elementRef: ElementRef,){
     this.items = [
        { label: 'Products', routerLink: ['/products'] },
+       { label: 'Options', routerLink: ['/options'] },
        { label: 'About', routerLink: ['/about'] }
       ];
   }

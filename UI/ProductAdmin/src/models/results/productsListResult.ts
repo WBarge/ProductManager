@@ -1,4 +1,3 @@
-import { TestData } from "../test-data";
 import { Product } from "./product";
 
 export class ProductsListResult {

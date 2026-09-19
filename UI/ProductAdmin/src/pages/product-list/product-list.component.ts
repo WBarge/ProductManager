@@ -83,7 +83,7 @@ export class ProductListComponent implements OnInit{
 
   submit(productToAdd:Product){
     this.dataService.quickAdd(productToAdd).subscribe((newId:any)=>{
-      productToAdd.id = newId;
+      productToAdd.idValue = newId;
       this.products.push(productToAdd);
     });
     this.newProduct = new Product();
@@ -91,7 +91,7 @@ export class ProductListComponent implements OnInit{
 
   delete(productToDelete:Product){
     this.dataService?.deleteProduct(productToDelete).subscribe(()=>{
-      this.products = this.products.filter(p=>p.id!= productToDelete.id);
+      this.products = this.products.filter(p=>p.idValue!= productToDelete.idValue);
     });
   }
 

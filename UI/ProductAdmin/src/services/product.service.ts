@@ -67,7 +67,7 @@ export class ProductService {
   }
 
   deleteProduct(productToDelete: Product):Observable<any> {
-    var requestURl = this.productServiceLocation+'/'+productToDelete.id
+    var requestURl = this.productServiceLocation+'/'+productToDelete.idValue;
     return this.http.delete(requestURl).pipe(catchError(this.handleError<any>('deleteProduct')));
   }
 }

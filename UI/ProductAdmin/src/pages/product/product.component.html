@@ -1,6 +1,6 @@
-<p-splitter class="product-splitter">
+<p-splitter class="product-splitter" [panelSizes]="[25,40,35]">
   <p-splitter-panel class="form-panel">
-    <div class="field">
+    <span class="fieldOnSide">
       <label for="name">Name</label>
       <input
         id="name"
@@ -10,9 +10,8 @@
         [ngModel]="_productObj?.name"
         (ngModelChange)="_productObj && (_productObj.name = $event)"
       />
-    </div>
-
-    <div class="field">
+    </span>
+    <span class="fieldOnSide">
       <label for="sku">SKU</label>
       <input
         id="sku"
@@ -22,9 +21,8 @@
         [ngModel]="_productObj?.sku"
         (ngModelChange)="_productObj && (_productObj.sku = $event)"
       />
-    </div>
-
-    <div class="field">
+    </span>
+    <span class="fieldOnSide">
       <label for="quickDescription">Quick Description</label>
       <input
         id="quickDescription"
@@ -34,11 +32,10 @@
         [ngModel]="_productObj?.shortDescription"
         (ngModelChange)="_productObj && (_productObj.shortDescription = $event)"
       />
-    </div>
-
-    <div class="field">
+    </span>
+    <span  class="fieldOnSide">
       <label for="price">Price</label>
-      <p-inputnumber
+      <p-inputnumber class="price-input"
         inputId="price"
         placeholder="Price"
         [ngModel]="_productObj?.price"
@@ -47,20 +44,90 @@
         currency="USD"
         locale="en-US"
       />
-    </div>
-
-    <div class="field">
+    </span>
+    <span class="field">
       <label for="description">Description</label>
       <textarea rows="5" cols="30" pTextarea
         id="description"
         placeholder="Full Description"
         [ngModel]="_productObj?.description"
         (ngModelChange)="_productObj && (_productObj.description = $event)"></textarea>
-    </div>
+    </span>
   </p-splitter-panel>
-
   <p-splitter-panel class="form-panel">
     <!-- second panel content -->
+    <p-fieldset legend="Add an Option to Product">
+      <p-toolbar>
+        <ng-template #start>
+        </ng-template>
+        <ng-template #center>
+          <div class="quick-create-fields">
+            <span class="fieldOnSide">
+              <label for="Name">Name</label>
+              <p-select
+                id="Name"
+                [options]="_optionsList"
+                optionLabel="label"
+                optionValue="idValue"
+                placeholder="Select an Option"
+                autoDisplayFirst="false"
+                [(ngModel)]="newProductOption.optionId"
+              />
+            </span>
+            <span class="fieldOnSide" >
+              <label for="Price">Price</label>
+              <p-inputnumber
+                id="Price"
+                placeholder="Price for Option"
+                [(ngModel)]="newProductOption.price"
+                mode="currency"
+                currency="USD"
+                locale="en-US"
+              />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template #end>
+          <button type="button" pButton (click)="addOptionToProduct(newProductOption)">Add</button>
+        </ng-template>
+      </p-toolbar>
+    </p-fieldset>
+    <br>
+        <ul class="option-list" >
+          @for (option of this._productObj?.options; track $index) {
+            <li class="option-item" >
+            <p-fieldset class="option-fieldset" legend=" Product Option {{ $index + 1 }}" toggleable="true">
+              <span class="option-name">
+                <label for="Name-{{ $index }}">Name</label>
+                <p-select
+                  id="Name-{{ $index }}"
+                  [options]="_optionsList"
+                  optionLabel="label"
+                  optionValue="idValue"
+                  placeholder="Select an Option"
+                  autoDisplayFirst="false"
+                  [(ngModel)]="option.optionId"
+                />
+              </span>
+              <span class="option-price">
+                <label for="Price-{{ $index }}">Price</label>
+                <p-inputnumber
+                  id="Price-{{ $index }}"
+                  placeholder="Option Price"
+                  [ngModel]="option.price"
+                  (ngModelChange)="option.price = $event"
+                  mode="currency"
+                  currency="USD"
+                  locale="en-US"
+                />
+              </span>
+              <button type="button" pButton (click)="_productObj?.options?.splice($index, 1)">Delete</button>
+            </p-fieldset>
+            </li>
+          }
+          </ul>
+  </p-splitter-panel>
+  <p-splitter-panel class="form-panel">
   </p-splitter-panel>
 </p-splitter>
 <button type="button" pButton (click)="submit(_productObj!)">Done</button>

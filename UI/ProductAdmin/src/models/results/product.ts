@@ -1,8 +1,11 @@
+import { ProductOption } from "./ProductOption";
+
 export class Product {
-    id!: string;
+    idValue!: string;
     name!: string;
     shortDescription!: string;
     sku!: string;
     price!: number;
     description!: string;
+    options!: ProductOption[];
 }
