@@ -184,6 +184,13 @@
             <param name="productService"></param>
             <exception cref="T:System.ArgumentNullException"></exception>
         </member>
+        <member name="M:ProductManager.Service.Controllers.ProductCharacteristicController.Get(System.Guid)">
+            <summary>
+            Gets the product characteristics for a given product.
+            </summary>
+            <param name="productId"></param>
+            <returns></returns>
+        </member>
         <member name="M:ProductManager.Service.Controllers.ProductCharacteristicController.Get(System.Guid,System.Guid)">
             <summary>
             Gets the product characteristic by ID.
@@ -197,8 +204,15 @@
             Adds a product characteristic.
             </summary>
             <param name="productId"></param>
-            <param name="name"></param>
-            <param name="value"></param>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.ProductCharacteristicController.Delete(System.Guid,System.Guid)">
+            <summary>
+            Deletes a product characteristic.
+            </summary>
+            <param name="productId"></param>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="T:ProductManager.Service.Controllers.ProductController">
@@ -358,6 +372,21 @@
             <param name="builder">The builder.</param>
             <returns>IApplicationBuilder.</returns>
         </member>
+        <member name="T:ProductManager.Service.Models.Request.CharacteristicRequest">
+            <summary>
+            Represents a request to create or update a product characteristic.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.CharacteristicRequest.Name">
+            <summary>
+            Gets or sets the name of the characteristic.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.CharacteristicRequest.Value">
+            <summary>
+            Gets or sets the value of the characteristic.
+            </summary>
+        </member>
         <member name="T:ProductManager.Service.Models.Request.FilterMetaData">
             <summary>
             Class FilterMetaData.
@@ -427,6 +456,16 @@
         <member name="P:ProductManager.Service.Models.Request.OptionRequest.Price">
             <summary>
             Gets or sets the price of the option.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.OptionRequest.Cost">
+            <summary>
+            Gets or sets the cost of the option.
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.OptionRequest.Estimated">
+            <summary>
+            Gets or sets the estimated detail price of the option.
             </summary>
         </member>
         <member name="T:ProductManager.Service.Models.Request.QuickProductRequest">

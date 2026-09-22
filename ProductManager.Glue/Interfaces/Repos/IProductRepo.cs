@@ -62,4 +62,6 @@ public interface IProductRepo
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>IProduct.</returns>
     Task<IFullProduct?> GetProductAsync(Guid id, CancellationToken cancellationToken);
+
+    Task UpdateProductAsync(IFullProduct product, CancellationToken cancellationToken = default);
 }

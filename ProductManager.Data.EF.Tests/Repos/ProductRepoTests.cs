@@ -1,6 +1,4 @@
-﻿
-
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProductManager.Data.EF.Helpers;
@@ -27,6 +25,7 @@ namespace ProductManager.Data.EF.Tests.Repos
             using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 serviceScope.SeedData();
+                serviceScope.SeedDataForProductUpdate();
             }
         }
 
@@ -35,6 +34,7 @@ namespace ProductManager.Data.EF.Tests.Repos
         {
             using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                serviceScope.RemoveProductUpdateData();
                 serviceScope.RemoveData();
             }
         }
@@ -794,6 +794,330 @@ namespace ProductManager.Data.EF.Tests.Repos
                 }
             }
         }
+
+        #region UpdateProductAsync
+
+        // All data used by these tests is created in SetUp by SeedDataForProductUpdate. The tests only read it. Where a
+        // scenario needs the payload to differ from what is stored, the test removes seeded rows before updating.
+
+        private static Product FindSeededProduct(ProductDbContext context, string sku) =>
+            context.Products.First(p => p.Sku == sku && !p.Deleted);
+
+        private static ProductSell FindSeededSell(ProductDbContext context, Guid productId, (DateTime Start, DateTime End) window) =>
+            context.Set<ProductSell>().First(s => s.ProductId == productId && s.Start == window.Start && s.End == window.End);
+
+        private static Task<int> CountSellsAsync(ProductDbContext context, Guid productId) =>
+            context.Set<ProductSell>().CountAsync(s => s.ProductId == productId);
+
+        private static int CountSells(Product product, (DateTime Start, DateTime End) window) =>
+            product.Reductions.Count(r => r.Start == window.Start && r.End == window.End);
+
+        private async Task<IFullProduct> GetFullProductAsync(ProductRepo sut, Guid id)
+        {
+            IFullProduct? full = await sut.GetProductAsync(id, CancellationToken.None);
+            full.Should().NotBeNull("the product must exist to be used as the update payload");
+            return full!;
+        }
+
+        /// <summary>
+        /// Reads the product back through a brand new scope/context so we assert against what was really persisted
+        /// rather than what the tracking context in the test remembers.
+        /// </summary>
+        private async Task<Product> LoadProductFromNewContextAsync(Guid id)
+        {
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>();
+                return await context.Products
+                    .AsNoTracking()
+                    .Include(x => x.Characteristics)
+                    .Include(x => x.Options)
+                    .ThenInclude(x => x.Option)
+                    .Include(x => x.Reductions)
+                    .FirstAsync(p => p.Id == id);
+            }
+        }
+
+        [Test, Description("Test that the scalar fields on the product are overwritten")]
+        public async Task UpdateProductAsync_UpdatesScalarFields_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            Product existing;
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    existing = FindSeededProduct(context, TestSetupHelper.UPDATE_CHARACTERISTICS_SKU);
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    full.Name = "Updated Name";
+                    full.Sku = "Updated Sku";
+                    full.ShortDescription = "Updated Short";
+                    full.Description = "Updated Description";
+                    full.Price = 111;
+                    full.Cost = 55;
+                    full.Estimated = 77;
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                }
+            }
+            await TestContext.Out.WriteLineAsync("Examining results");
+            Product updated = await LoadProductFromNewContextAsync(existing.Id);
+            updated.Name.Should().Be("Updated Name");
+            updated.Sku.Should().Be("Updated Sku");
+            updated.ShortDescription.Should().Be("Updated Short");
+            updated.Description.Should().Be("Updated Description");
+            updated.Price.Should().Be(111);
+            updated.Cost.Should().Be(55);
+            updated.Estimated.Should().Be(77);
+
+        }
+
+        [Test, Description("Test that null text values and zero or negative numbers do not overwrite the existing values")]
+        public async Task UpdateProductAsync_NullOrNonPositiveValues_KeepsExistingValues_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            Product existing;
+            Product original;
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    existing = FindSeededProduct(context, TestSetupHelper.UPDATE_CHARACTERISTICS_SKU);
+                    original = await LoadProductFromNewContextAsync(existing.Id);
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    full.Name = null!;
+                    full.Sku = null!;
+                    full.ShortDescription = null!;
+                    full.Description = null!;
+                    full.Price = 0;
+                    full.Cost = -1;
+                    full.Estimated = 0;
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                }
+            }
+            await TestContext.Out.WriteLineAsync("Examining results");
+            Product updated = await LoadProductFromNewContextAsync(existing.Id);
+            updated.Name.Should().Be(original.Name);
+            updated.Sku.Should().Be(original.Sku);
+            updated.ShortDescription.Should().Be(original.ShortDescription);
+            updated.Description.Should().Be(original.Description);
+            updated.Price.Should().Be(original.Price);
+            updated.Cost.Should().Be(original.Cost);
+            updated.Estimated.Should().Be(original.Estimated);
+
+        }
+
+        [Test, Description("Test that updating a product that no longer exists quietly does nothing")]
+        public async Task UpdateProductAsync_ProductNotFound_DoesNothing_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            Guid id;
+            long countBefore;
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    Product existing = FindSeededProduct(context, TestSetupHelper.UPDATE_CHARACTERISTICS_SKU);
+                    id = existing.Id;
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, id);
+
+                    //remove the row so the payload refers to a product that is gone
+                    context.Products.Remove(existing);
+                    await context.SaveChangesAsync();
+                    countBefore = await context.Products.LongCountAsync();
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    Func<Task> act = () => sut.UpdateProductAsync(full);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    await act.Should().NotThrowAsync();
+                }
+            }
+
+            using (IServiceScope serviceScope =
+                   _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    (await dbContext.Products.AnyAsync(p => p.Id == id)).Should().BeFalse("an update must never create a product");
+                    (await dbContext.Products.LongCountAsync()).Should().Be(countBefore);
+                }
+            }
+        }
+
+        [Test, Description("Test that existing characteristics are soft deleted and replaced by the supplied ones")]
+        public async Task UpdateProductAsync_ReplacesCharacteristics_Success()
+        {
+            Product existing;
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    existing = FindSeededProduct(context, TestSetupHelper.UPDATE_CHARACTERISTICS_SKU);
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    full.Characteristics.Count().Should().Be(2, "the payload should carry the two seeded characteristics");
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                }
+            }
+            Product updated = await LoadProductFromNewContextAsync(existing.Id);
+            List<ProductCharacteristic> active = updated.Characteristics.Where(c => !c.Deleted).ToList();
+            active.Should().HaveCount(2, "the supplied characteristics are inserted as new rows");
+            active.Select(c => c.Name).Should().BeEquivalentTo(new[] { "Color", "Size" });
+            active.Select(c => c.CharacteristicValue).Should().BeEquivalentTo(new[] { "Red", "Large" });
+            active.Should().OnlyContain(c => c.ProductId == existing.Id);
+        }
+
+        [Test, Description("Test that an option that no longer exists is skipped")]
+        public async Task UpdateProductAsync_OptionNoLongerExists_IsSkipped_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            Product existing;
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    existing = FindSeededProduct(context, TestSetupHelper.UPDATE_MISSING_OPTION_SKU);
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    full.Options.Count().Should().Be(1);
+
+                    //the payload still references the option, but it is gone from the database
+                    ProductOption productOption = context.ProductOptions.First(o => o.ProductId == existing.Id);
+                    Option option = context.Options.First(o => o.Name == TestSetupHelper.UPDATE_MISSING_OPTION_NAME);
+                    context.ProductOptions.Remove(productOption);
+                    context.Options.Remove(option);
+                    await context.SaveChangesAsync();
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                }
+            }
+            Product updated = await LoadProductFromNewContextAsync(existing.Id);
+            updated.Options.Should().BeEmpty("an option that cannot be found must not be linked to the product");
+
+        }
+
+        [Test, Description("Test that a sell is added when the product has no existing sells")]
+        public async Task UpdateProductAsync_NoExistingSells_AddsSell_Success()
+        {
+            Product existing;
+            (DateTime Start, DateTime End) window;
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    window = TestSetupHelper.UpdateNoExistingSell;
+                    existing = FindSeededProduct(context, TestSetupHelper.UPDATE_OPTIONS_SKU);
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    full.Sells.Count().Should().Be(1);
+
+                    //take the sell out of the database so the product has no existing sells
+                    context.Remove(FindSeededSell(context, existing.Id, window));
+                    await context.SaveChangesAsync();
+                    (await CountSellsAsync(context, existing.Id)).Should().Be(0);
+                    List<IProductSell> sells =
+                    [
+                        new ProductSell() { 
+                            Start = window.Start, 
+                            End = window.End,
+                            Price = TestSetupHelper.UPDATE_SELL_PRICE,
+                            ProductId = full.Id
+                        }
+                    ];
+                    full.Sells = sells;
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                }
+            }
+            await TestContext.Out.WriteLineAsync("Examining results");
+            Product updated = await LoadProductFromNewContextAsync(existing.Id);
+            updated.Reductions.Should().HaveCount(1);
+            ProductSell added = updated.Reductions.Single();
+            added.Start.Should().Be(window.Start);
+            added.End.Should().Be(window.End);
+            added.Price.Should().Be(TestSetupHelper.UPDATE_SELL_PRICE);
+            added.ProductId.Should().Be(existing.Id);
+
+        }
+
+        [Test, Description("Test that a sell without a start or end date is ignored")]
+        public async Task UpdateProductAsync_SellWithEmptyDates_IsSkipped_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    Product existing = FindSeededProduct(context, TestSetupHelper.UPDATE_EMPTY_DATE_SELL_SKU);
+                    ProductRepo sut = new(context);
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    full.Sells.Count().Should().Be(1);
+
+                    context.Remove(FindSeededSell(context, existing.Id, (default(DateTime), default(DateTime))));
+                    await context.SaveChangesAsync();
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    Product updated = await LoadProductFromNewContextAsync(existing.Id);
+                    updated.Reductions.Should().BeEmpty("a sell needs both a start and an end date");
+                }
+            }
+        }
+
+        // NOTE: the rule in UpdateProductAsync is "skip an incoming sell when an existing sell covers it
+        // (existing.Period.WithIn(incoming.Period)) or overlaps it (existing.Period.Overlaps(incoming.Period)),
+        // otherwise add it". The tests below describe that rule. They all use the sells seeded on UPDATE_SELLS_SKU:
+        // every seeded sell is part of the payload, the stored ones are identical to the database so they are skipped,
+        // and each test removes only its own "incoming" sell from the database and checks that sell's window.
+
+        [Test, Description("Test that a sell identical to an existing sell is not added again")]
+        public async Task UpdateProductAsync_SellIdenticalToExistingSell_IsNotAdded_Success()
+        {
+            await TestContext.Out.WriteLineAsync("Setting up and test");
+            using (IServiceScope serviceScope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                using (ProductDbContext context = serviceScope.ServiceProvider.GetRequiredService<ProductDbContext>())
+                {
+                    Product existing = FindSeededProduct(context, TestSetupHelper.UPDATE_SELLS_SKU);
+                    ProductRepo sut = new(context);
+                    //the payload carries exactly the sells that are already stored
+                    IFullProduct full = await GetFullProductAsync(sut, existing.Id);
+                    int storedCount = await CountSellsAsync(context, existing.Id);
+
+                    await TestContext.Out.WriteLineAsync("Executing test");
+                    await sut.UpdateProductAsync(full);
+
+                    await TestContext.Out.WriteLineAsync("Examining results");
+                    Product updated = await LoadProductFromNewContextAsync(existing.Id);
+                    CountSells(updated, TestSetupHelper.UpdateIdenticalStoredSell).Should().Be(1, "a sell that is already stored must not be duplicated");
+                    updated.Reductions.Should().HaveCount(storedCount, "nothing should have been added");
+                }
+            }
+        }
+
+        #endregion
 
     }
 }

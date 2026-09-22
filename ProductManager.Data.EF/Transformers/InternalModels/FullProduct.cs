@@ -90,6 +90,10 @@ namespace ProductManager.Data.EF.Transformers.InternalModels
         /// </summary>
         /// <value>The price.</value>
         public decimal Price { get; set; }
+
+        public decimal Cost { get; set; }
+
+        public decimal Estimated { get; set; }
         /// <summary>
         /// Gets or sets the description.
         /// The full description of the product.

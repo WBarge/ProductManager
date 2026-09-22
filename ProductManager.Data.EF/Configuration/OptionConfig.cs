@@ -27,6 +27,11 @@ namespace ProductManager.Data.EF.Configuration
             builder.Property(p => p.Price)
                 .IsRequired()
                 .HasPrecision(10, 2);
+            builder.Property(p => p.Cost)
+                .IsRequired()
+                .HasPrecision(10, 2);
+            builder.Property(p => p.Estimated)
+                .HasPrecision(10, 2);
             builder.Property(p => p.Deleted)
                 .IsRequired()
                 .HasDefaultValue(false);

@@ -24,5 +24,14 @@ namespace ProductManager.Service.Models.Request
         /// Gets or sets the price of the option.
         /// </summary>
         public decimal Price { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cost of the option.
+        /// </summary>
+        public decimal Cost { get; set; }
+        /// <summary>
+        /// Gets or sets the estimated detail price of the option.
+        /// </summary>
+        public decimal Estimated { get; set; }
     }
 }

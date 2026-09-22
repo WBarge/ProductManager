@@ -201,6 +201,7 @@ namespace ProductManager.Data.EF.Tests.Repos
                     data.Name = TEST_NAME;
                     data.Description = TEST_NAME;
                     data.Price = 123M;
+                    data.Cost = 123M;
 
                     await TestContext.Out.WriteLineAsync("Executing test");
                     Guid id = await sut.AddOptionAsync(data, TestContext.CurrentContext.CancellationToken);

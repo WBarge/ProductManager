@@ -32,5 +32,16 @@
         /// </summary>
         /// <value>The price.</value>
         decimal Price { get; set; }
+
+        /// <summary>
+        /// The cost of the option
+        /// </summary>
+        public decimal Cost { get; set; }
+
+        /// <summary>
+        /// The estimated detail price of the option
+        /// </summary>
+        public decimal Estimated { get; set; }
+
     }
 }

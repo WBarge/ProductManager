@@ -174,4 +174,49 @@ public class ProductService : IProductService
     {
         await _productCharacteristicRepo.DeleteAsync(id, cancellationToken);
     }
+
+    public async Task UpdateProductAsync(IFullProduct product, CancellationToken cancellationToken = default)
+    {
+        if (product == null)
+        {
+            throw new ArgumentNullException(nameof(product));
+        }
+
+        if (product.Sells.Any())
+        {
+            List<IProductSell> originalList = product.Sells.ToList();
+            List<IProductSell> toRemove = new List<IProductSell>();
+            //leave as old nested for-each for maintainability
+            foreach (IProductSell productSell in originalList)
+            {
+                foreach (IProductSell otherSell in originalList)
+                {
+                    if (otherSell == productSell)
+                    {
+                        continue;
+                    }
+
+                    if (
+                        (otherSell.Period.WithIn(productSell.Period) || otherSell.Period.Overlaps(productSell.Period)) &&
+                        !(toRemove.Contains(otherSell) || toRemove.Contains(productSell))
+                        )
+                    {
+                        toRemove.Add(otherSell);
+                    }
+                }
+            }
+
+            foreach (IProductSell productSell in toRemove)
+            {
+                originalList.Remove(productSell);    
+            }
+
+            if (originalList.Count != product.Sells.Count())
+            {
+                product.Sells = originalList;
+            }
+
+            await _productRepo.UpdateProductAsync(product,cancellationToken);
+        }
+    }
 }   

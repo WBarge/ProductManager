@@ -37,9 +37,20 @@ public interface IShortProduct
 
     /// <summary>
     /// Gets or sets the price.
-    /// How much the product costs.
+    /// The amount being charged for the product .
     /// </summary>
     /// <value>The price.</value>
     decimal Price { get; set; }
+
+    /// <summary>
+    /// Gets or sets the cost.
+    /// How much the product costs.
+    /// </summary>
+    decimal Cost { get; set; }
+
+    /// <summary>
+    /// Estimated Manufacture Price.
+    /// </summary>
+    decimal Estimated { get; set; }
 
 }

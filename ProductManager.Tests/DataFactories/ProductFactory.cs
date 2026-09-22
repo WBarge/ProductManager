@@ -37,5 +37,7 @@ internal class ShortP(Guid id, string name, string shortDescription, string sku,
     public string ShortDescription { get; set; } = shortDescription;
     public string Sku { get; set; } = sku;
     public decimal Price { get; set; } = price;
+    public decimal Cost { get; set; }
+    public decimal Estimated { get; set; }
     public string? Description { get; set; }
 }

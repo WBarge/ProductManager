@@ -397,5 +397,164 @@ namespace ProductManager.Data.EF.Tests
 
             context.SaveChanges();
         }
+
+        #region ProductRepo UpdateProductAsync test data
+
+        // Identifies the products (seeded by SeedData) that SeedDataForProductUpdate attaches child rows to, so the
+        // tests can find them without adding or changing any products. Product counts asserted by other tests are
+        // therefore not affected.
+        public const string UPDATE_CHARACTERISTICS_SKU = "T125";   // two characteristics; also used by the scalar and not found tests
+        public const string UPDATE_OPTIONS_SKU = "T14";            // two product options and one sell
+        public const string UPDATE_MISSING_OPTION_SKU = "T24";     // one product option pointing at UPDATE_MISSING_OPTION_NAME
+        public const string UPDATE_EMPTY_DATE_SELL_SKU = "T124";   // one sell with no start or end date
+        public const string UPDATE_SELLS_SKU = "T5";               // one sell per overlap scenario, see the windows below
+
+        // Options seeded with these values (price / cost / estimated): 10 / 4 / 6, 20 / 8 / 12 and 10 / 4 / 6.
+        public const string UPDATE_NO_PRICE_OPTION_NAME = "PU Test Option";
+        public const string UPDATE_PRICED_OPTION_NAME = "PU Test Option2";
+        public const string UPDATE_MISSING_OPTION_NAME = "PU Doomed Option";
+
+        // The product option for UPDATE_NO_PRICE_OPTION_NAME is seeded with a price of 0 (use the option price) and the
+        // one for UPDATE_PRICED_OPTION_NAME with this price.
+        public const decimal UPDATE_PRODUCT_OPTION_PRICE = 55M;
+
+        // Every seeded sell has this price.
+        public const decimal UPDATE_SELL_PRICE = 5M;
+
+        public static readonly DateTime UpdateSellBaseDate = new DateTime(2030, 1, 1);
+
+        private static (DateTime Start, DateTime End) UpdateSellWindow(int startDay, int endDay) =>
+            (UpdateSellBaseDate.AddDays(startDay), UpdateSellBaseDate.AddDays(endDay));
+
+        // The only sell on UPDATE_OPTIONS_SKU. The "no existing sells" test removes it from the database.
+        public static readonly (DateTime Start, DateTime End) UpdateNoExistingSell = UpdateSellWindow(0, 10);
+
+        // Sells on UPDATE_SELLS_SKU. The windows are far apart so the scenarios cannot affect each other.
+        // A "stored" sell is left in the database. An "incoming" sell is also seeded so it is part of the payload
+        // returned by GetProductAsync, and the test that owns it removes it from the database before updating.
+        public static readonly (DateTime Start, DateTime End) UpdateIdenticalStoredSell = UpdateSellWindow(0, 10);
+        public static readonly (DateTime Start, DateTime End) UpdateInsideStoredSell = UpdateSellWindow(100, 120);
+        public static readonly (DateTime Start, DateTime End) UpdateInsideIncomingSell = UpdateSellWindow(105, 108);
+        public static readonly (DateTime Start, DateTime End) UpdateDisjointStoredSell = UpdateSellWindow(200, 210);
+        public static readonly (DateTime Start, DateTime End) UpdateDisjointIncomingSell = UpdateSellWindow(220, 230);
+        public static readonly (DateTime Start, DateTime End) UpdatePartialStoredSell = UpdateSellWindow(300, 310);
+        public static readonly (DateTime Start, DateTime End) UpdatePartialIncomingSell = UpdateSellWindow(305, 315);
+        public static readonly (DateTime Start, DateTime End) UpdateSurroundStoredSell = UpdateSellWindow(405, 408);
+        public static readonly (DateTime Start, DateTime End) UpdateSurroundIncomingSell = UpdateSellWindow(400, 420);
+
+        /// <summary>
+        /// Seeds the options, characteristics, product options and sells used by the ProductRepo UpdateProductAsync
+        /// tests. Must run after SeedData because it attaches the rows to products that SeedData creates.
+        /// Removed by RemoveProductUpdateData.
+        /// </summary>
+        public static void SeedDataForProductUpdate(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ??
+                                       throw new InvalidOperationException();
+
+            Product FindProduct(string sku) => context.Products.First(p => p.Sku == sku && !p.Deleted);
+
+            Product characteristicsProduct = FindProduct(UPDATE_CHARACTERISTICS_SKU);
+            Product optionsProduct = FindProduct(UPDATE_OPTIONS_SKU);
+            Product missingOptionProduct = FindProduct(UPDATE_MISSING_OPTION_SKU);
+            Product emptyDateSellProduct = FindProduct(UPDATE_EMPTY_DATE_SELL_SKU);
+            Product sellsProduct = FindProduct(UPDATE_SELLS_SKU);
+
+            // Prerequisite options, since a product option must reference a valid option
+            Option noPriceOption = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = UPDATE_NO_PRICE_OPTION_NAME,
+                Description = "An option used for product update tests",
+                Price = 10M,
+                Cost = 4M,
+                Estimated = 6M
+            };
+            Option pricedOption = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = UPDATE_PRICED_OPTION_NAME,
+                Description = "A second option used for product update tests",
+                Price = 20M,
+                Cost = 8M,
+                Estimated = 12M
+            };
+            Option missingOption = new Option
+            {
+                Id = Guid.NewGuid(),
+                Name = UPDATE_MISSING_OPTION_NAME,
+                Description = "An option the product update tests remove from the database",
+                Price = 10M,
+                Cost = 4M,
+                Estimated = 6M
+            };
+            context.Options.AddRange(noPriceOption, pricedOption, missingOption);
+            context.SaveChanges();
+
+            context.ProductCharacteristics.Add(new ProductCharacteristic
+            {
+                Id = Guid.NewGuid(), ProductId = characteristicsProduct.Id, Name = "Color", CharacteristicValue = "Red"
+            });
+            context.ProductCharacteristics.Add(new ProductCharacteristic
+            {
+                Id = Guid.NewGuid(), ProductId = characteristicsProduct.Id, Name = "Size", CharacteristicValue = "Large"
+            });
+
+            //a price of zero on the product option means "use the option price"
+            context.ProductOptions.Add(new ProductOption
+            {
+                Id = Guid.NewGuid(), ProductId = optionsProduct.Id, OptionId = noPriceOption.Id, Price = 0M
+            });
+            context.ProductOptions.Add(new ProductOption
+            {
+                Id = Guid.NewGuid(), ProductId = optionsProduct.Id, OptionId = pricedOption.Id,
+                Price = UPDATE_PRODUCT_OPTION_PRICE
+            });
+            context.ProductOptions.Add(new ProductOption
+            {
+                Id = Guid.NewGuid(), ProductId = missingOptionProduct.Id, OptionId = missingOption.Id, Price = 10M
+            });
+
+            void AddSell(Product product, (DateTime Start, DateTime End) window)
+            {
+                context.Add(new ProductSell
+                {
+                    Id = Guid.NewGuid(), ProductId = product.Id, Start = window.Start, End = window.End,
+                    Price = UPDATE_SELL_PRICE
+                });
+            }
+
+            AddSell(optionsProduct, UpdateNoExistingSell);
+            AddSell(emptyDateSellProduct, (default(DateTime), default(DateTime)));
+            AddSell(sellsProduct, UpdateIdenticalStoredSell);
+            AddSell(sellsProduct, UpdateInsideStoredSell);
+            AddSell(sellsProduct, UpdateInsideIncomingSell);
+            AddSell(sellsProduct, UpdateDisjointStoredSell);
+            AddSell(sellsProduct, UpdateDisjointIncomingSell);
+            AddSell(sellsProduct, UpdatePartialStoredSell);
+            AddSell(sellsProduct, UpdatePartialIncomingSell);
+            AddSell(sellsProduct, UpdateSurroundStoredSell);
+            AddSell(sellsProduct, UpdateSurroundIncomingSell);
+
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Removes the dependent rows and options seeded by SeedDataForProductUpdate.
+        /// The in-memory provider does not cascade delete to dependents that are not loaded, and RemoveData
+        /// only removes products, so without this the rows would leak into other fixtures via the shared database.
+        /// </summary>
+        public static void RemoveProductUpdateData(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ??
+                                       throw new InvalidOperationException();
+            context.RemoveRange(context.Set<ProductSell>().ToList());
+            context.RemoveRange(context.ProductCharacteristics.ToList());
+            context.RemoveRange(context.ProductOptions.ToList());
+            context.RemoveRange(context.Options.ToList());
+            context.SaveChanges();
+        }
+
+        #endregion
     }
 }

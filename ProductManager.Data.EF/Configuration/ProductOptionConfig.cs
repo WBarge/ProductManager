@@ -38,6 +38,10 @@ internal class ProductOptionConfig:IEntityTypeConfiguration<ProductOption>
             .IsRequired();
         builder.Property(p => p.Price)
             .HasPrecision(10, 2);
+        builder.Property(p => p.Cost)
+            .HasPrecision(10, 2);
+        builder.Property(p => p.Estimated)
+            .HasPrecision(10, 2);
         builder.Property(p => p.Deleted)
             .IsRequired()
             .HasDefaultValue(false);

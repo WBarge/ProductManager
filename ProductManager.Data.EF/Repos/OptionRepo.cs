@@ -82,11 +82,14 @@ namespace ProductManager.Data.EF.Repos
             string localName = option.Name ?? throw new ArgumentException(nameof(option.Name));
             string localDescription = option.Description ?? throw new ArgumentException(nameof(option.Description));
             decimal localPrice = option.Price <= 0 ? throw new ArgumentException(nameof(option.Price)) : option.Price;
+            decimal localCost = option.Cost <= 0 ? throw new ArgumentException(nameof(option.Cost)) : option.Cost;
 
             Option p = Create();
             p.Name = localName;
             p.Description = localDescription;
             p.Price = localPrice;
+            p.Cost = localCost;
+            p.Estimated = option.Estimated;
             try
             {
                 await InsertAsync(p, cancellationToken);
@@ -116,6 +119,8 @@ namespace ProductManager.Data.EF.Repos
             existingOption.Name = option.Name ?? existingOption.Name;
             existingOption.Description = option.Description ?? existingOption.Description;
             existingOption.Price = option.Price <= 0 ? existingOption.Price : option.Price;
+            existingOption.Cost = option.Cost <= 0 ? existingOption.Cost : option.Cost;
+            existingOption.Estimated = option.Estimated <= 0 ? existingOption.Estimated : option.Estimated; 
 
             Update(existingOption);
             await SaveAsync(cancellationToken);

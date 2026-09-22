@@ -118,6 +118,16 @@ public class Product : IProduct
     public decimal Price { get; set; }
 
     /// <summary>
+    /// The cost of the product
+    /// </summary>
+    public decimal Cost { get; set; }
+
+    /// <summary>
+    /// The estimated detail price of the product
+    /// </summary>
+    public decimal Estimated { get; set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether this <see cref="Product" /> is deleted.
     /// </summary>
     /// <value><c>true</c> if deleted; otherwise, <c>false</c>.</value>

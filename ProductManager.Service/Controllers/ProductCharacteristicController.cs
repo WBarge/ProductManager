@@ -30,6 +30,11 @@ namespace ProductManager.Service.Controllers
         }
 
         // GET: api/<ProductCharacteristicController>
+        /// <summary>
+        /// Gets the product characteristics for a given product.
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<IActionResult> Get(Guid productId)
         {
@@ -56,8 +61,7 @@ namespace ProductManager.Service.Controllers
         /// Adds a product characteristic.
         /// </summary>
         /// <param name="productId"></param>
-        /// <param name="name"></param>
-        /// <param name="value"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post(Guid productId,[FromBody] CharacteristicRequest request)
@@ -67,6 +71,12 @@ namespace ProductManager.Service.Controllers
         }
 
         // POST api/Product/{productId:guid}/Characteristic/{id:guid}
+        /// <summary>
+        /// Deletes a product characteristic.
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid productId, Guid id)
         {

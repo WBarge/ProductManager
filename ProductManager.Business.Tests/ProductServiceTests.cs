@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CrossCutting.Models;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using ProductManager.Business.Tests.DataFactories;
@@ -63,7 +64,8 @@ namespace ProductManager.Business.Tests
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             sut.Should().NotBeNull();
@@ -79,25 +81,27 @@ namespace ProductManager.Business.Tests
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
             IEnumerable<IProduct> data = ProductFactory.BuildShortProductList();
-            productRepo.Setup(m=>m.FindPagedProductRecordsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
+            productRepo.Setup(m => m.FindPagedProductRecordsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
                     It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
-            Dictionary<string,IFilterMetaData[]> filterParameter = new();
+            Dictionary<string, IFilterMetaData[]> filterParameter = new();
             const int PAGE = 1;
             const int PAGE_SIZE = 10;
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            IEnumerable<IProduct> results = await sut.GetProductsAsync(filterParameter, PAGE, PAGE_SIZE,TestContext.CurrentContext.CancellationToken);
-            
+            IEnumerable<IProduct> results = await sut.GetProductsAsync(filterParameter, PAGE, PAGE_SIZE,
+                TestContext.CurrentContext.CancellationToken);
+
             await TestContext.Out.WriteLineAsync("Examining results");
             results.Should().NotBeNull();
             results.Should().NotBeEmpty();
             results.Should().HaveCount(2);
-            productRepo.Verify(m=>m.FindPagedProductRecordsAsync(filterParameter,PAGE, 
-                PAGE_SIZE,It.IsAny<CancellationToken>()));
+            productRepo.Verify(m => m.FindPagedProductRecordsAsync(filterParameter, PAGE,
+                PAGE_SIZE, It.IsAny<CancellationToken>()));
         }
 
         [Test, Description("The get product count should call the repo to get the number of products")]
@@ -112,7 +116,8 @@ namespace ProductManager.Business.Tests
             productRepo.Setup(m => m.GetProductCountAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(25);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             long results = await sut.GetProductCountAsync(TestContext.CurrentContext.CancellationToken);
@@ -129,9 +134,10 @@ namespace ProductManager.Business.Tests
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
-            productRepo.Setup(m => m.DeleteAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>()));
+            productRepo.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             await sut.DeleteProductAsync(Guid.NewGuid(), TestContext.CurrentContext.CancellationToken);
@@ -155,7 +161,8 @@ namespace ProductManager.Business.Tests
             productRepo.Setup(m => m.AddMinimumProductAsync(It.IsAny<IProduct>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedId);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             const string SKU = "SKU-1";
             const string NAME = "Widget";
@@ -163,7 +170,8 @@ namespace ProductManager.Business.Tests
             const decimal PRICE = 9.99m;
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            Guid result = await sut.CreateMinimumViableProductAsync(SKU, NAME, SHORT_DESCRIPTION, PRICE, TestContext.CurrentContext.CancellationToken);
+            Guid result = await sut.CreateMinimumViableProductAsync(SKU, NAME, SHORT_DESCRIPTION, PRICE,
+                TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             result.Should().Be(expectedId);
@@ -189,7 +197,8 @@ namespace ProductManager.Business.Tests
             productRepo.Setup(m => m.GetProductAsync(productId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(fullProduct.Object);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IFullProduct? result = await sut.GetProductAsync(productId, TestContext.CurrentContext.CancellationToken);
@@ -207,7 +216,8 @@ namespace ProductManager.Business.Tests
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductOptionAsync(Guid.Empty, Guid.NewGuid(), 5m));
@@ -221,13 +231,15 @@ namespace ProductManager.Business.Tests
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductOptionAsync(Guid.NewGuid(), Guid.Empty, 5m));
         }
 
-        [Test, Description("Adding a product option with valid IDs and a positive price override should use that price")]
+        [Test,
+         Description("Adding a product option with valid IDs and a positive price override should use that price")]
         public async Task AddProductOptionAsync_PositivePriceOverride_UsesProvidedPrice()
         {
             await TestContext.Out.WriteLineAsync("Setting up test");
@@ -240,21 +252,24 @@ namespace ProductManager.Business.Tests
             productOption.SetupAllProperties();
             productOptionRepo.Setup(m => m.CreateInstance()).Returns(productOption.Object);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Guid productId = Guid.NewGuid();
             Guid optionId = Guid.NewGuid();
             const decimal PRICE_OVERRIDE = 12.50m;
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            bool result = await sut.AddProductOptionAsync(productId, optionId, PRICE_OVERRIDE, TestContext.CurrentContext.CancellationToken);
+            bool result = await sut.AddProductOptionAsync(productId, optionId, PRICE_OVERRIDE,
+                TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             result.Should().BeTrue();
             productOption.Object.ProductId.Should().Be(productId);
             productOption.Object.OptionId.Should().Be(optionId);
             productOption.Object.Price.Should().Be(PRICE_OVERRIDE);
-            productOptionRepo.Verify(m => m.AddProductOptionAsync(productOption.Object, TestContext.CurrentContext.CancellationToken));
+            productOptionRepo.Verify(m =>
+                m.AddProductOptionAsync(productOption.Object, TestContext.CurrentContext.CancellationToken));
         }
 
         [Test, Description("Adding a product option with a zero or negative price override should default to zero")]
@@ -270,10 +285,12 @@ namespace ProductManager.Business.Tests
             productOption.SetupAllProperties();
             productOptionRepo.Setup(m => m.CreateInstance()).Returns(productOption.Object);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            bool result = await sut.AddProductOptionAsync(Guid.NewGuid(), Guid.NewGuid(), -3m, TestContext.CurrentContext.CancellationToken);
+            bool result = await sut.AddProductOptionAsync(Guid.NewGuid(), Guid.NewGuid(), -3m,
+                TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             result.Should().BeTrue();
@@ -292,7 +309,8 @@ namespace ProductManager.Business.Tests
             Guid optionRecordId = Guid.NewGuid();
             productOptionRepo.Setup(m => m.DeleteAsync(optionRecordId, It.IsAny<CancellationToken>()));
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             await sut.DeleteProductOptionAsync(optionRecordId, TestContext.CurrentContext.CancellationToken);
@@ -313,17 +331,21 @@ namespace ProductManager.Business.Tests
             Guid productId = Guid.NewGuid();
             Mock<IProductCharacteristic> characteristic = new();
             IEnumerable<IProductCharacteristic> data = new List<IProductCharacteristic> { characteristic.Object };
-            productCharacteristicRepo.Setup(m => m.ListProductCharacteristicsAsync(productId, It.IsAny<CancellationToken>()))
+            productCharacteristicRepo
+                .Setup(m => m.ListProductCharacteristicsAsync(productId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            IEnumerable<IProductCharacteristic> results = await sut.ListProductCharacteristicsAsync(productId,TestContext.CurrentContext.CancellationToken);
+            IEnumerable<IProductCharacteristic> results =
+                await sut.ListProductCharacteristicsAsync(productId, TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             results.Should().BeEquivalentTo(data);
-            productCharacteristicRepo.Verify(m => m.ListProductCharacteristicsAsync(productId, TestContext.CurrentContext.CancellationToken));
+            productCharacteristicRepo.Verify(m =>
+                m.ListProductCharacteristicsAsync(productId, TestContext.CurrentContext.CancellationToken));
         }
 
         [Test, Description("Adding a product characteristic with an invalid product ID should throw")]
@@ -334,7 +356,8 @@ namespace ProductManager.Business.Tests
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductCharacteristic(Guid.Empty, "Color", "Red"));
@@ -348,7 +371,8 @@ namespace ProductManager.Business.Tests
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductCharacteristic(Guid.NewGuid(), string.Empty, "Red"));
@@ -362,13 +386,15 @@ namespace ProductManager.Business.Tests
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductCharacteristic(Guid.NewGuid(), "Color", string.Empty));
         }
 
-        [Test, Description("Adding a product characteristic with valid arguments should populate and delegate to the repo")]
+        [Test,
+         Description("Adding a product characteristic with valid arguments should populate and delegate to the repo")]
         public async Task AddProductCharacteristic_ValidArguments_CallsCharacteristicRepoAdd_Successfully()
         {
             await TestContext.Out.WriteLineAsync("Setting up test");
@@ -382,24 +408,29 @@ namespace ProductManager.Business.Tests
             productCharacteristicRepo.Setup(m => m.CreateInstance()).Returns(characteristic.Object);
 
             Guid expectedId = Guid.NewGuid();
-            productCharacteristicRepo.Setup(m => m.AddProductCharacteristicAsync(It.IsAny<IProductCharacteristic>(), It.IsAny<CancellationToken>()))
+            productCharacteristicRepo.Setup(m =>
+                    m.AddProductCharacteristicAsync(It.IsAny<IProductCharacteristic>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedId);
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             Guid productId = Guid.NewGuid();
             const string NAME = "Color";
             const string VALUE = "Red";
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            Guid result = await sut.AddProductCharacteristic(productId, NAME, VALUE, TestContext.CurrentContext.CancellationToken);
+            Guid result =
+                await sut.AddProductCharacteristic(productId, NAME, VALUE,
+                    TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             result.Should().Be(expectedId);
             characteristic.Object.ProductId.Should().Be(productId);
             characteristic.Object.Name.Should().Be(NAME);
             characteristic.Object.CharacteristicValue.Should().Be(VALUE);
-            productCharacteristicRepo.Verify(m => m.AddProductCharacteristicAsync(characteristic.Object, TestContext.CurrentContext.CancellationToken));
+            productCharacteristicRepo.Verify(m =>
+                m.AddProductCharacteristicAsync(characteristic.Object, TestContext.CurrentContext.CancellationToken));
         }
 
         [Test, Description("Deleting a product characteristic should delegate to the characteristic repo")]
@@ -414,13 +445,159 @@ namespace ProductManager.Business.Tests
             Guid characteristicId = Guid.NewGuid();
             productCharacteristicRepo.Setup(m => m.DeleteAsync(characteristicId, It.IsAny<CancellationToken>()));
 
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object, productCharacteristicRepo.Object);
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             await sut.DeleteProductCharacteristicAsync(characteristicId, TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
-            productCharacteristicRepo.Verify(m => m.DeleteAsync(characteristicId, TestContext.CurrentContext.CancellationToken));
+            productCharacteristicRepo.Verify(m =>
+                m.DeleteAsync(characteristicId, TestContext.CurrentContext.CancellationToken));
         }
+
+        [Test, Description("UpdateProductAsync should throw ArgumentNullException if the product is null")]
+        public void UpdateProductAsync_NullProduct_ThrowsArgumentNullException()
+        {
+            // Arrange
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+            Mock<IProductOptionRepo> productOptionRepo = new();
+            Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
+            // Act & Assert
+            Assert.ThrowsAsync<ArgumentNullException>(() =>
+                sut.UpdateProductAsync(null!, TestContext.CurrentContext.CancellationToken));
+        }
+
+        [Test, Description("UpdateProductAsync should not update if the Sells collection is empty")]
+        public async Task UpdateProductAsync_EmptySells_NoUpdatePerformed()
+        {
+            // Arrange
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+            Mock<IProductOptionRepo> productOptionRepo = new();
+            Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IFullProduct> product = new();
+            product.Setup(p => p.Sells).Returns(Enumerable.Empty<IProductSell>());
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
+            // Act
+            await sut.UpdateProductAsync(product.Object, TestContext.CurrentContext.CancellationToken);
+            // Assert
+            productRepo.Verify(m => m.UpdateProductAsync(It.IsAny<IFullProduct>(), It.IsAny<CancellationToken>()),
+                Times.Never);
+        }
+
+        [Test, Description("UpdateProductAsync should remove overlapping or contained periods in the Sells collection")]
+        public async Task UpdateProductAsync_WithInPeriods_RemovesConflictingSells()
+        {
+            // Arrange
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+            Mock<IProductOptionRepo> productOptionRepo = new();
+            Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            // Create overlapping and non-overlapping sells
+            var sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
+            var sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
+            var sell3 = new ProductSell(new DateTime(2023, 1, 15), new DateTime(2023, 1, 20)); // Contained within sell1
+            Mock<IFullProduct> product = new();
+            product.SetupAllProperties();
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
+            // Act
+            var productObj = product.Object;
+            var tempList = new List<IProductSell>();
+            tempList.Add(sell1);
+            tempList.Add(sell2);
+            tempList.Add(sell3);
+            productObj.Sells = tempList;
+            await sut.UpdateProductAsync(productObj, TestContext.CurrentContext.CancellationToken);
+            // Assert
+            productRepo.Verify(m => m.UpdateProductAsync(It.IsAny<IFullProduct>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+            productObj.Sells.Should().HaveCount(2,"There was one overlap");
+        }
+
+        [Test, Description("UpdateProductAsync should remove overlapping or contained periods in the Sells collection")]
+        public async Task UpdateProductAsync_OverLapsPeriods_RemovesConflictingSells()
+        {
+            // Arrange
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+            Mock<IProductOptionRepo> productOptionRepo = new();
+            Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            // Create overlapping and non-overlapping sells
+            var sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
+            var sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
+            var sell3 = new ProductSell(new DateTime(2023, 2, 15), new DateTime(2023, 3, 20)); // overlaps sell2
+            Mock<IFullProduct> product = new();
+            product.SetupAllProperties();
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
+            // Act
+            var productObj = product.Object;
+            var tempList = new List<IProductSell>();
+            tempList.Add(sell1);
+            tempList.Add(sell2);
+            tempList.Add(sell3);
+            productObj.Sells = tempList;
+            await sut.UpdateProductAsync(productObj, TestContext.CurrentContext.CancellationToken);
+            // Assert
+            productRepo.Verify(m => m.UpdateProductAsync(It.IsAny<IFullProduct>(), It.IsAny<CancellationToken>()),
+                Times.Once);
+            productObj.Sells.Should().HaveCount(2,"There was one overlap");
+        }
+
+        [Test, Description("UpdateProductAsync should update the product if it is valid and has non-empty Sells")]
+        public async Task UpdateProductAsync_ValidProduct_UpdatesSuccessfully()
+        {
+            // Arrange
+            Mock<ILogger<ProductService>> logger = new();
+            Mock<IProductRepo> productRepo = new();
+            Mock<IProductOptionRepo> productOptionRepo = new();
+            Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            // Create a valid sell
+            var sell = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28));
+            Mock<IFullProduct> product = new();
+            product.SetupAllProperties();
+            var productObj = product.Object;
+            var tempList = new List<IProductSell>();
+            tempList.Add(sell);
+            productObj.Sells = tempList;
+            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
+                productCharacteristicRepo.Object);
+            // Act
+            await sut.UpdateProductAsync(product.Object, TestContext.CurrentContext.CancellationToken);
+            // Assert
+            productRepo.Verify(m => m.UpdateProductAsync(product.Object, TestContext.CurrentContext.CancellationToken),
+                Times.Once);
+            productObj.Sells.Should().HaveCount(1,"There was no overlap or within");
+        }
+
+
+        class ProductSell : IProductSell
+        {
+            public Guid Id { get; set; }
+            public Guid ProductId { get; set; }
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+
+            DateRange IProductSell.Period
+            {
+                get => Period;
+                set => Period = value;
+            }
+
+            public decimal Price { get; set; }
+            public DateRange Period { get; set; }
+
+            public ProductSell(DateTime start, DateTime end)
+            {
+                Period = new DateRange(start, end);
+            }
+        }
+
     }
 }
