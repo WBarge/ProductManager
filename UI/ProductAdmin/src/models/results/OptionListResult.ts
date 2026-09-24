@@ -1,6 +1,6 @@
-import { ProductOption } from "./ProductOption";
+import { Option } from "./option";
 
 export class OptionListResult {
-  public data!:ProductOption[];
+  public data!:Option[];
   public totalRecordSize!:number;
 }

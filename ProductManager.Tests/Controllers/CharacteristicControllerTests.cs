@@ -79,11 +79,10 @@ namespace ProductManager.Service.Tests.Controllers
             // Act
             IActionResult result = await sut.CreateCharacteristic(characteristicName);
             // Assert
-            result.Should().BeOfType<CreatedResult>();
-            CreatedResult? castedResult = result as CreatedResult;
+            result.Should().BeOfType<OkObjectResult>();
+            OkObjectResult? castedResult = result as OkObjectResult;
             castedResult.Should().NotBeNull();
-            castedResult!.Location.Should().Be($"/api/characteristic/{mockCharacteristicId}");
-            castedResult.Value.Should().BeEquivalentTo(mockedCharacteristic);
+            castedResult!.Value.Should().BeEquivalentTo(mockedCharacteristic);
         }
     }
 }

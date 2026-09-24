@@ -73,7 +73,7 @@ namespace ProductManager.Business.Tests
             Guid characteristicId = Guid.NewGuid();
             string value = "Test Value";
             _repoMock.Setup(repo => repo.AddValue(It.IsAny<ICharacteristicValue>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync((new Mock<ICharacteristicValue>()).Object);
             // Act
             await _sut.AddValueToCharacteristicAsync(characteristicId, value);
             // Assert

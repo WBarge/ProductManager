@@ -80,13 +80,12 @@ namespace ProductManager.Data.EF.Repos
         public async Task<Guid> AddOptionAsync(IOption option, CancellationToken cancellationToken = default)
         {
             string localName = option.Name ?? throw new ArgumentException(nameof(option.Name));
-            string localDescription = option.Description ?? throw new ArgumentException(nameof(option.Description));
             decimal localPrice = option.Price <= 0 ? throw new ArgumentException(nameof(option.Price)) : option.Price;
             decimal localCost = option.Cost <= 0 ? throw new ArgumentException(nameof(option.Cost)) : option.Cost;
 
             Option p = Create();
             p.Name = localName;
-            p.Description = localDescription;
+            p.Description = option.Description;
             p.Price = localPrice;
             p.Cost = localCost;
             p.Estimated = option.Estimated;

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Mvc;
+using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
+using ProductManager.Service.Models.Result;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,8 +41,21 @@ namespace ProductManager.Service.Controllers
         /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post(Guid id, [FromBody] string value)
-        {   
-            await _characteristicService.AddValueToCharacteristicAsync(id, value);
+        {
+            ICharacteristicValue result = await _characteristicService.AddValueToCharacteristicAsync(id, value);
+            return new OkObjectResult(new CharacteristicValueResult(result));
+        }
+
+        /// <summary>
+        /// delete the characteristic value from the system.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="valueId"></param>
+        /// <returns></returns>
+        [HttpDelete("{valueId:guid}")]
+        public async Task<IActionResult> Delete(Guid id, Guid valueId)
+        {
+            await _characteristicService.DeleteCharacteristicValueAsync(id, valueId);
             return Ok();
         }
 

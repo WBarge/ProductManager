@@ -2,6 +2,7 @@
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Models.Request;
+using ProductManager.Service.Models.Transformers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,7 +72,6 @@ namespace ProductManager.Service.Controllers
             return new OkObjectResult(newId);
         }
 
-        
         // POST api/<ProductController>
         //[HttpPost]
         //public void Post([FromBody] string value)
@@ -90,6 +90,26 @@ namespace ProductManager.Service.Controllers
             _logger.LogDebug("request to delete product");
             await this._productService.DeleteProductAsync(id);
             return Ok();
+        }
+
+        /// <summary>
+        /// updates the product
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Update([FromBody] FullProductRequest request)
+        {
+            _logger.LogDebug("request to Update product");
+            if (request == null)
+            {
+                return BadRequest("Request body is null");
+            }
+            IFullProduct fullProduct = request.TransformFullProductRequest();
+            await _productService.UpdateProductAsync(fullProduct);
+            return new OkResult();
         }
     }
 }

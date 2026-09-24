@@ -34,7 +34,8 @@ namespace ProductManager.Glue.Interfaces.Services
         /// <param name="value">The value to add.</param>
         /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A Task representing the asynchronous operation.</returns>
-        Task AddValueToCharacteristicAsync(Guid characteristicId, string value, CancellationToken cancellationToken = default);
+        Task<ICharacteristicValue> AddValueToCharacteristicAsync(Guid characteristicId, string value,
+            CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Gets the full characteristic information by its unique identifier as an asynchronous operation.
@@ -44,5 +45,6 @@ namespace ProductManager.Glue.Interfaces.Services
         /// <returns>A task that represents the asynchronous operation. The task result contains the full characteristic information.</returns>
         Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken cancellationToken = default);
 
+        Task<bool> DeleteCharacteristicValueAsync(Guid id, Guid valueId, CancellationToken token = default);
     }
 }

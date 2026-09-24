@@ -2,10 +2,10 @@ import { Service,inject } from '@angular/core';
 import { ErrorHandlerService, HandleError } from './error-handler.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { LocationService } from './location.service';
-import { catchError, Observable } from 'rxjs';
+import { catchError, map, Observable } from 'rxjs';
 import { ProductsListResult } from '../models/results/productsListResult';
 import { FilterDetail, FilterDictionary } from '../models/requests/filter-detail';
-import { ProductListRequest } from '../models/requests/product-list-request';
+import { ListRequest } from '../models/requests/list-request';
 import { Product } from '../models/results/product';
 
 
@@ -27,7 +27,7 @@ export class ProductService {
     this.handleError = this.httpErrorHandler.createHandleError('ProductService');
   }
 
-   getProducts( currentPage: number =1 ,
+  getProducts( currentPage: number =1 ,
                 pageSize: number = 10 ,
                 filters?:FilterDictionary
               ):Observable<ProductsListResult>{
@@ -40,23 +40,50 @@ export class ProductService {
       });
     }
 
-    var request:ProductListRequest = {
+    var request:ListRequest = {
       page: currentPage,
       pageSize: pageSize,
       filters:  filtersAsObject
     };
     return this.http.post<ProductsListResult>(this.productsServiceLocation,request)
-    .pipe(
-      catchError(this.handleError<ProductsListResult>('getProducts'))
-    );
+      .pipe(
+        map((results:any) => {
+          const returnValue = new ProductsListResult();
+          returnValue.totalRecordSize = results.totalRecordSize;
+          returnValue.data = results.data.map((product:any) => {
+            const tempProduct = new Product();
+            tempProduct.idValue = product.id;
+            tempProduct.name = product.name;
+            tempProduct.shortDescription = product.shortDescription;
+            tempProduct.sku = product.sku;
+            tempProduct.price = product.price;
+            tempProduct.description = product.description;
+            tempProduct.options = product.options;
+            return tempProduct;
+          });
+          return returnValue;
+        }),
+        catchError(this.handleError<ProductsListResult>('getProducts'))
+      );
   }
 
   getProductById(productId:string):Observable<Product>{
     var requestURl = this.productServiceLocation+'/'+productId;
     return this.http.get<Product>(requestURl)
     .pipe(
+      map((product:any) => {
+        const tempProduct = new Product();
+        tempProduct.idValue = product.id;
+        tempProduct.name = product.name;
+        tempProduct.shortDescription = product.shortDescription;
+        tempProduct.sku = product.sku;
+        tempProduct.price = product.price;
+        tempProduct.description = product.description;
+        tempProduct.options = product.options;
+        return tempProduct;
+      }),
       catchError(this.handleError<Product>('getProductById'))
-    );
+    )
   }
 
   quickAdd(newProduct:Product):Observable<any>{

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Controllers;
 
@@ -45,15 +46,16 @@ namespace ProductManager.Service.Tests.Controllers
             Guid characteristicId = Guid.NewGuid();
             string value = "Test Value";
             characteristicService.Setup(s => s.AddValueToCharacteristicAsync(characteristicId, value, It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+                .ReturnsAsync((new Mock<ICharacteristicValue>()).Object);
             CharacteristicValueController sut = new(logger.Object, characteristicService.Object);
             // Act
             IActionResult result = await sut.Post(characteristicId, value);
             // Assert
-            result.Should().BeOfType<OkResult>();
-            OkResult? castedResult = result as OkResult;
+            result.Should().BeOfType<OkObjectResult>();
+            OkObjectResult? castedResult = result as OkObjectResult;
             castedResult.Should().NotBeNull();
             castedResult!.StatusCode.Should().Be(200);
+            castedResult.Value.Should().NotBeNull();
             characteristicService.Verify(s => s.AddValueToCharacteristicAsync(characteristicId, value, It.IsAny<CancellationToken>()), Times.Once);
         }
         

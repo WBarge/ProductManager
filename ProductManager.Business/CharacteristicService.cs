@@ -79,7 +79,8 @@ public class CharacteristicService : ICharacteristicService
     /// <param name="value">The value to add.</param>
     /// <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>A Task representing the asynchronous operation.</returns>
-    public async Task AddValueToCharacteristicAsync(Guid characteristicId, string value, CancellationToken cancellationToken = default)
+    public async Task<ICharacteristicValue> AddValueToCharacteristicAsync(Guid characteristicId, string value,
+        CancellationToken cancellationToken = default)
     {
         _logger.LogDebug($"AddValueToCharacteristicAsync called for Characteristic ID: {characteristicId}");
         ICharacteristicValue newValue = new CharacteristicValue
@@ -87,7 +88,7 @@ public class CharacteristicService : ICharacteristicService
             CharacteristicId = characteristicId,
             Value = value
         };
-        await _repo.AddValue(newValue, cancellationToken);
+        return await _repo.AddValue(newValue, cancellationToken);
     }
 
     /// <summary>
@@ -100,5 +101,11 @@ public class CharacteristicService : ICharacteristicService
     {
         _logger.LogDebug($"GetFullCharacteristicAsync called for ID: {id}");
         return await _repo.GetFullCharacteristicAsync(id, cancellationToken);
+    }
+
+    public async Task<bool> DeleteCharacteristicValueAsync(Guid id, Guid valueId, CancellationToken token = default)
+    {
+        _logger.LogDebug($"DeleteCharacteristicValueAsync for charId:{id} and valueId:{valueId}");
+        return await _repo.DeleteValue(valueId, token);
     }
 }

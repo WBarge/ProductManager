@@ -67,7 +67,7 @@ export class ProductListComponent implements OnInit{
     this.dataService.getProducts(this.currentPage,this.pageSize,transFormedFilters)
       .subscribe((results:ProductsListResult)=>{
         this.products = results.data;
-        this.totalItems = results.totalRecordSize;
+        this.totalItems = results.totalRecordSize
       });
   }
 
@@ -90,6 +90,7 @@ export class ProductListComponent implements OnInit{
   }
 
   delete(productToDelete:Product){
+
     this.dataService?.deleteProduct(productToDelete).subscribe(()=>{
       this.products = this.products.filter(p=>p.idValue!= productToDelete.idValue);
     });

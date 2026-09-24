@@ -131,9 +131,11 @@ namespace ProductManager.Data.EF.Tests.Repos
                         CharacteristicId = existingCharacteristic.Id, Value = "New Value"
                     };
                     // Add the new characteristic value
-                    bool result = await sut.AddValue(newValue, CancellationToken.None);
+                    ICharacteristicValue result = await sut.AddValue(newValue, CancellationToken.None);
                     // Assert the result is true
-                    result.Should().BeTrue();
+                    result.Id.Should()
+                        .NotBeEmpty(
+                            "the record was just added to the system and the insert should be returning the id of the record plus the record itself");
                 }
             }
 

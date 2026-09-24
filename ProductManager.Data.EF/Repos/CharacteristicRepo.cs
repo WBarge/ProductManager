@@ -5,6 +5,7 @@ using ProductManager.Data.EF.Transformers.InternalModels;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Repos;
 using System.Reflection.PortableExecutable;
+using System.Xml.Linq;
 
 namespace ProductManager.Data.EF.Repos
 {
@@ -40,7 +41,7 @@ namespace ProductManager.Data.EF.Repos
         /// <exception cref="OperationCanceledException">
         /// Thrown if the operation is canceled.
         /// </exception>
-        public async Task<IEnumerable<IFullCharacteristic>> GetAll(CancellationToken token)
+        public async Task<IEnumerable<IFullCharacteristic>> GetAll(CancellationToken token=default)
         {
             List<Characteristic> characteristics = await DbContext.Characteristics
                 .Include(c => c.Values)
@@ -76,7 +77,7 @@ namespace ProductManager.Data.EF.Repos
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="recordToAdd"/> is <c>null</c>.
         /// </exception>
-        public async Task<ICharacteristic> Add(ICharacteristic recordToAdd, CancellationToken token)
+        public async Task<ICharacteristic> Add(ICharacteristic recordToAdd, CancellationToken token=default)
         {
             if (recordToAdd == null)
             {
@@ -90,7 +91,7 @@ namespace ProductManager.Data.EF.Repos
 
             return entity;
         }
-      
+
         /// <summary>
         /// Adds a new characteristic value to the database.
         /// </summary>
@@ -106,7 +107,7 @@ namespace ProductManager.Data.EF.Repos
         /// <exception cref="KeyNotFoundException">
         /// Thrown when the characteristic with the specified <see cref="ICharacteristicValue.CharacteristicId"/> does not exist.
         /// </exception>
-        public async Task<bool> AddValue(ICharacteristicValue value, CancellationToken token)
+        public async Task<ICharacteristicValue> AddValue(ICharacteristicValue value, CancellationToken token)
         {
             if (value == null || value.CharacteristicId == Guid.Empty)
             {
@@ -123,7 +124,8 @@ namespace ProductManager.Data.EF.Repos
             CharacteristicValue entity = new CharacteristicValue
             {
                 CharacteristicId = value.CharacteristicId,
-                Value = value.Value
+                Value = value.Value,
+                Created = DateTime.UtcNow
             };
             characteristic.Values ??= new List<CharacteristicValue>();
             characteristic.Values.Add(entity);
@@ -131,6 +133,25 @@ namespace ProductManager.Data.EF.Repos
 
             await SaveAsync(token);
 
+            return entity;
+        }
+
+        /// <summary>
+        /// remove a characteristic value from the system
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteValue(Guid id, CancellationToken token = default)
+        {
+            // ReSharper disable once MethodSupportsCancellation
+            CharacteristicValue? characteristicValue = await DbContext.CharacteristicValues.FindAsync(id, token);
+            if (characteristicValue == null)
+            {
+                return false;
+            }
+            DbContext.CharacteristicValues.Remove(characteristicValue);
+            await SaveAsync(token);
             return true;
         }
 
@@ -143,7 +164,7 @@ namespace ProductManager.Data.EF.Repos
         /// A task that represents the asynchronous operation. The task result contains 
         /// <c>true</c> if the record was successfully deleted; otherwise, <c>false</c>.
         /// </returns>
-        public async Task<bool> Delete(Guid id,CancellationToken token)
+        public async Task<bool> Delete(Guid id,CancellationToken token=default)
         {
             Characteristic? recordToDelete = await FindByIdAsync(id, token);
             if (recordToDelete == null)
@@ -155,7 +176,6 @@ namespace ProductManager.Data.EF.Repos
             return true;
         }
 
-
         /// <summary>
         /// Gets the full characteristic information by its unique identifier.
         /// </summary>
@@ -165,7 +185,7 @@ namespace ProductManager.Data.EF.Repos
         /// A task that represents the asynchronous operation. The task result contains the full characteristic information.
         /// </returns>
         /// <exception cref="KeyNotFoundException"></exception>
-        public async Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken token)
+        public async Task<IFullCharacteristic> GetFullCharacteristicAsync(Guid id, CancellationToken token=default)
         {
             Characteristic? characteristic = await DbContext.Characteristics
                 .Include(c => c.Values)

@@ -50,7 +50,19 @@ namespace ProductManager.Service.Controllers
         public async Task<IActionResult> CreateCharacteristic([FromBody] string name)
         {
             ICharacteristic newCharacteristic = await _characteristicService.CreateCharacteristicAsync(name);
-            return new CreatedResult($"/api/characteristic/{newCharacteristic.Id}", newCharacteristic);
+            return new OkObjectResult(newCharacteristic);
+        }
+
+        /// <summary>
+        /// Delete a characteristic from the system
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteCharacteristic(Guid id)
+        {
+            await _characteristicService.DeleteCharacteristicAsync(id);
+            return Ok();
         }
     }
 }

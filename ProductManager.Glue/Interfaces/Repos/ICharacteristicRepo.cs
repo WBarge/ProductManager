@@ -60,7 +60,9 @@ namespace ProductManager.Glue.Interfaces.Repos
         /// <exception cref="KeyNotFoundException">
         /// Thrown when the characteristic with the specified <see cref="ICharacteristicValue.CharacteristicId"/> does not exist.
         /// </exception>
-        Task<bool> AddValue(ICharacteristicValue value, CancellationToken token);
+        Task<ICharacteristicValue> AddValue(ICharacteristicValue value, CancellationToken token);
+
+        Task<bool> DeleteValue(Guid id, CancellationToken token = default);
 
         /// <summary>
         /// Deletes a characteristic record by its unique identifier.

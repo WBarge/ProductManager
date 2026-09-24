@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
     this.items = [
        { label: 'Products', routerLink: ['/products'] },
        { label: 'Options', routerLink: ['/options'] },
+       { label: 'Characteristics',routerLink:['/characteristics']},
        { label: 'About', routerLink: ['/about'] }
       ];
   }

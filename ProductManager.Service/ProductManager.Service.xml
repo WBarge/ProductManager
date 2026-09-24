@@ -31,6 +31,13 @@
             <param name="name"></param>
             <returns></returns>
         </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicController.DeleteCharacteristic(System.Guid)">
+            <summary>
+            Delete a characteristic from the system
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="T:ProductManager.Service.Controllers.CharacteristicsController">
             <summary>
             Represents the characteristics controller.
@@ -69,6 +76,14 @@
             </summary>
             <param name="id"></param>
             <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ProductManager.Service.Controllers.CharacteristicValueController.Delete(System.Guid,System.Guid)">
+            <summary>
+            delete the characteristic value from the system.
+            </summary>
+            <param name="id"></param>
+            <param name="valueId"></param>
             <returns></returns>
         </member>
         <member name="T:ProductManager.Service.Controllers.OptionController">
@@ -260,6 +275,13 @@
             <param name="id">The identifier.</param>
             <returns>IActionResult.</returns>
         </member>
+        <member name="M:ProductManager.Service.Controllers.ProductController.Update(ProductManager.Service.Models.Request.FullProductRequest)">
+            <summary>
+            updates the product
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="T:ProductManager.Service.Controllers.ProductOptionController">
             <summary>
             Represents a controller for managing product options.
@@ -410,6 +432,156 @@
             </summary>
             <value>The logical operator.</value>
         </member>
+        <member name="T:ProductManager.Service.Models.Request.FullProductRequest">
+            <summary>
+            request object to contain a full product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Id">
+            <summary>
+            id
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Name">
+            <summary>
+            The name of the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.ShortDescription">
+            <summary>
+            a short description for the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Sku">
+            <summary>
+            a sku number for the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Price">
+            <summary>
+            the price of the product the customer is expected to pay
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Cost">
+            <summary>
+            The cost of the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Estimated">
+            <summary>
+            The estimated manufacture price
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Description">
+            <summary>
+            The full description of the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Characteristics">
+            <summary>
+            the characteristics of the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Options">
+            <summary>
+            Any options that have been added to the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.FullProductRequest.Sells">
+            <summary>
+            Any time periods the product is on sell
+            </summary>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.ProdChar">
+            <summary>
+            The characteristic for a product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdChar.Id">
+            <summary>
+            primary id
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdChar.ProductId">
+            <summary>
+            id of the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdChar.Name">
+            <summary>
+            the name of the characteristic
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdChar.CharacteristicValue">
+            <summary>
+            the value of the characteristic
+            </summary>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.ProOption">
+            <summary>
+            an option for the product
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProOption.Id">
+            <summary>
+            the id
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProOption.OptionId">
+            <summary>
+            the id of the option
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProOption.ProductId">
+            <summary>
+            the id of the product the option is for
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProOption.Price">
+            <summary>
+            the price of the option
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProOption.Name">
+            <summary>
+            the name of the option
+            </summary>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.ProdSell">
+            <summary>
+            a fancy date range in which the product is on sell
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdSell.Id">
+            <summary>
+            the id
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdSell.ProductId">
+            <summary>
+            the product id
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdSell.Start">
+            <summary>
+            the start date of the sell
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdSell.End">
+            <summary>
+            the end date of the sell
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdSell.Period">
+            <summary>
+            The sale dates as a range
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProdSell.Price">
+            <summary>
+            the price of the product during the sell period.
+            </summary>
+        </member>
         <member name="T:ProductManager.Service.Models.Request.ListRequest">
             <summary>
             Class ProductListRequest.
@@ -497,6 +669,27 @@
             </summary>
             <value>The price.</value>
         </member>
+        <member name="T:ProductManager.Service.Models.Result.CharacteristicValueResult">
+            <summary>
+            A result object - needed cause .Net will serialize the full object that implements ICharacteristicValue, we only want specific properties returned
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Models.Result.CharacteristicValueResult.#ctor(ProductManager.Glue.Interfaces.Models.ICharacteristicValue)">
+            <summary>
+            The constructor
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="P:ProductManager.Service.Models.Result.CharacteristicValueResult.Id">
+            <summary>
+            id of the value
+            </summary>
+        </member>
+        <member name="P:ProductManager.Service.Models.Result.CharacteristicValueResult.Value">
+            <summary>
+            the characteristic value
+            </summary>
+        </member>
         <member name="T:ProductManager.Service.Models.Result.ErrorMessageForClient">
             <summary>
             Class ErrorMessageForClient.
@@ -525,30 +718,6 @@
             </summary>
             <param name="x">The x.</param>
         </member>
-        <member name="T:ProductManager.Service.Models.Result.TestData">
-            <summary>
-            Class TestData.
-            </summary>
-        </member>
-        <member name="M:ProductManager.Service.Models.Result.TestData.#ctor(System.Int32,System.String)">
-            <summary>
-            
-            </summary>
-            <param name="name"></param>
-            <param name="id"></param>
-        </member>
-        <member name="P:ProductManager.Service.Models.Result.TestData.Id">
-            <summary>
-            Gets or sets the identifier.
-            </summary>
-            <value>The identifier.</value>
-        </member>
-        <member name="P:ProductManager.Service.Models.Result.TestData.Name">
-            <summary>
-            Gets or sets the name.
-            </summary>
-            <value>The name.</value>
-        </member>
         <member name="T:ProductManager.Service.Models.Transformers.FilterTransformers">
             <summary>
             Class FilterTransformers.
@@ -560,6 +729,19 @@
             </summary>
             <param name="request">The request.</param>
             <returns>System.Nullable&lt;Dictionary&lt;System.String, IFilterMetaData[]&gt;&gt;.</returns>
+        </member>
+        <member name="T:ProductManager.Service.Models.Transformers.FullProductRequestTransformer">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:ProductManager.Service.Models.Transformers.FullProductRequestTransformer.TransformFullProductRequest(ProductManager.Service.Models.Request.FullProductRequest)">
+            <summary>
+            Transforms a <see cref="T:ProductManager.Service.Models.Request.FullProductRequest"/> into an <see cref="T:ProductManager.Glue.Interfaces.Models.IFullProduct"/>.
+            </summary>
+            <param name="request">the request to transform</param>
+            <returns>an <see cref="T:ProductManager.Glue.Interfaces.Models.IFullProduct"/> populated from the request</returns>
+            <exception cref="T:System.ArgumentNullException">thrown when <paramref name="request"/> is null</exception>
         </member>
         <member name="T:ProductManager.Service.Program">
             <summary>

@@ -25,4 +25,5 @@ public interface IProductService
     Task<IEnumerable<IProductCharacteristic>> ListProductCharacteristicsAsync(Guid productId, CancellationToken cancellationToken = default);
     Task<Guid> AddProductCharacteristic(Guid productId, string name, string value, CancellationToken cancellationToken = default);
     Task DeleteProductCharacteristicAsync(Guid id, CancellationToken cancellationToken = default);
+    Task UpdateProductAsync(IFullProduct product, CancellationToken cancellationToken = default);
 }

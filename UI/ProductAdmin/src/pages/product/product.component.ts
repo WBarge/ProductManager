@@ -60,7 +60,7 @@ constructor() {
   }
 
   ngOnInit(): void {
-    this.optionService.getOptions().subscribe({
+    this.optionService.getSelectedOptions().subscribe({
       next: (options) => {
         this._optionsList = options;
       }
