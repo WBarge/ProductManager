@@ -73,3 +73,12 @@ p-inputnumber .option-price {
   margin-bottom: 0.25rem;
   flex-basis: 15px;
 }
+
+.characteristic-name {
+  padding-right: 0.2rem;
+}
+
+.characteristic-price {
+  padding-left: 1rem;
+  padding-right: 2rem;
+}

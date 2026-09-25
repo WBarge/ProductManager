@@ -286,6 +286,7 @@
             <summary>
             Represents a controller for managing product options.
             </summary>
+            <param name="productId">The id of the product to work with</param>
         </member>
         <member name="M:ProductManager.Service.Controllers.ProductOptionController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.ProductOptionController},ProductManager.Glue.Interfaces.Services.IProductService)">
             <summary>
@@ -299,15 +300,15 @@
             <summary>
             Creates a new product option.
             </summary>
-            <param name="productId">from url</param>
-            <param name="id">from url</param>
-            <param name="priceOverride">from body - the number by itself</param>
+            <param name="productId">The id of the product to add the option to</param>
+            <param name="id">The id of the option to add</param>
+            <param name="priceOverride">Optional: override the price of the option with this value</param>
         </member>
         <member name="M:ProductManager.Service.Controllers.ProductOptionController.Delete(System.Guid)">
             <summary>
             Deletes a product option.
             </summary>
-            <param name="id"></param>
+            <param name="id">the id of the productOption</param>
             <exception cref="T:System.NotImplementedException"></exception>
         </member>
         <member name="T:ProductManager.Service.Controllers.ProductsController">

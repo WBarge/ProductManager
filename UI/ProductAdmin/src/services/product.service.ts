@@ -7,6 +7,7 @@ import { ProductsListResult } from '../models/results/productsListResult';
 import { FilterDetail, FilterDictionary } from '../models/requests/filter-detail';
 import { ListRequest } from '../models/requests/list-request';
 import { Product } from '../models/results/product';
+import { ProductCharacteristic } from '../models/results/product-characteristic';
 
 
 @Service()
@@ -17,6 +18,8 @@ export class ProductService {
 
   private productsServiceLocation:string;
   private productServiceLocation:string;
+  private productCharacteristicSubLocation:string;
+  private productOptionSubLocation:string;
   private handleError: HandleError;
 
 
@@ -24,6 +27,8 @@ export class ProductService {
   constructor() {
     this.productsServiceLocation = this.location.getLocationUrl()+'Products';
     this.productServiceLocation = this.location.getLocationUrl()+'Product';
+    this.productCharacteristicSubLocation = "Characteristic"
+    this.productOptionSubLocation = "Option";
     this.handleError = this.httpErrorHandler.createHandleError('ProductService');
   }
 
@@ -58,7 +63,6 @@ export class ProductService {
             tempProduct.sku = product.sku;
             tempProduct.price = product.price;
             tempProduct.description = product.description;
-            tempProduct.options = product.options;
             return tempProduct;
           });
           return returnValue;
@@ -78,8 +82,11 @@ export class ProductService {
         tempProduct.shortDescription = product.shortDescription;
         tempProduct.sku = product.sku;
         tempProduct.price = product.price;
+        tempProduct.cost = product.cost;
+        tempProduct.estimated = product.estimated;
         tempProduct.description = product.description;
         tempProduct.options = product.options;
+        tempProduct.characteristics = product.characteristics
         return tempProduct;
       }),
       catchError(this.handleError<Product>('getProductById'))
@@ -96,5 +103,36 @@ export class ProductService {
   deleteProduct(productToDelete: Product):Observable<any> {
     var requestURl = this.productServiceLocation+'/'+productToDelete.idValue;
     return this.http.delete(requestURl).pipe(catchError(this.handleError<any>('deleteProduct')));
+  }
+
+  addCharacteristicToProduct(productId:string,prodChar:ProductCharacteristic):Observable<any>{
+    const url = this.productServiceLocation+'/'+productId+'/'+ this.productCharacteristicSubLocation;
+    const requst = {
+      name:prodChar.name,
+      value:prodChar.characteristicValue
+    };
+    return this.http.post(url,requst)
+    .pipe(
+      catchError(this.handleError<any>('addCharacteristicToProduct'))
+    );
+  }
+
+  deleteCharacteristicFromProduct(productId:string,productChacacteristicId:string):Observable<any>{
+    const url = this.productServiceLocation+'/'+productId+'/'+ this.productCharacteristicSubLocation+'/'+productChacacteristicId;
+    return this.http.delete(url).pipe(catchError(this.handleError<any>('deleteCharacteristicFromProduct')));
+  }
+
+  addOptionToProduct(productId:string,optionId:string,priceOverride:number):Observable<any>{
+    const url = this.productServiceLocation+'/'+productId+'/'+ this.productOptionSubLocation+'/'+optionId;
+    return this.http.post(url,priceOverride)
+    .pipe(
+      catchError(this.handleError<any>('addOptionToProduct'))
+    );
+  }
+
+  deleteOptionFromProduct(productId:string,productOptionId:string):Observable<any>{
+    const url = this.productServiceLocation+'/'+productId+'/'+ this.productOptionSubLocation+'/'+productOptionId;
+    return this.http.delete(url).pipe(catchError(this.handleError<any>('deleteOptionFromProduct')));
+
   }
 }

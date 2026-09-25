@@ -8,6 +8,7 @@ namespace ProductManager.Service.Controllers
     /// <summary>
     /// Represents a controller for managing product options.
     /// </summary>
+    /// <param name="productId">The id of the product to work with</param>
     [Route("api/Product/{productId:guid}/Option")]
     [ApiController]
     public class ProductOptionController : ControllerBase
@@ -32,9 +33,9 @@ namespace ProductManager.Service.Controllers
         /// <summary>
         /// Creates a new product option.
         /// </summary>
-        /// <param name="productId">from url</param>
-        /// <param name="id">from url</param>
-        /// <param name="priceOverride">from body - the number by itself</param>
+        /// <param name="productId">The id of the product to add the option to</param>
+        /// <param name="id">The id of the option to add</param>
+        /// <param name="priceOverride">Optional: override the price of the option with this value</param>
         [HttpPost("{id:guid}")]
         public async Task<IActionResult> Post(Guid productId,Guid id,[FromBody] decimal priceOverride)
         {
@@ -54,7 +55,7 @@ namespace ProductManager.Service.Controllers
         /// <summary>
         /// Deletes a product option.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">the id of the productOption</param>
         /// <exception cref="NotImplementedException"></exception>
         [HttpDelete("{id:guid}")]       
         public async Task<IActionResult> Delete(Guid id)

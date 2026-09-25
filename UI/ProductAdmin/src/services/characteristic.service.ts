@@ -46,7 +46,7 @@ export class CharacteristicService {
   }
 
   getCharacteristic(characteristicId:string):Observable<Characteristic>{
-    const requstUrl = this.characteristicsServiceLocation+'/'+characteristicId;
+    const requstUrl = this.characteristicServiceLocation+'/'+characteristicId;
     return this.http.get<Characteristic>(requstUrl)
       .pipe(
         map((charact:any)=>{
