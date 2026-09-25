@@ -8,6 +8,7 @@ import { FilterDetail, FilterDictionary } from '../models/requests/filter-detail
 import { ListRequest } from '../models/requests/list-request';
 import { Product } from '../models/results/product';
 import { ProductCharacteristic } from '../models/results/product-characteristic';
+import { ProductOption } from '../models/results/ProductOption';
 
 
 @Service()
@@ -103,6 +104,54 @@ export class ProductService {
   deleteProduct(productToDelete: Product):Observable<any> {
     var requestURl = this.productServiceLocation+'/'+productToDelete.idValue;
     return this.http.delete(requestURl).pipe(catchError(this.handleError<any>('deleteProduct')));
+  }
+
+  updateProduct(productToUpdate:Product):Observable<any>{
+    const url=this.productServiceLocation;
+    const requestObj={
+      id: productToUpdate.idValue,
+      name: productToUpdate.name,
+      shortDescription:productToUpdate.shortDescription,
+      sku:productToUpdate.sku,
+      price:productToUpdate.price,
+      cost:productToUpdate.cost,
+      estimated: productToUpdate.estimated,
+      description:productToUpdate.description,
+      characteristics: productToUpdate.characteristics.map ((prodChar:ProductCharacteristic)=>{
+         return {
+          id: prodChar.idValue,
+          productId:productToUpdate.idValue,
+          name:prodChar.name,
+          characteristicValue:prodChar.characteristicValue
+         }
+      }),
+      options: productToUpdate.options.map((prodOption:ProductOption)=>{
+        return {
+          id:prodOption.idValue,
+          productId: productToUpdate.idValue,
+          optionId: prodOption.optionId,
+          price: prodOption.price,
+          name: prodOption.name
+        }
+      }),
+      sells: []
+  //   {
+  //     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  //     "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  //     "start": "2026-09-25T17:49:59.346Z",
+  //     "end": "2026-09-25T17:49:59.346Z",
+  //     "period": {
+  //       "start": "2026-09-25T17:49:59.346Z",
+  //       "end": "2026-09-25T17:49:59.346Z"
+  //     },
+  //     "price": 0
+  //   }
+  // ]
+    }
+    return this.http.put(url,requestObj)
+    .pipe(
+      catchError(this.handleError<any>('updateProduct'))
+    );
   }
 
   addCharacteristicToProduct(productId:string,prodChar:ProductCharacteristic):Observable<any>{

@@ -1,3 +1,17 @@
+.main-splitter {
+  height: 100vh; /* or whatever fixed/definite height makes sense in your layout */
+}
+
+.main-splitter > p-splitter-panel {
+  height: 100%;
+  display: flex; /* ensure the inner splitter can flex-grow to fill it */
+}
+
+.product-splitter {
+  width: 100%;
+  height: 100%;
+}
+
 .form-panel {
   display: flex;
   flex-direction: column;
@@ -5,6 +19,12 @@
   padding: 1rem;
   overflow: auto;
 }
+
+p-scrollarea {
+  height: 300px; /* or height: 100%, if the parent panel has a resolved height */
+  display: block;
+}
+
 
 
 .fieldOnSide{
@@ -40,6 +60,14 @@ label {
 
 .option-list {
   list-style-type: none;
+  width:fit-content;
+  margin: 0 auto;
+  margin-bottom: .5rem;
+
+  display: flex;
+  flex-direction: column; /* stack vertically, centered horizontally */
+  align-items: left;
+  list-style-position: inside; /* keeps bullets tucked in, optional */
 }
 
 .option-fieldset {
@@ -53,6 +81,10 @@ label {
 .option-name label {
   padding-right: 0.2rem;
   margin-bottom: 0.25rem;
+}
+
+.option-button{
+  margin-left: 1rem;
 }
 
 p-select .option-name  {
@@ -72,6 +104,11 @@ p-inputnumber .option-price {
   padding-left: 0.2rem;
   margin-bottom: 0.25rem;
   flex-basis: 15px;
+}
+
+.characteristic-list{
+  list-style: none;
+  margin-left: 0;
 }
 
 .characteristic-name {

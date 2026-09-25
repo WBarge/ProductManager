@@ -12,6 +12,7 @@ import { SplitterModule } from 'primeng/splitter';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { ScrollAreaModule } from 'primeng/scrollarea';
+import { ScrollArea, ScrollAreaViewport, ScrollAreaContent, ScrollAreaScrollbar, ScrollAreaHandle } from 'primeng/scrollarea';
 import { SelectModule } from 'primeng/select';
 import { OptionSelection } from '../../models/results/optionSelection';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -22,7 +23,6 @@ import { ProductCharacteristic } from '../../models/results/product-characterist
 import { CharacteristicValue } from '../../models/results/characteristic-value';
 import { ProductOption } from '../../models/results/ProductOption';
 
-
 @Component({
     selector: 'app-product',
     imports: [InputTextModule,
@@ -32,6 +32,12 @@ import { ProductOption } from '../../models/results/ProductOption';
       TextareaModule,
       ButtonModule,
       ScrollAreaModule,
+          ScrollArea,
+    ScrollAreaViewport,
+    ScrollAreaContent,
+    ScrollAreaScrollbar,
+    ScrollAreaHandle,
+
       SelectModule,
       FieldsetModule,
       ToolbarModule,
@@ -98,14 +104,19 @@ constructor() {
 
   }
 
-
   private sendMessage(severity:string,summary:string,detail:string){
     this.msgService.add({severity:severity,summary:summary,detail:detail});
   }
 
   submit(productToUpdate:Product){
     this.sendMessage('info','System Message','Updating Product');
-    this.router.navigate(['/products']);
+    // this.productService.updateProduct(productToUpdate)
+    // .subscribe({
+    //   next:()=>{
+    //     this.router.navigate(['/products']);
+    //   }
+    // });
+
   }
 
   addOptionToProduct(newProductOption: any) {
@@ -139,6 +150,9 @@ constructor() {
       .subscribe({
         next:()=>{
           this.loadProduct();
+          this.newProductCharacteristic = new ProductCharacteristic();
+          this.newProductCharacteristic.name = "";
+          this.newProductCharacteristic.characteristicValue = "";
         }
 
       });
