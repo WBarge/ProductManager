@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -39,7 +40,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<IProductService> productService = new();
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            ProductController sut = new(logger.Object, productService.Object);
+            ProductController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Examining results");
             sut.Should().NotBeNull();
@@ -63,7 +73,16 @@ namespace ProductManager.Service.Tests.Controllers
                 "Full Test", null!, null!, null!);
             productService.Setup(s => s.GetProductAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(product);
 
-            ProductController sut = new ProductController(logger.Object, productService.Object);
+            ProductController sut = new ProductController(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(productId);
 
@@ -87,7 +106,16 @@ namespace ProductManager.Service.Tests.Controllers
             productService.Setup(s => s.GetProductAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((IFullProduct?)null);
 
-            ProductController sut = new ProductController(logger.Object, productService.Object);
+            ProductController sut = new ProductController(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(productId);
 
@@ -111,7 +139,16 @@ namespace ProductManager.Service.Tests.Controllers
                 It.IsAny<decimal>(),
                 It.IsAny<CancellationToken>()));
 
-            ProductController sut = new(logger.Object, productService.Object);
+            ProductController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             QuickProductRequest request = new()
@@ -137,7 +174,16 @@ namespace ProductManager.Service.Tests.Controllers
                 It.IsAny<Guid>(),
                 It.IsAny<CancellationToken>()));
 
-            ProductController sut = new(logger.Object, productService.Object);
+            ProductController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IActionResult result = await sut.DeleteProduct(Guid.NewGuid());

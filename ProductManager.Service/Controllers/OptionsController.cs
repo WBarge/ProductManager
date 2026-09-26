@@ -64,11 +64,12 @@ namespace ProductManager.Service.Controllers
             {
                 request.PageSize = DATA_SIZE;
             }
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
 
             Dictionary<string, IFilterMetaData[]> filters = FilterTransformers.TransformFilters(request);
             var returnValue = new
             {
-                data = await _optionService.GetOptionsAsync(filters, request.Page.Value, request.PageSize.Value),
+                data = await _optionService.GetOptionsAsync(filters, request.Page.Value, request.PageSize.Value, token),
                 totalRecordSize = await _optionService.GetOptionCountAsync()
             };
             return new OkObjectResult(returnValue);

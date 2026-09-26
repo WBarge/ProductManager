@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -33,7 +34,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<CharacteristicsController>> logger = new();
             Mock<ICharacteristicService> characteristicService = new();
             // Act
-            CharacteristicsController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicsController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Assert
             sut.Should().NotBeNull();
         }
@@ -51,7 +61,16 @@ namespace ProductManager.Service.Tests.Controllers
             };
             characteristicService.Setup(s => s.GetAllCharacteristicsAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mockData);
-            CharacteristicsController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicsController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.GetAllCharacteristics();
             // Assert
@@ -70,7 +89,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ICharacteristicService> characteristicService = new();
             characteristicService.Setup(s => s.GetAllCharacteristicsAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new List<IFullCharacteristic>());
-            CharacteristicsController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicsController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             await sut.GetAllCharacteristics();
             // Assert
@@ -91,7 +119,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ICharacteristicService> characteristicService = new();
             characteristicService.Setup(s => s.GetAllCharacteristicsAsync(It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            CharacteristicsController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicsController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.GetAllCharacteristics();
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");

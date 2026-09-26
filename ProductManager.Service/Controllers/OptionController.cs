@@ -48,7 +48,8 @@ namespace ProductManager.Service.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             _logger.LogDebug("Get Option received request");
-            IOption? option = await _optionService.GetOptionAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            IOption? option = await _optionService.GetOptionAsync(id, token);
             if (option == null)
             {
                 return NotFound();
@@ -80,7 +81,8 @@ namespace ProductManager.Service.Controllers
                 return BadRequest("Option price cannot be negative");
             }
 
-            Guid newOptionId = await _optionService.AddOptionAsync(request);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            Guid newOptionId = await _optionService.AddOptionAsync(request, token);
             request.Id = newOptionId;
 
             return new CreatedResult("api/Option", request);// yes take advantage of the request object implementing IOption and return it with the new ID
@@ -112,7 +114,8 @@ namespace ProductManager.Service.Controllers
             {
                 return BadRequest("Invalid option data");
             }
-            bool updated = await _optionService.UpdateOptionAsync(request); 
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            bool updated = await _optionService.UpdateOptionAsync(request, token); 
             return new OkObjectResult(updated);
         }
 
@@ -132,7 +135,8 @@ namespace ProductManager.Service.Controllers
             {
                 return BadRequest("Option ID is required for deletion");
             }
-            bool deleted = await _optionService.DeleteOptionAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            bool deleted = await _optionService.DeleteOptionAsync(id, token);
             return new OkObjectResult(deleted);
         }
     }

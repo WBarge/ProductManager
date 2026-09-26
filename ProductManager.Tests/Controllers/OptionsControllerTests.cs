@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -36,7 +37,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<IOptionService> optionService = new();
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            OptionsController sut = new(logger.Object, optionService.Object);
+            OptionsController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Examining results");
             sut.Should().NotBeNull();
@@ -61,7 +71,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.GetOptionCountAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data.Count());
 
-            OptionsController sut = new(logger.Object, optionService.Object);
+            OptionsController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IActionResult result = await sut.GetOptions(null!);
@@ -101,7 +120,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.GetOptionCountAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data.Count());
 
-            OptionsController sut = new(logger.Object, optionService.Object);
+            OptionsController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             ListRequest request = new()
             {
@@ -137,7 +165,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.GetOptionCountAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(0);
 
-            OptionsController sut = new(logger.Object, optionService.Object);
+            OptionsController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             ListRequest request = new() { Page = page };
 
@@ -167,7 +204,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.GetOptionCountAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(0);
 
-            OptionsController sut = new(logger.Object, optionService.Object);
+            OptionsController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             ListRequest request = new() { PageSize = pageSize };
 

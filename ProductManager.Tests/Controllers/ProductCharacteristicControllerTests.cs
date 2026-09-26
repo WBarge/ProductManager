@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -49,7 +50,16 @@ namespace ProductManager.Service.Tests.Controllers
             IEnumerable<IProductCharacteristic> data = new List<IProductCharacteristic> { characteristic.Object };
             productService.Setup(s => s.ListProductCharacteristicsAsync(productId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(productId);
             // Assert
@@ -70,7 +80,16 @@ namespace ProductManager.Service.Tests.Controllers
             Guid productId = Guid.NewGuid();
             productService.Setup(s => s.ListProductCharacteristicsAsync(productId, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.Get(productId);
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");
@@ -93,7 +112,16 @@ namespace ProductManager.Service.Tests.Controllers
             IEnumerable<IProductCharacteristic> data = new List<IProductCharacteristic> { other.Object, matching.Object };
             productService.Setup(s => s.ListProductCharacteristicsAsync(productId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(productId, characteristicId);
             // Assert
@@ -116,7 +144,16 @@ namespace ProductManager.Service.Tests.Controllers
             IEnumerable<IProductCharacteristic> data = new List<IProductCharacteristic>();
             productService.Setup(s => s.ListProductCharacteristicsAsync(productId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(data);
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(productId, characteristicId);
             // Assert
@@ -138,7 +175,16 @@ namespace ProductManager.Service.Tests.Controllers
             string value = "Red";
             productService.Setup(s => s.AddProductCharacteristicAsync(productId, name, value, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(newId);
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Post(productId, new CharacteristicRequest { Name = name, Value = value });
             // Assert
@@ -161,7 +207,16 @@ namespace ProductManager.Service.Tests.Controllers
             string value = "Red";
             productService.Setup(s => s.AddProductCharacteristicAsync(productId, name, value, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.Post(productId, new CharacteristicRequest { Name = name, Value = value });
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");
@@ -177,7 +232,16 @@ namespace ProductManager.Service.Tests.Controllers
             Guid characteristicId = Guid.NewGuid();
             productService.Setup(s => s.DeleteProductCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Delete(productId, characteristicId);
             // Assert
@@ -198,7 +262,16 @@ namespace ProductManager.Service.Tests.Controllers
             Guid characteristicId = Guid.NewGuid();
             productService.Setup(s => s.DeleteProductCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            ProductCharacteristicController sut = new(logger.Object, productService.Object);
+            ProductCharacteristicController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.Delete(productId, characteristicId);
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");

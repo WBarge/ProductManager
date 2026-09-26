@@ -38,7 +38,8 @@ namespace ProductManager.Service.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(Guid productId)
         {
-            IEnumerable<IProductCharacteristic> productCharacteristics = await _productService.ListProductCharacteristicsAsync(productId);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            IEnumerable<IProductCharacteristic> productCharacteristics = await _productService.ListProductCharacteristicsAsync(productId, token);
             return Ok(productCharacteristics);
         }
 
@@ -52,8 +53,9 @@ namespace ProductManager.Service.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> Get(Guid productId, Guid id)
         {
-            IProductCharacteristic? characteristic = await _productService.ListProductCharacteristicsAsync(productId)
-                .ContinueWith(t => t.Result.FirstOrDefault(c => c.Id == id));
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            IProductCharacteristic? characteristic = await _productService.ListProductCharacteristicsAsync(productId, token)
+                .ContinueWith(t => t.Result.FirstOrDefault(c => c.Id == id), token);
             return Ok(characteristic);
         }
 
@@ -66,7 +68,8 @@ namespace ProductManager.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Guid productId,[FromBody] CharacteristicRequest request)
         {
-            Guid id = await _productService.AddProductCharacteristicAsync(productId, request.Name, request.Value);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            Guid id = await _productService.AddProductCharacteristicAsync(productId, request.Name, request.Value, token);
             return Ok(id);
         }
 
@@ -80,7 +83,9 @@ namespace ProductManager.Service.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid productId, Guid id)
         {
-            await _productService.DeleteProductCharacteristicAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+
+            await _productService.DeleteProductCharacteristicAsync(id, token);
             return Ok();
         }
     }

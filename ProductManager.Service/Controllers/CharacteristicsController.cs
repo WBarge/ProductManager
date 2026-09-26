@@ -35,7 +35,8 @@ namespace ProductManager.Service.Controllers
         public async Task<IActionResult> GetAllCharacteristics() 
         {
             _logger.LogDebug("Retrieving all characteristics.");
-            IEnumerable<IFullCharacteristic> characteristics = await _characteristicService.GetAllCharacteristicsAsync();
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            IEnumerable<IFullCharacteristic> characteristics = await _characteristicService.GetAllCharacteristicsAsync(token);
             return Ok(characteristics);
         }
     }

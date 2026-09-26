@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -32,7 +33,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<CharacteristicValueController>> logger = new();
             Mock<ICharacteristicService> characteristicService = new();
             // Act
-            CharacteristicValueController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicValueController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Assert
             sut.Should().NotBeNull();
         }
@@ -47,7 +57,16 @@ namespace ProductManager.Service.Tests.Controllers
             string value = "Test Value";
             characteristicService.Setup(s => s.AddValueToCharacteristicAsync(characteristicId, value, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((new Mock<ICharacteristicValue>()).Object);
-            CharacteristicValueController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicValueController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Post(characteristicId, value);
             // Assert
@@ -69,7 +88,16 @@ namespace ProductManager.Service.Tests.Controllers
             string value = "Test Value";
             characteristicService.Setup(s => s.AddValueToCharacteristicAsync(characteristicId, value, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            CharacteristicValueController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicValueController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.Post(characteristicId, value);
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");

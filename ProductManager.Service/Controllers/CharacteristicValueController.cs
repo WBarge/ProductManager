@@ -42,7 +42,8 @@ namespace ProductManager.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Guid id, [FromBody] string value)
         {
-            ICharacteristicValue result = await _characteristicService.AddValueToCharacteristicAsync(id, value);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            ICharacteristicValue result = await _characteristicService.AddValueToCharacteristicAsync(id, value, token);
             return new OkObjectResult(new CharacteristicValueResult(result));
         }
 
@@ -55,7 +56,8 @@ namespace ProductManager.Service.Controllers
         [HttpDelete("{valueId:guid}")]
         public async Task<IActionResult> Delete(Guid id, Guid valueId)
         {
-            await _characteristicService.DeleteCharacteristicValueAsync(id, valueId);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _characteristicService.DeleteCharacteristicValueAsync(id, valueId, token);
             return Ok();
         }
 

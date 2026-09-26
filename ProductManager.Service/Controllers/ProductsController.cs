@@ -78,10 +78,11 @@ namespace ProductManager.Service.Controllers
             }
 
             Dictionary<string, IFilterMetaData[]> filters = FilterTransformers.TransformFilters(request);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
             var returnValue = new
                 {
-                    data = await _productService.GetProductsAsync(filters, request.Page.Value, request.PageSize.Value),
-                    totalRecordSize = await _productService.GetProductCountAsync()
+                    data = await _productService.GetProductsAsync(filters, request.Page.Value, request.PageSize.Value, token),
+                    totalRecordSize = await _productService.GetProductCountAsync(token)
                 };
                 return new OkObjectResult(returnValue);
             

@@ -49,7 +49,8 @@ namespace ProductManager.Service.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             _logger.LogDebug("Get Product received request");
-            IFullProduct? product = await _productService.GetProductAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            IFullProduct? product = await _productService.GetProductAsync(id, token);
             if (product == null)
             {
                 return NotFound();
@@ -68,7 +69,8 @@ namespace ProductManager.Service.Controllers
         public async  Task<IActionResult> QuickAdd([FromBody] QuickProductRequest request)
         {
             _logger.LogDebug("request to quick product add");
-            Guid newId =  await _productService.CreateMinimumViableProductAsync(request.Sku, request.Name, request.ShortDescription, request.Price);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            Guid newId =  await _productService.CreateMinimumViableProductAsync(request.Sku, request.Name, request.ShortDescription, request.Price, token);
             return new OkObjectResult(newId);
         }
 
@@ -88,7 +90,8 @@ namespace ProductManager.Service.Controllers
         public async  Task<IActionResult> DeleteProduct(Guid id)
         {
             _logger.LogDebug("request to delete product");
-            await this._productService.DeleteProductAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            await this._productService.DeleteProductAsync(id, token);
             return Ok();
         }
 
@@ -107,8 +110,9 @@ namespace ProductManager.Service.Controllers
             {
                 return BadRequest("Request body is null");
             }
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
             IFullProduct fullProduct = request.TransformFullProductRequest();
-            await _productService.UpdateProductAsync(fullProduct);
+            await _productService.UpdateProductAsync(fullProduct, token);
             return new OkResult();
         }
     }

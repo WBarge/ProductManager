@@ -403,11 +403,16 @@ namespace ProductManager.Data.EF.Tests
         // Identifies the products (seeded by SeedData) that SeedDataForProductUpdate attaches child rows to, so the
         // tests can find them without adding or changing any products. Product counts asserted by other tests are
         // therefore not affected.
-        public const string UPDATE_CHARACTERISTICS_SKU = "T125";   // two characteristics; also used by the scalar and not found tests
-        public const string UPDATE_OPTIONS_SKU = "T14";            // two product options and one sell
-        public const string UPDATE_MISSING_OPTION_SKU = "T24";     // one product option pointing at UPDATE_MISSING_OPTION_NAME
-        public const string UPDATE_EMPTY_DATE_SELL_SKU = "T124";   // one sell with no start or end date
-        public const string UPDATE_SELLS_SKU = "T5";               // one sell per overlap scenario, see the windows below
+        public const string
+            UPDATE_CHARACTERISTICS_SKU = "T125"; // two characteristics; also used by the scalar and not found tests
+
+        public const string UPDATE_OPTIONS_SKU = "T14"; // two product options and one sell
+
+        public const string
+            UPDATE_MISSING_OPTION_SKU = "T24"; // one product option pointing at UPDATE_MISSING_OPTION_NAME
+
+        public const string UPDATE_EMPTY_DATE_SELL_SKU = "T124"; // one sell with no start or end date
+        public const string UPDATE_SELLS_SKU = "T5"; // one sell per overlap scenario, see the windows below
 
         // Options seeded with these values (price / cost / estimated): 10 / 4 / 6, 20 / 8 / 12 and 10 / 4 / 6.
         public const string UPDATE_NO_PRICE_OPTION_NAME = "PU Test Option";
@@ -493,11 +498,17 @@ namespace ProductManager.Data.EF.Tests
 
             context.ProductCharacteristics.Add(new ProductCharacteristic
             {
-                Id = Guid.NewGuid(), ProductId = characteristicsProduct.Id, Name = "Color", CharacteristicValue = "Red"
+                Id = Guid.NewGuid(),
+                ProductId = characteristicsProduct.Id,
+                Name = "Color",
+                CharacteristicValue = "Red"
             });
             context.ProductCharacteristics.Add(new ProductCharacteristic
             {
-                Id = Guid.NewGuid(), ProductId = characteristicsProduct.Id, Name = "Size", CharacteristicValue = "Large"
+                Id = Guid.NewGuid(),
+                ProductId = characteristicsProduct.Id,
+                Name = "Size",
+                CharacteristicValue = "Large"
             });
 
             //a price of zero on the product option means "use the option price"
@@ -507,7 +518,9 @@ namespace ProductManager.Data.EF.Tests
             });
             context.ProductOptions.Add(new ProductOption
             {
-                Id = Guid.NewGuid(), ProductId = optionsProduct.Id, OptionId = pricedOption.Id,
+                Id = Guid.NewGuid(),
+                ProductId = optionsProduct.Id,
+                OptionId = pricedOption.Id,
                 Price = UPDATE_PRODUCT_OPTION_PRICE
             });
             context.ProductOptions.Add(new ProductOption
@@ -519,7 +532,10 @@ namespace ProductManager.Data.EF.Tests
             {
                 context.Add(new ProductSell
                 {
-                    Id = Guid.NewGuid(), ProductId = product.Id, Start = window.Start, End = window.End,
+                    Id = Guid.NewGuid(),
+                    ProductId = product.Id,
+                    Start = window.Start,
+                    End = window.End,
                     Price = UPDATE_SELL_PRICE
                 });
             }
@@ -556,5 +572,73 @@ namespace ProductManager.Data.EF.Tests
         }
 
         #endregion
+
+        public static void SeedDataForProductSells(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ??
+                                       throw new InvalidOperationException();
+            // Prerequisite products, since a product sell must reference a valid product
+            Product product1 = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sell Test Product 1",
+                ShortDescription = "SellTest1",
+                Sku = "STP1",
+                Description = "A product used for product sell tests",
+                Price = 19.99M
+            };
+            context.Products.Add(product1);
+            Product product2 = new Product
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sell Test Product 2",
+                ShortDescription = "SellTest2",
+                Sku = "STP2",
+                Description = "Another product used for product sell tests",
+                Price = 29.99M
+            };
+            context.Products.Add(product2);
+            context.SaveChanges();
+            // Add product sells
+            ProductSell sell1 = new ProductSell
+            {
+                Id = Guid.NewGuid(),
+                ProductId = product1.Id,
+                Start = DateTime.UtcNow,
+                End = DateTime.UtcNow.AddDays(7),
+                Price = 15.99M
+            };
+            context.Sells.Add(sell1);
+            ProductSell sell2 = new ProductSell
+            {
+                Id = Guid.NewGuid(),
+                ProductId = product2.Id,
+                Start = DateTime.UtcNow.AddDays(1),
+                End = DateTime.UtcNow.AddDays(10),
+                Price = 25.99M
+            };
+            context.Sells.Add(sell2);
+            context.SaveChanges();
+        }
+
+        public static void RemoveProductSellData(this IServiceScope serviceScope)
+        {
+            ProductDbContext context = serviceScope.ServiceProvider.GetService<ProductDbContext>() ??
+                                       throw new InvalidOperationException();
+            // Remove all product sells
+            foreach (ProductSell sell in context.Sells)
+            {
+                context.Remove(sell);
+            }
+
+            // Remove prerequisite products
+            foreach (Product product in context.Products)
+            {
+                context.Remove(product);
+            }
+
+            context.SaveChanges();
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
+using System.Resources;
 
 namespace ProductManager.Service.Controllers
 {
@@ -37,7 +38,8 @@ namespace ProductManager.Service.Controllers
 
         public async Task<IActionResult> GetCharacteristic(Guid id)
         {
-            IFullCharacteristic characteristic = await _characteristicService.GetFullCharacteristicAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            IFullCharacteristic characteristic = await _characteristicService.GetFullCharacteristicAsync(id, token);
             return Ok(characteristic);
         }
 
@@ -49,7 +51,8 @@ namespace ProductManager.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCharacteristic([FromBody] string name)
         {
-            ICharacteristic newCharacteristic = await _characteristicService.CreateCharacteristicAsync(name);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            ICharacteristic newCharacteristic = await _characteristicService.CreateCharacteristicAsync(name, token);
             return new OkObjectResult(newCharacteristic);
         }
 
@@ -61,7 +64,8 @@ namespace ProductManager.Service.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteCharacteristic(Guid id)
         {
-            await _characteristicService.DeleteCharacteristicAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _characteristicService.DeleteCharacteristicAsync(id, token);
             return Ok();
         }
     }

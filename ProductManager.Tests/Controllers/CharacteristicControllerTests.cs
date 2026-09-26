@@ -1,7 +1,9 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NUnit.Framework.Internal;
 using ProductManager.Glue.Interfaces.Models;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Controllers;
@@ -32,8 +34,18 @@ namespace ProductManager.Service.Tests.Controllers
             // Arrange
             Mock<ILogger<CharacteristicController>> logger = new();
             Mock<ICharacteristicService> characteristicService = new();
+            
             // Act
-            CharacteristicController sut = new(logger.Object, characteristicService.Object);
+            CharacteristicController sut = new(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Assert
             sut.Should().NotBeNull();
         }
@@ -48,7 +60,17 @@ namespace ProductManager.Service.Tests.Controllers
             IFullCharacteristic mockCharacteristic = new Mock<IFullCharacteristic>().Object;
             characteristicService.Setup(s => s.GetFullCharacteristicAsync(characteristicId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mockCharacteristic);
-            CharacteristicController sut = new CharacteristicController(logger.Object, characteristicService.Object);
+            CharacteristicController sut = new CharacteristicController(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
+            
             // Act
             IActionResult result = await sut.GetCharacteristic(characteristicId);
             // Assert
@@ -75,7 +97,16 @@ namespace ProductManager.Service.Tests.Controllers
 
             characteristicService.Setup(s => s.CreateCharacteristicAsync(characteristicName, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(mockedCharacteristic);
-            CharacteristicController sut = new CharacteristicController(logger.Object, characteristicService.Object);
+            CharacteristicController sut = new CharacteristicController(logger.Object, characteristicService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.CreateCharacteristic(characteristicName);
             // Assert

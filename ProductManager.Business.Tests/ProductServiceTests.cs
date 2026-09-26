@@ -537,16 +537,16 @@ namespace ProductManager.Business.Tests
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
             Mock<IProductSellRepo> productSellRepo = new();
             // Create overlapping and non-overlapping sells
-            var sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
-            var sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
-            var sell3 = new ProductSell(new DateTime(2023, 1, 15), new DateTime(2023, 1, 20)); // Contained within sell1
+            ProductSell sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
+            ProductSell sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
+            ProductSell sell3 = new ProductSell(new DateTime(2023, 1, 15), new DateTime(2023, 1, 20)); // Contained within sell1
             Mock<IFullProduct> product = new();
             product.SetupAllProperties();
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
                 productCharacteristicRepo.Object, productSellRepo.Object);
             // Act
-            var productObj = product.Object;
-            var tempList = new List<IProductSell>();
+            IFullProduct productObj = product.Object;
+            List<IProductSell> tempList = new List<IProductSell>();
             tempList.Add(sell1);
             tempList.Add(sell2);
             tempList.Add(sell3);
@@ -568,16 +568,16 @@ namespace ProductManager.Business.Tests
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
             Mock<IProductSellRepo> productSellRepo = new();
             // Create overlapping and non-overlapping sells
-            var sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
-            var sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
-            var sell3 = new ProductSell(new DateTime(2023, 2, 15), new DateTime(2023, 3, 20)); // overlaps sell2
+            ProductSell sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
+            ProductSell sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
+            ProductSell sell3 = new ProductSell(new DateTime(2023, 2, 15), new DateTime(2023, 3, 20)); // overlaps sell2
             Mock<IFullProduct> product = new();
             product.SetupAllProperties();
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
                 productCharacteristicRepo.Object, productSellRepo.Object);
             // Act
-            var productObj = product.Object;
-            var tempList = new List<IProductSell>();
+            IFullProduct productObj = product.Object;
+            List<IProductSell> tempList = new List<IProductSell>();
             tempList.Add(sell1);
             tempList.Add(sell2);
             tempList.Add(sell3);
@@ -599,11 +599,11 @@ namespace ProductManager.Business.Tests
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
             Mock<IProductSellRepo> productSellRepo = new();
             // Create a valid sell
-            var sell = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28));
+            ProductSell sell = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28));
             Mock<IFullProduct> product = new();
             product.SetupAllProperties();
-            var productObj = product.Object;
-            var tempList = new List<IProductSell>();
+            IFullProduct productObj = product.Object;
+            List<IProductSell> tempList = new List<IProductSell>();
             tempList.Add(sell);
             productObj.Sells = tempList;
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
@@ -615,6 +615,62 @@ namespace ProductManager.Business.Tests
                 Times.Once);
             productObj.Sells.Should().HaveCount(1,"There was no overlap or within");
         }
+
+        [Test, Description("AddSellPeriodAsync should add a sell period successfully")]
+        public async Task AddSellPeriodAsync_ValidInput_AddsSellPeriodSuccessfully()
+        {
+            // Arrange
+            Guid productId = Guid.NewGuid();
+            DateTime start = DateTime.UtcNow;
+            DateTime end = DateTime.UtcNow.AddDays(7);
+            decimal price = 100m;
+            Mock<IProductSellRepo> productSellRepoMock = new Mock<IProductSellRepo>();
+
+            Mock<IProductSell> productSellMock = new Mock<IProductSell>();
+            productSellMock.SetupAllProperties();
+
+            productSellRepoMock
+                .Setup(repo => repo.AddProductSellAsync(It.IsAny<IProductSell>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Guid.NewGuid());
+
+            productSellRepoMock.Setup(repo => repo.CreateInstance()).Returns(productSellMock.Object);
+
+
+            ProductService sut = new ProductService(
+                new Mock<ILogger<ProductService>>().Object,
+                new Mock<IProductRepo>().Object,
+                new Mock<IProductOptionRepo>().Object,
+                new Mock<IProductCharacteristicRepo>().Object,
+                productSellRepoMock.Object
+            );
+            // Act
+            Guid result = await sut.AddSellPeriodAsync(productId, start, end, price);
+            // Assert
+            result.Should().NotBe(Guid.Empty);
+            productSellRepoMock.Verify(repo => repo.AddProductSellAsync(It.IsAny<IProductSell>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+        [Test, Description("DeleteSellPeriodAsync should delete a sell period successfully")]
+        public async Task DeleteSellPeriodAsync_ValidInput_DeletesSellPeriodSuccessfully()
+        {
+            // Arrange
+            Guid sellPeriodId = Guid.NewGuid();
+            Mock<IProductSellRepo> productSellRepoMock = new Mock<IProductSellRepo>();
+            productSellRepoMock
+                .Setup(repo => repo.DeleteAsync(sellPeriodId, It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            ProductService sut = new ProductService(
+                new Mock<ILogger<ProductService>>().Object,
+                new Mock<IProductRepo>().Object,
+                new Mock<IProductOptionRepo>().Object,
+                new Mock<IProductCharacteristicRepo>().Object,
+                productSellRepoMock.Object
+            );
+            // Act
+            await sut.DeleteSellPeriodAsync(sellPeriodId);
+            // Assert
+            productSellRepoMock.Verify(repo => repo.DeleteAsync(sellPeriodId, It.IsAny<CancellationToken>()), Times.Once);
+        }
+
 
 
         class ProductSell : IProductSell

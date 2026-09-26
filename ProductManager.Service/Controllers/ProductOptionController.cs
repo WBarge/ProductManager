@@ -39,7 +39,8 @@ namespace ProductManager.Service.Controllers
         public async Task<IActionResult> Post(Guid productId,Guid id,[FromBody] decimal priceOverride)
         {
             _logger.LogDebug($"Creating product option for product {productId} with Option ID {id} and a price override of {priceOverride}");
-            bool result = await _productService.AddProductOptionAsync(productId, id, priceOverride);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            bool result = await _productService.AddProductOptionAsync(productId, id, priceOverride, token);
             if (result)
             {
                 return Ok();
@@ -60,7 +61,8 @@ namespace ProductManager.Service.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             _logger.LogDebug($"Deleting product option with ID {id}");
-            await _productService.DeleteProductOptionAsync(id);
+            CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _productService.DeleteProductOptionAsync(id, token);
             return Ok();
         }
     }

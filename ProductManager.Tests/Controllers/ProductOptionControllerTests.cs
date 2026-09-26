@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -31,7 +32,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<ProductOptionController>> logger = new();
             Mock<IProductService> productService = new();
             // Act
-            ProductOptionController sut = new(logger.Object, productService.Object);
+            ProductOptionController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Assert
             sut.Should().NotBeNull();
         }
@@ -47,7 +57,16 @@ namespace ProductManager.Service.Tests.Controllers
             decimal priceOverride = 9.99m;
             productService.Setup(s => s.AddProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<decimal>(),It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
-            ProductOptionController sut = new(logger.Object, productService.Object);
+            ProductOptionController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Post(productId, id, priceOverride);
             // Assert
@@ -69,7 +88,16 @@ namespace ProductManager.Service.Tests.Controllers
             decimal priceOverride = 9.99m;
             productService.Setup(s => s.AddProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<decimal>(),It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
-            ProductOptionController sut = new(logger.Object, productService.Object);
+            ProductOptionController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Post(productId, id, priceOverride);
             // Assert
@@ -91,7 +119,16 @@ namespace ProductManager.Service.Tests.Controllers
             decimal priceOverride = 9.99m;
             productService.Setup(s => s.AddProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<decimal>(),It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            ProductOptionController sut = new(logger.Object, productService.Object);
+            ProductOptionController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.Post(productId, id, priceOverride);
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");
@@ -106,7 +143,16 @@ namespace ProductManager.Service.Tests.Controllers
             Guid id = Guid.NewGuid();
             productService.Setup(s => s.DeleteProductOptionAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
-            ProductOptionController sut = new(logger.Object, productService.Object);
+            ProductOptionController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Delete(id);
             // Assert
@@ -126,7 +172,16 @@ namespace ProductManager.Service.Tests.Controllers
             Guid id = Guid.NewGuid();
             productService.Setup(s => s.DeleteProductOptionAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
-            ProductOptionController sut = new(logger.Object, productService.Object);
+            ProductOptionController sut = new(logger.Object, productService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act & Assert
             Func<Task> act = async () => await sut.Delete(id);
             act.Should().ThrowAsync<Exception>().WithMessage("Test exception");

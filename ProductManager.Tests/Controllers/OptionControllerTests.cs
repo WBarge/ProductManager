@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -35,7 +36,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<IOptionService> optionService = new();
 
             await TestContext.Out.WriteLineAsync("Executing test");
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Examining results");
             sut.Should().NotBeNull();
@@ -59,7 +69,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(option);
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(optionId);
 
@@ -69,7 +88,7 @@ namespace ProductManager.Service.Tests.Controllers
             OkObjectResult? castedResult = result as OkObjectResult;
             castedResult.Should().NotBeNull();
             castedResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            castedResult!.Value.Should().BeEquivalentTo(option);
+            castedResult.Value.Should().BeEquivalentTo(option);
         }
 
         [Test, Description("Tests retrieving an option by an invalid ID.")]
@@ -83,7 +102,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.GetOptionAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((IOption?)null);
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
             // Act
             IActionResult result = await sut.Get(optionId);
 
@@ -99,7 +127,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             // ReSharper disable once AssignNullToNotNullAttribute
@@ -120,7 +157,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             OptionRequest request = new()
             {
@@ -144,7 +190,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             OptionRequest request = new()
             {
@@ -172,7 +227,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.AddOptionAsync(It.IsAny<IOption>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(newOptionId);
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             OptionRequest request = new()
             {
@@ -202,7 +266,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             // ReSharper disable once AssignNullToNotNullAttribute
@@ -220,7 +293,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             OptionRequest request = new()
             {
@@ -245,7 +327,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             OptionRequest request = new()
             {
@@ -273,7 +364,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.UpdateOptionAsync(It.IsAny<IOption>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             OptionRequest request = new()
             {
@@ -291,7 +391,7 @@ namespace ProductManager.Service.Tests.Controllers
             OkObjectResult? castedResult = result as OkObjectResult;
             castedResult.Should().NotBeNull();
             castedResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            castedResult!.Value.Should().Be(true);
+            castedResult.Value.Should().Be(true);
             optionService.Verify(s => s.UpdateOptionAsync(It.IsAny<IOption>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -302,7 +402,16 @@ namespace ProductManager.Service.Tests.Controllers
             Mock<ILogger<OptionController>> logger = new();
             Mock<IOptionService> optionService = new();
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IActionResult result = await sut.Delete(Guid.Empty);
@@ -322,7 +431,16 @@ namespace ProductManager.Service.Tests.Controllers
             optionService.Setup(s => s.DeleteOptionAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            OptionController sut = new(logger.Object, optionService.Object);
+            OptionController sut = new(logger.Object, optionService.Object)
+            {
+                ControllerContext = new ControllerContext
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        RequestAborted = TestContext.CurrentContext.CancellationToken
+                    }
+                }
+            };
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IActionResult result = await sut.Delete(Guid.NewGuid());
@@ -332,7 +450,7 @@ namespace ProductManager.Service.Tests.Controllers
             OkObjectResult? castedResult = result as OkObjectResult;
             castedResult.Should().NotBeNull();
             castedResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
-            castedResult!.Value.Should().Be(true);
+            castedResult.Value.Should().Be(true);
             optionService.Verify(s => s.DeleteOptionAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
