@@ -136,7 +136,7 @@ namespace ProductManager.Service.Tests.Controllers
             Guid newId = Guid.NewGuid();
             string name = "Color";
             string value = "Red";
-            productService.Setup(s => s.AddProductCharacteristic(productId, name, value, It.IsAny<CancellationToken>()))
+            productService.Setup(s => s.AddProductCharacteristicAsync(productId, name, value, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(newId);
             ProductCharacteristicController sut = new(logger.Object, productService.Object);
             // Act
@@ -147,7 +147,7 @@ namespace ProductManager.Service.Tests.Controllers
             castedResult.Should().NotBeNull();
             castedResult!.StatusCode.Should().Be(200);
             castedResult.Value.Should().Be(newId);
-            productService.Verify(s => s.AddProductCharacteristic(productId, name, value, It.IsAny<CancellationToken>()), Times.Once);
+            productService.Verify(s => s.AddProductCharacteristicAsync(productId, name, value, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test, Description("Post handles exceptions gracefully")]
@@ -159,7 +159,7 @@ namespace ProductManager.Service.Tests.Controllers
             Guid productId = Guid.NewGuid();
             string name = "Color";
             string value = "Red";
-            productService.Setup(s => s.AddProductCharacteristic(productId, name, value, It.IsAny<CancellationToken>()))
+            productService.Setup(s => s.AddProductCharacteristicAsync(productId, name, value, It.IsAny<CancellationToken>()))
                 .ThrowsAsync(new Exception("Test exception"));
             ProductCharacteristicController sut = new(logger.Object, productService.Object);
             // Act & Assert

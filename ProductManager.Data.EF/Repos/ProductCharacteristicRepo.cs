@@ -36,7 +36,7 @@ namespace ProductManager.Data.EF.Repos
         public async Task<IEnumerable<IProductCharacteristic>> ListProductCharacteristicsAsync(Guid productId, CancellationToken cancellationToken = default)
         {
             List<IProductCharacteristic> productCharacteristics = await DbContext.ProductCharacteristics
-                .Where(pc => !pc.Deleted && pc.ProductId == productId)
+                .Where(pc => !pc.Deleted && pc.ProductId == productId && !pc.Deleted)
                 .Select(pc => (IProductCharacteristic)pc)
                 .ToListAsync(cancellationToken);
             return productCharacteristics;

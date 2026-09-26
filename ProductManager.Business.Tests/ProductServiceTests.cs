@@ -18,7 +18,8 @@ namespace ProductManager.Business.Tests
             Assert.Throws<ArgumentNullException>(() => new ProductService(null!,
                 new Mock<IProductRepo>().Object,
                 new Mock<IProductOptionRepo>().Object,
-                new Mock<IProductCharacteristicRepo>().Object));
+                new Mock<IProductCharacteristicRepo>().Object,
+                new Mock<IProductSellRepo>().Object));
         }
 
         [Test, Description("Test required product repo object")]
@@ -29,7 +30,8 @@ namespace ProductManager.Business.Tests
                 new Mock<ILogger<ProductService>>().Object,
                 null!,
                 new Mock<IProductOptionRepo>().Object,
-                new Mock<IProductCharacteristicRepo>().Object));
+                new Mock<IProductCharacteristicRepo>().Object, 
+                new Mock<IProductSellRepo>().Object));
         }
 
         [Test, Description("Test required product option repo object")]
@@ -40,7 +42,8 @@ namespace ProductManager.Business.Tests
                 new Mock<ILogger<ProductService>>().Object,
                 new Mock<IProductRepo>().Object,
                 null!,
-                new Mock<IProductCharacteristicRepo>().Object));
+                new Mock<IProductCharacteristicRepo>().Object, 
+                new Mock<IProductSellRepo>().Object));
         }
 
         [Test, Description("Test required product characteristic repo object")]
@@ -51,7 +54,21 @@ namespace ProductManager.Business.Tests
                 new Mock<ILogger<ProductService>>().Object,
                 new Mock<IProductRepo>().Object,
                 new Mock<IProductOptionRepo>().Object,
-                null!));
+                null!, 
+                new Mock<IProductSellRepo>().Object));
+        }
+        
+        [Test, Description("Test required product characteristic repo object")]
+        public void Constructor_RequiredIProductSellRepo_Fail()
+        {
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Assert.Throws<ArgumentNullException>(() => new ProductService(
+                new Mock<ILogger<ProductService>>().Object,
+                new Mock<IProductRepo>().Object,
+                new Mock<IProductOptionRepo>().Object,
+                new Mock<IProductCharacteristicRepo>().Object,
+                null!
+                ));
         }
 
         [Test, Description("Test required objects")]
@@ -62,10 +79,11 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             await TestContext.Out.WriteLineAsync("Executing test");
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Examining results");
             sut.Should().NotBeNull();
@@ -79,6 +97,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             IEnumerable<IProduct> data = ProductFactory.BuildShortProductList();
             productRepo.Setup(m => m.FindPagedProductRecordsAsync(It.IsAny<Dictionary<string, IFilterMetaData[]>>(),
@@ -86,7 +105,7 @@ namespace ProductManager.Business.Tests
                 .ReturnsAsync(data);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Dictionary<string, IFilterMetaData[]> filterParameter = new();
             const int PAGE = 1;
@@ -112,12 +131,14 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
+
 
             productRepo.Setup(m => m.GetProductCountAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(25);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             long results = await sut.GetProductCountAsync(TestContext.CurrentContext.CancellationToken);
@@ -133,11 +154,12 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             productRepo.Setup(m => m.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()));
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             await sut.DeleteProductAsync(Guid.NewGuid(), TestContext.CurrentContext.CancellationToken);
@@ -152,6 +174,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Mock<IProduct> product = new();
             product.SetupAllProperties();
@@ -162,7 +185,7 @@ namespace ProductManager.Business.Tests
                 .ReturnsAsync(expectedId);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             const string SKU = "SKU-1";
             const string NAME = "Widget";
@@ -191,6 +214,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Guid productId = Guid.NewGuid();
             Mock<IFullProduct> fullProduct = new();
@@ -198,7 +222,7 @@ namespace ProductManager.Business.Tests
                 .ReturnsAsync(fullProduct.Object);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IFullProduct? result = await sut.GetProductAsync(productId, TestContext.CurrentContext.CancellationToken);
@@ -215,9 +239,10 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductOptionAsync(Guid.Empty, Guid.NewGuid(), 5m));
@@ -230,9 +255,10 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
                 sut.AddProductOptionAsync(Guid.NewGuid(), Guid.Empty, 5m));
@@ -247,13 +273,14 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Mock<IProductOption> productOption = new();
             productOption.SetupAllProperties();
             productOptionRepo.Setup(m => m.CreateInstance()).Returns(productOption.Object);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Guid productId = Guid.NewGuid();
             Guid optionId = Guid.NewGuid();
@@ -280,13 +307,14 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Mock<IProductOption> productOption = new();
             productOption.SetupAllProperties();
             productOptionRepo.Setup(m => m.CreateInstance()).Returns(productOption.Object);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             bool result = await sut.AddProductOptionAsync(Guid.NewGuid(), Guid.NewGuid(), -3m,
@@ -305,12 +333,13 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Guid optionRecordId = Guid.NewGuid();
             productOptionRepo.Setup(m => m.DeleteAsync(optionRecordId, It.IsAny<CancellationToken>()));
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             await sut.DeleteProductOptionAsync(optionRecordId, TestContext.CurrentContext.CancellationToken);
@@ -327,6 +356,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Guid productId = Guid.NewGuid();
             Mock<IProductCharacteristic> characteristic = new();
@@ -336,7 +366,7 @@ namespace ProductManager.Business.Tests
                 .ReturnsAsync(data);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             IEnumerable<IProductCharacteristic> results =
@@ -355,12 +385,13 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
-                sut.AddProductCharacteristic(Guid.Empty, "Color", "Red"));
+                sut.AddProductCharacteristicAsync(Guid.Empty, "Color", "Red"));
         }
 
         [Test, Description("Adding a product characteristic with a null or empty name should throw")]
@@ -370,12 +401,13 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
-                sut.AddProductCharacteristic(Guid.NewGuid(), string.Empty, "Red"));
+                sut.AddProductCharacteristicAsync(Guid.NewGuid(), string.Empty, "Red"));
         }
 
         [Test, Description("Adding a product characteristic with a null or empty value should throw")]
@@ -385,12 +417,13 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Assert.ThrowsAsync<ArgumentException>(() =>
-                sut.AddProductCharacteristic(Guid.NewGuid(), "Color", string.Empty));
+                sut.AddProductCharacteristicAsync(Guid.NewGuid(), "Color", string.Empty));
         }
 
         [Test,
@@ -402,6 +435,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Mock<IProductCharacteristic> characteristic = new();
             characteristic.SetupAllProperties();
@@ -413,7 +447,7 @@ namespace ProductManager.Business.Tests
                 .ReturnsAsync(expectedId);
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             Guid productId = Guid.NewGuid();
             const string NAME = "Color";
@@ -421,7 +455,7 @@ namespace ProductManager.Business.Tests
 
             await TestContext.Out.WriteLineAsync("Executing test");
             Guid result =
-                await sut.AddProductCharacteristic(productId, NAME, VALUE,
+                await sut.AddProductCharacteristicAsync(productId, NAME, VALUE,
                     TestContext.CurrentContext.CancellationToken);
 
             await TestContext.Out.WriteLineAsync("Examining results");
@@ -441,12 +475,13 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
 
             Guid characteristicId = Guid.NewGuid();
             productCharacteristicRepo.Setup(m => m.DeleteAsync(characteristicId, It.IsAny<CancellationToken>()));
 
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
 
             await TestContext.Out.WriteLineAsync("Executing test");
             await sut.DeleteProductCharacteristicAsync(characteristicId, TestContext.CurrentContext.CancellationToken);
@@ -464,8 +499,9 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
             // Act & Assert
             Assert.ThrowsAsync<ArgumentNullException>(() =>
                 sut.UpdateProductAsync(null!, TestContext.CurrentContext.CancellationToken));
@@ -479,10 +515,11 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
             Mock<IFullProduct> product = new();
             product.Setup(p => p.Sells).Returns(Enumerable.Empty<IProductSell>());
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
             // Act
             await sut.UpdateProductAsync(product.Object, TestContext.CurrentContext.CancellationToken);
             // Assert
@@ -498,6 +535,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
             // Create overlapping and non-overlapping sells
             var sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
             var sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
@@ -505,7 +543,7 @@ namespace ProductManager.Business.Tests
             Mock<IFullProduct> product = new();
             product.SetupAllProperties();
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
             // Act
             var productObj = product.Object;
             var tempList = new List<IProductSell>();
@@ -528,6 +566,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
             // Create overlapping and non-overlapping sells
             var sell1 = new ProductSell(new DateTime(2023, 1, 1), new DateTime(2023, 1, 31)); // Overlaps
             var sell2 = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28)); // Does not overlap
@@ -535,7 +574,7 @@ namespace ProductManager.Business.Tests
             Mock<IFullProduct> product = new();
             product.SetupAllProperties();
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
             // Act
             var productObj = product.Object;
             var tempList = new List<IProductSell>();
@@ -558,6 +597,7 @@ namespace ProductManager.Business.Tests
             Mock<IProductRepo> productRepo = new();
             Mock<IProductOptionRepo> productOptionRepo = new();
             Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
+            Mock<IProductSellRepo> productSellRepo = new();
             // Create a valid sell
             var sell = new ProductSell(new DateTime(2023, 2, 1), new DateTime(2023, 2, 28));
             Mock<IFullProduct> product = new();
@@ -567,7 +607,7 @@ namespace ProductManager.Business.Tests
             tempList.Add(sell);
             productObj.Sells = tempList;
             ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object);
+                productCharacteristicRepo.Object, productSellRepo.Object);
             // Act
             await sut.UpdateProductAsync(product.Object, TestContext.CurrentContext.CancellationToken);
             // Assert

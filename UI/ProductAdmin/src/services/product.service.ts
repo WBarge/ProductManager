@@ -87,7 +87,8 @@ export class ProductService {
         tempProduct.estimated = product.estimated;
         tempProduct.description = product.description;
         tempProduct.options = product.options;
-        tempProduct.characteristics = product.characteristics
+        tempProduct.characteristics = product.characteristics;
+        tempProduct.sells = product.sells;
         return tempProduct;
       }),
       catchError(this.handleError<Product>('getProductById'))

@@ -124,10 +124,10 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
     {
         IFullProduct? returnValue = null;
         Product? p = await DbContext.Products
-            .Include(x => x.Characteristics)
-            .Include(x => x.Options)
+            .Include(x => x.Characteristics.Where(c=>!c.Deleted))
+            .Include(x => x.Options.Where(o=>!o.Deleted))
             .ThenInclude(x => x.Option)
-            .Include(x => x.Reductions)
+            .Include(x => x.Reductions.Where(r=>!r.Deleted))
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         if (p.IsNotEmpty())
         {

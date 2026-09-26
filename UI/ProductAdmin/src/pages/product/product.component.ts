@@ -6,6 +6,7 @@ import { Product } from '../../models/results/product';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { DatePickerModule } from 'primeng/datepicker';
 import { InputTextModule} from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { SplitterModule } from 'primeng/splitter';
@@ -32,12 +33,12 @@ import { ProductOption } from '../../models/results/ProductOption';
       TextareaModule,
       ButtonModule,
       ScrollAreaModule,
-          ScrollArea,
-    ScrollAreaViewport,
-    ScrollAreaContent,
-    ScrollAreaScrollbar,
-    ScrollAreaHandle,
-
+      ScrollArea,
+      ScrollAreaViewport,
+      ScrollAreaContent,
+      ScrollAreaScrollbar,
+      ScrollAreaHandle,
+      DatePickerModule,
       SelectModule,
       FieldsetModule,
       ToolbarModule,

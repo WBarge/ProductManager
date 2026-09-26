@@ -23,7 +23,9 @@ public interface IProductService
     Task<bool> AddProductOptionAsync(Guid productId, Guid optionId, decimal priceOverride, CancellationToken cancellationToken = default);
     Task DeleteProductOptionAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IEnumerable<IProductCharacteristic>> ListProductCharacteristicsAsync(Guid productId, CancellationToken cancellationToken = default);
-    Task<Guid> AddProductCharacteristic(Guid productId, string name, string value, CancellationToken cancellationToken = default);
+    Task<Guid> AddProductCharacteristicAsync(Guid productId, string name, string value, CancellationToken cancellationToken = default);
     Task DeleteProductCharacteristicAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Guid> AddSellPeriodAsync(Guid productId, DateTime start, DateTime end, decimal price, CancellationToken cancellationToken = default);
+    Task DeleteSellPeriodAsync(Guid id, CancellationToken token = default);
     Task UpdateProductAsync(IFullProduct product, CancellationToken cancellationToken = default);
 }

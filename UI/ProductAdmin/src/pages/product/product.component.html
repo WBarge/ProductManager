@@ -82,7 +82,7 @@
         </span>
       </p-splitter-panel>
       <p-splitter-panel class="form-panel">
-        <p-fieldset legend="Add an Option to the Product">
+        <p-fieldset legend="Options">
           <p-toolbar>
             <ng-template #start>
             </ng-template>
@@ -124,7 +124,6 @@
               <ul class="option-list" >
                 @for (option of this._productObj?.options; track $index) {
                   <li class="option-item" >
-                  <p-fieldset class="option-fieldset" legend=" Product Option {{ $index + 1 }}" toggleable="true">
                     <span class="option-name">
                       <label for="Name-{{ $index }}">Name</label>
                       <input readonly="true"
@@ -149,7 +148,6 @@
                       />
                     </span>
                     <button class="option-button" type="button" pButton (click)="_productObj?.options?.splice($index, 1)">Delete</button>
-                  </p-fieldset>
                   </li>
                 }
               </ul>
@@ -165,8 +163,7 @@
   <p-splitter-panel  class="vertical-panel">
     <p-splitter layout="horizontal" class="product-splitter"  [panelSizes]="[50,50]">
       <p-splitter-panel class="form-panel">
-        <!-- thrid panel content -->
-        <p-fieldset legend="Add a Characteristic for the Product">
+        <p-fieldset legend="Characteristics">
           <p-toolbar>
             <ng-template #start>
             </ng-template>
@@ -209,17 +206,17 @@
               <ul class="characteristic-list" >
                     @for (productCharacteristic of this._productObj?.characteristics; track $index) {
                       <li class="option-item" >
-                      <p-fieldset class="option-fieldset" toggleable="true">
                         <span class="characteristic-name">
-                          <label for="Name-{{ $index }}">Name:</label>
+                          <label for="Name-{{ $index }}">Name :  </label>
                           <span>{{productCharacteristic.name}}</span>
                         </span>
                         <span class="characteristic-price">
-                          <label for="Price-{{ $index }}">Value:</label>
+                          <label for="Price-{{ $index }}">Value :   </label>
                           <span>{{productCharacteristic.characteristicValue}}</span>
                         </span>
-                        <button type="button" pButton (click)="this._productObj?.characteristics?.splice($index, 1)">Delete</button>
-                      </p-fieldset>
+                        <span class="characteristic-button">
+                          <button type="button" pButton (click)="this._productObj?.characteristics?.splice($index, 1)">Delete</button>
+                        </span>
                       </li>
                     }
               </ul>
@@ -231,34 +228,18 @@
         </p-scrollarea>
       </p-splitter-panel>
       <p-splitter-panel class="form-panel">
-        <p-fieldset legend="Schedule A Sale">
+        <p-fieldset legend="Sales">
           <p-toolbar>
             <ng-template #start>
             </ng-template>
             <ng-template #center>
               <div class="quick-create-fields">
                 <span class="fieldOnSide">
-                  <label for="Characteristic">Start Date</label>
-                  <p-select
-                    id="Characteristic"
-                    [options]="_chararcteristicList"
-                    optionLabel="name"
-                    optionValue="idValue"
-                    placeholder="Select a Characteristic"
-                    autoDisplayFirst="false"
+                  <label for="dateRange">Sale Period</label>
+                  <p-datepicker
+                    id="dateRange"
+                    selectionMode="range" [readonlyInput]="true"
                     (onChange)="characteristicNameChange($event)"
-                  />
-                </span>
-                <span class="fieldOnSide" >
-                  <label for="CValue">End Date</label>
-                  <p-select
-                    id="CValue"
-                    [options]="_characteristicValueList"
-                    optionLabel="value"
-                    optionValue="value"
-                    placeholder="Select a Value"
-                    autoDisplayFirst="false"
-                    (onChange)="characteristicValueChange($event)"
                   />
                 </span>
                 <span class="fieldOnSide" >

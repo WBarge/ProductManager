@@ -66,7 +66,7 @@ namespace ProductManager.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(Guid productId,[FromBody] CharacteristicRequest request)
         {
-            Guid id = await _productService.AddProductCharacteristic(productId, request.Name, request.Value);
+            Guid id = await _productService.AddProductCharacteristicAsync(productId, request.Name, request.Value);
             return Ok(id);
         }
 

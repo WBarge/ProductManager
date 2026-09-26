@@ -1,5 +1,6 @@
 import { Characteristic } from "./characteristic";
 import { ProductCharacteristic } from "./product-characteristic";
+import { ProductSell } from "./product-sell";
 import { ProductOption } from "./ProductOption";
 
 export class Product {
@@ -13,4 +14,5 @@ export class Product {
     description!: string;
     options!: ProductOption[];
     characteristics!:ProductCharacteristic[];
+    sells!:ProductSell[];
 }

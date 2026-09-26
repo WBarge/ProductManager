@@ -286,7 +286,6 @@
             <summary>
             Represents a controller for managing product options.
             </summary>
-            <param name="productId">The id of the product to work with</param>
         </member>
         <member name="M:ProductManager.Service.Controllers.ProductOptionController.#ctor(Microsoft.Extensions.Logging.ILogger{ProductManager.Service.Controllers.ProductOptionController},ProductManager.Glue.Interfaces.Services.IProductService)">
             <summary>

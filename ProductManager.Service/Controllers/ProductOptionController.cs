@@ -8,7 +8,6 @@ namespace ProductManager.Service.Controllers
     /// <summary>
     /// Represents a controller for managing product options.
     /// </summary>
-    /// <param name="productId">The id of the product to work with</param>
     [Route("api/Product/{productId:guid}/Option")]
     [ApiController]
     public class ProductOptionController : ControllerBase

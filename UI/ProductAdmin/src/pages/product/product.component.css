@@ -25,8 +25,6 @@ p-scrollarea {
   display: block;
 }
 
-
-
 .fieldOnSide{
   display:flex;
   flex-direction: row;
@@ -61,13 +59,10 @@ label {
 .option-list {
   list-style-type: none;
   width:fit-content;
-  margin: 0 auto;
-  margin-bottom: .5rem;
+}
 
-  display: flex;
-  flex-direction: column; /* stack vertically, centered horizontally */
-  align-items: left;
-  list-style-position: inside; /* keeps bullets tucked in, optional */
+.option-item{
+  padding-bottom: 1rem;
 }
 
 .option-fieldset {
@@ -106,6 +101,11 @@ p-inputnumber .option-price {
   flex-basis: 15px;
 }
 
+.characteristic-list .option-item{
+  display: flex;
+  align-items: center;
+}
+
 .characteristic-list{
   list-style: none;
   margin-left: 0;
@@ -117,5 +117,9 @@ p-inputnumber .option-price {
 
 .characteristic-price {
   padding-left: 1rem;
-  padding-right: 2rem;
+  padding-right: 4rem;
+}
+
+.characteristic-button{
+  margin-left: auto;
 }
