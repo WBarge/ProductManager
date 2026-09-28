@@ -46,7 +46,9 @@ currentPageReportTemplate="{first}-{last} of {totalRecords}"
       <th colspan="5" class="gridHeader" >Products</th>
     </tr>
     <tr>
-      <th>SKU</th>
+      <th>SKU
+        <p-column-filter type="text" field="sku" display="menu" />
+      </th>
       <th>Name
         <p-column-filter type="text" field="name" display="menu" />
       </th>
