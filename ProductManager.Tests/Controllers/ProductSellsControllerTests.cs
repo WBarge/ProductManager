@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using ProductManager.Glue.Interfaces.Services;
 using ProductManager.Service.Controllers;
+using ProductManager.Service.Models.Request;
 using System.Net;
 
 namespace ProductManager.Service.Tests.Controllers
@@ -76,7 +77,8 @@ namespace ProductManager.Service.Tests.Controllers
             };
 
             // Act
-            IActionResult result = await sut.Post(productId, start, end, price);
+            ProductSellsRequest request = new () { Start= start, End = end, Price = price };
+            IActionResult result = await sut.Post(productId, request);
 
             // Assert
             result.Should().BeOfType<OkObjectResult>();

@@ -1,3 +1,11 @@
+.no-resize .p-splitter-gutter {
+  pointer-events: none;
+  cursor: default;
+}
+.no-resize .p-splitter-gutter-handle {
+  display: none;
+}
+
 .main-splitter {
   height: 100vh; /* or whatever fixed/definite height makes sense in your layout */
 }
@@ -7,17 +15,24 @@
   display: flex; /* ensure the inner splitter can flex-grow to fill it */
 }
 
+.form-panel p-splitter-panel{
+   border: none;
+}
+
+.vertical-panel:nth-child(1) {
+  padding-bottom: 1rem;
+}
+
 .product-splitter {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 1rem);
+  margin-bottom: 1rem;
 }
 
 .form-panel {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem;
-  overflow: auto;
 }
 
 p-scrollarea {
@@ -123,3 +138,9 @@ p-inputnumber .option-price {
 .characteristic-button{
   margin-left: auto;
 }
+
+.sell-period{
+  --p-inputtext-disabled-background: #000;
+  --p-inputtext-disabled-color: #fff;
+}
+

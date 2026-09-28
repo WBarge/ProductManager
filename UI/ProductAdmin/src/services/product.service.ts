@@ -9,6 +9,7 @@ import { ListRequest } from '../models/requests/list-request';
 import { Product } from '../models/results/product';
 import { ProductCharacteristic } from '../models/results/product-characteristic';
 import { ProductOption } from '../models/results/ProductOption';
+import { ProductSell } from '../models/results/product-sell';
 
 
 @Service()
@@ -21,6 +22,7 @@ export class ProductService {
   private productServiceLocation:string;
   private productCharacteristicSubLocation:string;
   private productOptionSubLocation:string;
+  private productSellsSubLocation: string;
   private handleError: HandleError;
 
 
@@ -30,6 +32,7 @@ export class ProductService {
     this.productServiceLocation = this.location.getLocationUrl()+'Product';
     this.productCharacteristicSubLocation = "Characteristic"
     this.productOptionSubLocation = "Option";
+    this.productSellsSubLocation = "Sells"
     this.handleError = this.httpErrorHandler.createHandleError('ProductService');
   }
 
@@ -86,9 +89,33 @@ export class ProductService {
         tempProduct.cost = product.cost;
         tempProduct.estimated = product.estimated;
         tempProduct.description = product.description;
-        tempProduct.options = product.options;
-        tempProduct.characteristics = product.characteristics;
-        tempProduct.sells = product.sells;
+        tempProduct.options = product.options.map((option:any)=>{
+          const tempOption = new ProductOption();
+          tempOption.idValue =option.id;
+          tempOption.optionId = option.optionId;
+          tempOption.productId = option.productId;
+          tempOption.name = option.name,
+          tempOption.price = option.price;
+          return tempOption;
+        }),
+        tempProduct.characteristics = product.characteristics.map((char:any)=>{
+          const tempChar = new ProductCharacteristic();
+          tempChar.idValue = char.id;
+          tempChar.productId = char.productId;
+          tempChar.name = char.name;
+          tempChar.characteristicValue = char.characteristicValue;
+          return tempChar;
+        });
+        tempProduct.sells = product.sells.map((sell:any)=>{
+          const tempSell = new ProductSell();
+          tempSell.idValue = sell.id;
+          tempSell.productId = sell.productId;
+          tempSell.start = new Date(sell.start);
+          tempSell.end = new Date(sell.end);
+          tempSell.rangeDates = [tempSell.start,tempSell.end];
+          tempSell.price = sell.price;
+          return tempSell;
+        });
         return tempProduct;
       }),
       catchError(this.handleError<Product>('getProductById'))
@@ -135,19 +162,19 @@ export class ProductService {
           name: prodOption.name
         }
       }),
-      sells: []
-  //   {
-  //     "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  //     "productId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  //     "start": "2026-09-25T17:49:59.346Z",
-  //     "end": "2026-09-25T17:49:59.346Z",
-  //     "period": {
-  //       "start": "2026-09-25T17:49:59.346Z",
-  //       "end": "2026-09-25T17:49:59.346Z"
-  //     },
-  //     "price": 0
-  //   }
-  // ]
+      sells: productToUpdate.sells.map((sell:ProductSell)=>{
+        return {
+          id: sell.idValue,
+          productId: sell.productId,
+          start: sell.start,
+          end: sell.end,
+          period: {
+            start: sell.start,
+            end: sell.end
+          },
+          price: sell.price
+        }
+      })
     }
     return this.http.put(url,requestObj)
     .pipe(
@@ -185,4 +212,18 @@ export class ProductService {
     return this.http.delete(url).pipe(catchError(this.handleError<any>('deleteOptionFromProduct')));
 
   }
+
+  addSellPeriodToProduct(newSell:ProductSell):Observable<string>{
+    const url = this.productServiceLocation+'/'+newSell.productId+'/'+ this.productSellsSubLocation
+    const request ={
+      start:newSell.start,
+      end:newSell.end,
+      price:newSell.price
+    };
+    return this.http.post<string>(url,request)
+    .pipe(
+      catchError(this.handleError<string>('addSellPeriodToProduct'))
+    );
+  }
+
 }

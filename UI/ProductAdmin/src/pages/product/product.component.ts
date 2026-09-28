@@ -22,28 +22,27 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { Characteristic } from '../../models/results/characteristic';
 import { ProductCharacteristic } from '../../models/results/product-characteristic';
 import { CharacteristicValue } from '../../models/results/characteristic-value';
-import { ProductOption } from '../../models/results/ProductOption';
+import { ProductSell } from '../../models/results/product-sell';
 
 @Component({
     selector: 'app-product',
     imports: [InputTextModule,
-      InputNumberModule,
-      FormsModule,
-      SplitterModule,
-      TextareaModule,
-      ButtonModule,
-      ScrollAreaModule,
-      ScrollArea,
-      ScrollAreaViewport,
-      ScrollAreaContent,
-      ScrollAreaScrollbar,
-      ScrollAreaHandle,
-      DatePickerModule,
-      SelectModule,
-      FieldsetModule,
-      ToolbarModule,
-      IftaLabelModule
-    ],
+    InputNumberModule,
+    FormsModule,
+    SplitterModule,
+    TextareaModule,
+    ButtonModule,
+    ScrollAreaModule,
+    ScrollArea,
+    ScrollAreaViewport,
+    ScrollAreaContent,
+    ScrollAreaScrollbar,
+    ScrollAreaHandle,
+    DatePickerModule,
+    SelectModule,
+    FieldsetModule,
+    ToolbarModule,
+    IftaLabelModule],
     providers: [ProductService,OptionService],
     templateUrl: './product.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -67,6 +66,8 @@ export class ProductComponent implements OnInit {
   public _characteristicValueList:CharacteristicValue[] = [];
   newProductOption: any ;
   newProductCharacteristic!:ProductCharacteristic;
+  newSellProduct!:ProductSell;
+
 
 
 constructor() {
@@ -77,6 +78,7 @@ constructor() {
     this.newProductCharacteristic = new ProductCharacteristic();
     this.newProductCharacteristic.name = "";
     this.newProductCharacteristic.characteristicValue = "";
+    this.newSellProduct = new ProductSell();
   }
 
   ngOnInit(): void {
@@ -111,12 +113,12 @@ constructor() {
 
   submit(productToUpdate:Product){
     this.sendMessage('info','System Message','Updating Product');
-    // this.productService.updateProduct(productToUpdate)
-    // .subscribe({
-    //   next:()=>{
-    //     this.router.navigate(['/products']);
-    //   }
-    // });
+    this.productService.updateProduct(productToUpdate)
+    .subscribe({
+      next:()=>{
+        this.router.navigate(['/products']);
+      }
+    });
 
   }
 
@@ -157,6 +159,17 @@ constructor() {
         }
 
       });
+  }
 
+  addSellToProduct(newSell:ProductSell){
+
+    newSell.setStartAndEndFromRange();
+    newSell.productId=this.pId;
+    this.productService.addSellPeriodToProduct(newSell)
+    .subscribe({
+      next:()=>{
+        this.loadProduct();
+      }
+    });
   }
 }

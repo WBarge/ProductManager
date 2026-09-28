@@ -373,23 +373,19 @@
             Thrown when <paramref name="logger"/> or <paramref name="productService"/> is <c>null</c>.
             </exception>
         </member>
-        <member name="M:ProductManager.Service.Controllers.ProductSellsController.Post(System.Guid,System.DateTime,System.DateTime,System.Decimal)">
+        <member name="M:ProductManager.Service.Controllers.ProductSellsController.Post(System.Guid,ProductManager.Service.Models.Request.ProductSellsRequest)">
             <summary>
             Adds a new sell period for the specified product.
             </summary>
             <param name="productId">The unique identifier of the product for which the sell period is being added.</param>
-            <param name="start">The start date and time of the sell period.</param>
-            <param name="end">The end date and time of the sell period.</param>
-            <param name="price">The price of the product during the sell period.</param>
+            <param name="request">The request object</param>
             <returns>
             An <see cref="T:Microsoft.AspNetCore.Mvc.IActionResult"/> containing the unique identifier of the newly created sell period.
             </returns>
             <remarks>
             This method creates a new sell period for a product identified by <paramref name="productId"/>.
-            The sell period is defined by the <paramref name="start"/> and <paramref name="end"/> parameters.
             </remarks>
             <exception cref="T:System.ArgumentException">
-            Thrown if the <paramref name="start"/> date is greater than or equal to the <paramref name="end"/> date.
             </exception>
             <exception cref="T:System.InvalidOperationException">
             Thrown if the product with the specified <paramref name="productId"/> does not exist.
@@ -699,6 +695,49 @@
             <summary>
             Gets or sets the estimated detail price of the option.
             </summary>
+        </member>
+        <member name="T:ProductManager.Service.Models.Request.ProductSellsRequest">
+            <summary>
+            Represents a request to define a sell period for a product.
+            </summary>
+            <remarks>
+            This class is used to specify the details of a sell period, including the start date, end date, and price.
+            </remarks>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProductSellsRequest.Start">
+            <summary>
+            Gets or sets the start date and time of the sell period.
+            </summary>
+            <value>
+            A <see cref="T:System.DateTime"/> representing the beginning of the sell period for the product.
+            </value>
+            <remarks>
+            This property is used to define when the sell period for a product begins.
+            Ensure that the value is earlier than the <see cref="P:ProductManager.Service.Models.Request.ProductSellsRequest.End"/> property.
+            </remarks>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProductSellsRequest.End">
+            <summary>
+            Gets or sets the end date and time of the sell period.
+            </summary>
+            <value>
+            A <see cref="T:System.DateTime"/> representing the conclusion of the sell period for the product.
+            </value>
+            <remarks>
+            This property is used to define when the sell period for a product ends.
+            Ensure that the value is later than the <see cref="P:ProductManager.Service.Models.Request.ProductSellsRequest.Start"/> property.
+            </remarks>
+        </member>
+        <member name="P:ProductManager.Service.Models.Request.ProductSellsRequest.Price">
+            <summary>
+            Gets or sets the price of the product for the specified sell period.
+            </summary>
+            <value>
+            The price of the product, represented as a decimal value.
+            </value>
+            <remarks>
+            This property is used to define the monetary value of the product during the sell period.
+            </remarks>
         </member>
         <member name="T:ProductManager.Service.Models.Request.QuickProductRequest">
             <summary>

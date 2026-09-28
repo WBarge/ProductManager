@@ -507,26 +507,6 @@ namespace ProductManager.Business.Tests
                 sut.UpdateProductAsync(null!, TestContext.CurrentContext.CancellationToken));
         }
 
-        [Test, Description("UpdateProductAsync should not update if the Sells collection is empty")]
-        public async Task UpdateProductAsync_EmptySells_NoUpdatePerformed()
-        {
-            // Arrange
-            Mock<ILogger<ProductService>> logger = new();
-            Mock<IProductRepo> productRepo = new();
-            Mock<IProductOptionRepo> productOptionRepo = new();
-            Mock<IProductCharacteristicRepo> productCharacteristicRepo = new();
-            Mock<IProductSellRepo> productSellRepo = new();
-            Mock<IFullProduct> product = new();
-            product.Setup(p => p.Sells).Returns(Enumerable.Empty<IProductSell>());
-            ProductService sut = new(logger.Object, productRepo.Object, productOptionRepo.Object,
-                productCharacteristicRepo.Object, productSellRepo.Object);
-            // Act
-            await sut.UpdateProductAsync(product.Object, TestContext.CurrentContext.CancellationToken);
-            // Assert
-            productRepo.Verify(m => m.UpdateProductAsync(It.IsAny<IFullProduct>(), It.IsAny<CancellationToken>()),
-                Times.Never);
-        }
-
         [Test, Description("UpdateProductAsync should remove overlapping or contained periods in the Sells collection")]
         public async Task UpdateProductAsync_WithInPeriods_RemovesConflictingSells()
         {

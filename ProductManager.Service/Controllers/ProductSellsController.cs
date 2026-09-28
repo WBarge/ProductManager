@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductManager.Glue.Interfaces.Services;
+using ProductManager.Service.Models.Request;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,18 +43,14 @@ namespace ProductManager.Service.Controllers
         /// Adds a new sell period for the specified product.
         /// </summary>
         /// <param name="productId">The unique identifier of the product for which the sell period is being added.</param>
-        /// <param name="start">The start date and time of the sell period.</param>
-        /// <param name="end">The end date and time of the sell period.</param>
-        /// <param name="price">The price of the product during the sell period.</param>
+        /// <param name="request">The request object</param>
         /// <returns>
         /// An <see cref="IActionResult"/> containing the unique identifier of the newly created sell period.
         /// </returns>
         /// <remarks>
         /// This method creates a new sell period for a product identified by <paramref name="productId"/>.
-        /// The sell period is defined by the <paramref name="start"/> and <paramref name="end"/> parameters.
         /// </remarks>
         /// <exception cref="ArgumentException">
-        /// Thrown if the <paramref name="start"/> date is greater than or equal to the <paramref name="end"/> date.
         /// </exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown if the product with the specified <paramref name="productId"/> does not exist.
@@ -62,11 +59,11 @@ namespace ProductManager.Service.Controllers
         /// <response code="400">The request is invalid, such as when the dates are not valid or the product does not exist.</response>
         /// <response code="500">An internal server error occurred while processing the request.</response>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Guid productId, DateTime start, DateTime end, decimal price)
+        public async Task<IActionResult> Post( Guid productId,[FromBody]ProductSellsRequest request)
         {
             CancellationToken token = HttpContext?.RequestAborted ?? CancellationToken.None;
 
-            Guid idOfNewRecord = await _productService.AddSellPeriodAsync(productId, start, end, price,token);
+            Guid idOfNewRecord = await _productService.AddSellPeriodAsync(productId, request.Start, request.End, request.Price,token);
             return new OkObjectResult(idOfNewRecord);
         }
 

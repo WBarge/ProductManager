@@ -70,7 +70,13 @@ namespace ProductManager.Service.Tests.Controllers
                 "test",
                 "P12343",
                 1200.00m,
-                "Full Test", null!, null!, null!);
+                "Full Test",
+                0,
+                0,
+                null!,
+                null!,
+                null!
+                );
             productService.Setup(s => s.GetProductAsync(It.IsAny<Guid>(),It.IsAny<CancellationToken>())).ReturnsAsync(product);
 
             ProductController sut = new ProductController(logger.Object, productService.Object)

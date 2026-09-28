@@ -32,15 +32,19 @@ namespace ProductManager.Data.EF.Transformers.InternalModels
         /// <param name="sku"></param>
         /// <param name="price"></param>
         /// <param name="description"></param>
+        /// <param name="est"></param>
         /// <param name="characteristics"></param>
         /// <param name="options"></param>
         /// <param name="sells"></param>
+        /// <param name="cost"></param>
         public FullProduct(Guid id, 
             string name, 
             string shortDescription, 
             string sku, 
             decimal price, 
-            string? description, 
+            string? description,
+            decimal cost,
+            decimal est,
             IEnumerable<IProductCharacteristic> characteristics, 
             IEnumerable<IFullProductOption> options, 
             IEnumerable<IProductSell> sells)
@@ -51,6 +55,8 @@ namespace ProductManager.Data.EF.Transformers.InternalModels
             Sku = sku;
             Price = price;
             Description = description;
+            Cost = cost;
+            Estimated = est;
             Characteristics = characteristics;
             Options = options;
             Sells = sells;

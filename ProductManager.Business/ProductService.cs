@@ -335,8 +335,7 @@ public class ProductService : IProductService
             {
                 product.Sells = originalList;
             }
-
-            await _productRepo.UpdateProductAsync(product,cancellationToken);
         }
+        await _productRepo.UpdateProductAsync(product,cancellationToken);
     }
 }   

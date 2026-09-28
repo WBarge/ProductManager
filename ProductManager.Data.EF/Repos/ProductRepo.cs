@@ -159,8 +159,8 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
             }
 
             //odd but EF is saying I am modifing the enum if I loop thought the passed in collect when I add the dbcontext collection.
-            List<IProductCharacteristic> loopCharacteristics = product.Characteristics.ToList(); 
-            foreach (IProductCharacteristic productCharacteristic in loopCharacteristics)
+            List<IProductCharacteristic> submittedProductCharacteristics = product.Characteristics.ToList(); 
+            foreach (IProductCharacteristic productCharacteristic in submittedProductCharacteristics)
             {
 
                 ProductCharacteristic? newProductCharacteristic =
@@ -176,9 +176,9 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
                 newProductCharacteristic.CharacteristicValue = productCharacteristic.CharacteristicValue;
             }
 
-            foreach (ProductCharacteristic productCharacteristic in existingProduct.Characteristics)
+            foreach (ProductCharacteristic productCharacteristic in existingProduct.Characteristics.Where(o=>!o.Deleted))
             {
-                IProductCharacteristic? submittedCharacteristic = loopCharacteristics.FirstOrDefault(c => c.Id == productCharacteristic.Id);
+                IProductCharacteristic? submittedCharacteristic = submittedProductCharacteristics.FirstOrDefault(c => c.Id == productCharacteristic.Id);
                 if (submittedCharacteristic == null)
                 {
                     productCharacteristic.Deleted = true;
@@ -186,8 +186,8 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
             }
 
             //odd but EF is saying I am modifing the enum if I loop thought the passed in collect when I add the dbcontext collection.
-            List<IFullProductOption> loopOptions = product.Options.ToList(); 
-            foreach (IFullProductOption fullProductOption in loopOptions)
+            List<IFullProductOption> submittedProductOptions = product.Options.ToList(); 
+            foreach (IFullProductOption fullProductOption in submittedProductOptions)
             {
                 ProductOption? existingProductOption = existingProduct.Options.FirstOrDefault(po => po.Id == fullProductOption.Id);
                 if (existingProductOption == null)
@@ -211,9 +211,9 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
                 existingProductOption.Deleted = false;
             }
 
-            foreach (ProductOption existingProductOption in existingProduct.Options)
+            foreach (ProductOption existingProductOption in existingProduct.Options.Where(o=>!o.Deleted))
             {
-                var submittedOption = loopOptions.FirstOrDefault(o => o.Id == existingProductOption.Id);
+                var submittedOption = submittedProductOptions.FirstOrDefault(o => o.Id == existingProductOption.Id);
                 if (submittedOption == null)
                 {
                     existingProductOption.Deleted = true;
@@ -223,8 +223,8 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
 
 
 
-            List<IProductSell> loopSells = product.Sells.ToList();
-            foreach (var newSell in loopSells)
+            List<IProductSell> submittedProductSells = product.Sells.ToList();
+            foreach (var newSell in submittedProductSells)
             {
                 if (newSell.Start.IsEmpty() || newSell.End.IsEmpty())
                 {
@@ -246,9 +246,10 @@ public class ProductRepo : BaseEfRepo<Product>, IProductRepo
                 productSell.Deleted = false;
             }
 
-            foreach (ProductSell existingProductReduction in existingProduct.Reductions)
+            foreach (ProductSell existingProductReduction in existingProduct.Reductions.Where(o=>!o.Deleted))
             {
-                var submittedSell = loopSells.FirstOrDefault(s => s.Id == existingProductReduction.Id);
+                var submittedSell = submittedProductSells.FirstOrDefault(s => s.Id == existingProductReduction.Id);
+                if (submittedSell == null)
                 {
                     existingProductReduction.Deleted = true;
                 }

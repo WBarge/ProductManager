@@ -1,85 +1,94 @@
-<p-splitter layout="vertical" class="main-splitter" [panelSizes]="[50,50]" >
+<p-splitter
+  layout="vertical"
+  class="main-splitter no-resize"
+  [panelSizes]="[50,50]"
+>
   <p-splitter-panel class="vertical-panel">
-    <p-splitter layout="horizontal" class="product-splitter" [panelSizes]="[50,50]">
+    <p-splitter
+      layout="horizontal"
+      class="product-splitter"
+      [panelSizes]="[50,50]"
+    >
       <p-splitter-panel class="form-panel">
-        <p style="justify-content: center;">Product Information</p>
-        <span class="fieldOnSide">
-          <label for="name">Name</label>
-          <input
-            id="name"
-            type="text"
-            pInputText
-            placeholder="Name"
-            [ngModel]="_productObj?.name"
-            (ngModelChange)="_productObj && (_productObj.name = $event)"
-          />
-        </span>
-        <span class="fieldOnSide">
-          <label for="sku">SKU</label>
-          <input
-            id="sku"
-            type="text"
-            pInputText
-            placeholder="SKU"
-            [ngModel]="_productObj?.sku"
-            (ngModelChange)="_productObj && (_productObj.sku = $event)"
-          />
-        </span>
-        <span class="fieldOnSide">
-          <label for="quickDescription">Quick Description</label>
-          <input
-            id="quickDescription"
-            type="text"
-            pInputText
-            placeholder="Quick Description"
-            [ngModel]="_productObj?.shortDescription"
-            (ngModelChange)="_productObj && (_productObj.shortDescription = $event)"
-          />
-        </span>
-        <span  class="fieldOnSide">
-          <label for="price">Price</label>
-          <p-inputnumber class="price-input"
-            inputId="price"
-            placeholder="Price"
-            [ngModel]="_productObj?.price"
-            (ngModelChange)="_productObj && (_productObj.price = $event)"
-            mode="currency"
-            currency="USD"
-            locale="en-US"
-          />
-        </span>
-        <span  class="fieldOnSide">
-          <label for="cost">Cost</label>
-          <p-inputnumber class="price-input"
-            inputId="cost"
-            placeholder="Cost"
-            [ngModel]="_productObj?.cost"
-            (ngModelChange)="_productObj && (_productObj.cost = $event)"
-            mode="currency"
-            currency="USD"
-            locale="en-US"
-          />
-        </span>
-        <span  class="fieldOnSide">
-          <label for="est">Estimated Retail Price</label>
-          <p-inputnumber class="price-input"
-            inputId="est"
-            placeholder="Estimated Price"
-            [ngModel]="_productObj?.estimated"
-            (ngModelChange)="_productObj && (_productObj.estimated = $event)"
-            mode="currency"
-            currency="USD"
-            locale="en-US"
-          />
-        </span>
-        <span class="field">
-          <label for="description">Description</label>
-          <textarea rows="5" cols="30" pTextarea
-            id="description"
-            placeholder="Full Description"
-            [ngModel]="_productObj?.description"
-            (ngModelChange)="_productObj && (_productObj.description = $event)"></textarea>
-        </span>
+        <p-fieldset legend="Product Information">
+          <span class="fieldOnSide">
+            <label for="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              pInputText
+              placeholder="Name"
+              [ngModel]="_productObj?.name"
+              (ngModelChange)="_productObj && (_productObj.name = $event)"
+            />
+          </span>
+          <span class="fieldOnSide">
+            <label for="sku">SKU</label>
+            <input
+              id="sku"
+              type="text"
+              pInputText
+              placeholder="SKU"
+              [ngModel]="_productObj?.sku"
+              (ngModelChange)="_productObj && (_productObj.sku = $event)"
+            />
+          </span>
+          <span class="fieldOnSide">
+            <label for="quickDescription">Quick Description</label>
+            <input
+              id="quickDescription"
+              type="text"
+              pInputText
+              placeholder="Quick Description"
+              [ngModel]="_productObj?.shortDescription"
+              (ngModelChange)="_productObj && (_productObj.shortDescription = $event)"
+            />
+          </span>
+          <span  class="fieldOnSide">
+            <label for="price">Price</label>
+            <p-inputnumber class="price-input"
+              inputId="price"
+              placeholder="Price"
+              [ngModel]="_productObj?.price"
+              (ngModelChange)="_productObj && (_productObj.price = $event)"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+            />
+          </span>
+          <span  class="fieldOnSide">
+            <label for="cost">Cost</label>
+            <p-inputnumber class="price-input"
+              inputId="cost"
+              placeholder="Cost"
+              [ngModel]="_productObj?.cost"
+              (ngModelChange)="_productObj && (_productObj.cost = $event)"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+            />
+          </span>
+          <span  class="fieldOnSide">
+            <label for="est">Estimated Retail Price</label>
+            <p-inputnumber class="price-input"
+              inputId="est"
+              placeholder="Estimated Price"
+              [ngModel]="_productObj?.estimated"
+              (ngModelChange)="_productObj && (_productObj.estimated = $event)"
+              mode="currency"
+              currency="USD"
+              locale="en-US"
+            />
+          </span>
+          <span class="field">
+            <label for="description">Description</label>
+            <textarea rows="5" cols="30" pTextarea
+              id="description"
+              placeholder="Full Description"
+              [ngModel]="_productObj?.description"
+              (ngModelChange)="_productObj && (_productObj.description = $event)"></textarea>
+          </span>
+        </p-fieldset>
       </p-splitter-panel>
       <p-splitter-panel class="form-panel">
         <p-fieldset legend="Options">
@@ -233,13 +242,14 @@
             <ng-template #start>
             </ng-template>
             <ng-template #center>
-              <div class="quick-create-fields">
+              <div class="">
                 <span class="fieldOnSide">
                   <label for="dateRange">Sale Period</label>
                   <p-datepicker
                     id="dateRange"
-                    selectionMode="range" [readonlyInput]="true"
-                    (onChange)="characteristicNameChange($event)"
+                    selectionMode="range"
+                    appendTo="body"
+                    [(ngModel)]= "newSellProduct.rangeDates"
                   />
                 </span>
                 <span class="fieldOnSide" >
@@ -247,7 +257,7 @@
                   <p-inputnumber
                     id="Price"
                     placeholder="Sale Price"
-                    [(ngModel)]="newProductOption.price"
+                    [(ngModel)]="newSellProduct.price"
                     mode="currency"
                     currency="USD"
                     locale="en-US"
@@ -256,10 +266,51 @@
               </div>
             </ng-template>
             <ng-template #end>
-              <button type="button" pButton (click)="addCharacteristicToProduct(newProductCharacteristic)">Add</button>
+              <button type="button" pButton (click)="addSellToProduct(newSellProduct)">Add</button>
             </ng-template>
           </p-toolbar>
         </p-fieldset>
+        <p-scrollarea>
+          <p-scrollarea-viewport>
+            <p-scrollarea-content>
+              <ul class="characteristic-list" >
+                    @for (sell of this._productObj?.sells; track $index) {
+                      <li class="option-item" >
+                        <span class="sell-period">
+                          <label for="sell-{{ $index }}">Period :  </label>
+                            <p-datepicker
+                              name="sell-{{$index}}"
+                              id="sell-{{$index}}"
+                              selectionMode="range"
+                              [ngModel]="sell.rangeDates"
+                              [ngModelOptions]="{standalone: true}"
+                              [disabled]="true"
+                            />
+                        </span>
+                        <span class="characteristic-price">
+                          <label for="Price-{{ $index }}">Price :   </label>
+                          <p-inputnumber
+                            id="Price"
+                            placeholder="Sale Price"
+                            readonly="true"
+                            [(ngModel)]="sell.price"
+                            mode="currency"
+                            currency="USD"
+                            locale="en-US"
+                          />
+                        </span>
+                        <span class="characteristic-button">
+                          <button type="button" pButton (click)="this._productObj?.sells?.splice($index, 1)">Delete</button>
+                        </span>
+                      </li>
+                    }
+              </ul>
+            </p-scrollarea-content>
+          </p-scrollarea-viewport>
+          <p-scrollarea-scrollbar orientation="vertical">
+            <p-scrollarea-handle/>
+          </p-scrollarea-scrollbar>
+        </p-scrollarea>
       </p-splitter-panel>
     </p-splitter>
   </p-splitter-panel>
