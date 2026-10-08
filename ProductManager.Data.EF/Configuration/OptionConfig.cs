@@ -7,7 +7,7 @@ namespace ProductManager.Data.EF.Configuration
     /// <summary>
     /// Configures the entity of type <see cref="Option"/>.
     /// </summary>
-    public class OptionConfig: IEntityTypeConfiguration<Option>
+    internal class OptionConfig: IEntityTypeConfiguration<Option>
     {
         /// <summary>
         /// Configures the entity of type <see cref="Option"/>.

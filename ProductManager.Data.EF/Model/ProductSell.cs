@@ -19,7 +19,7 @@ namespace ProductManager.Data.EF.Model;
 /// Class ProductSell.
 /// represent a date range a product is on sell
 /// </summary>
-public class ProductSell : IProductSell
+internal class ProductSell : IProductSell
 {
     /// <summary>
     /// Gets or sets the identifier.

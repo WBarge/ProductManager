@@ -22,7 +22,7 @@ namespace ProductManager.Data.EF.Model;
 /// Ram 16G
 /// Length 16"
 /// </summary>
-public class ProductCharacteristic : IProductCharacteristic
+internal class ProductCharacteristic : IProductCharacteristic
 {
     /// <summary>
     /// Gets or sets the identifier.

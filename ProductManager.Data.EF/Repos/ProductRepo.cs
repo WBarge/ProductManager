@@ -14,7 +14,7 @@ namespace ProductManager.Data.EF.Repos;
 /// Class ProductRepo.
 /// </summary>
 /// <seealso cref="BaseEfRepo{Product}" />
-public class ProductRepo : BaseEfRepo<Product>, IProductRepo
+internal class ProductRepo : BaseEfRepo<Product>, IProductRepo
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ProductRepo"/> class.

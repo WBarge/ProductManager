@@ -8,7 +8,7 @@ namespace ProductManager.Data.EF.Repos
     /// <summary>
     ///  provides a repository for managing product characteristics in the database using Entity Framework.
     /// </summary>
-    public class ProductCharacteristicRepo : BaseEfRepo<ProductCharacteristic>, IProductCharacteristicRepo
+    internal class ProductCharacteristicRepo : BaseEfRepo<ProductCharacteristic>, IProductCharacteristicRepo
     {
         /// <summary>
         /// creates a new instance of the <see cref="ProductCharacteristicRepo"/> class.

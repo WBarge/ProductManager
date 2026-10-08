@@ -24,7 +24,7 @@ namespace ProductManager.Data.EF.Repos;
 /// To be used when the repo represents the table in the db
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class BaseEfRepo<T> where T : class
+internal abstract class BaseEfRepo<T> where T : class
 {
     /// <summary>
     /// Gets the database context.

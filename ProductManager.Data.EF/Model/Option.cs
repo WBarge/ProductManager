@@ -6,7 +6,7 @@ namespace ProductManager.Data.EF.Model
     /// <summary>
     /// Represents an option for a product.
     /// </summary>
-    public class Option : IOption
+    internal class Option : IOption
     {
         /// <summary>
         /// Gets or sets the identifier.

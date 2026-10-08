@@ -12,7 +12,7 @@ namespace ProductManager.Data.EF.Transformers
     /// This class is responsible for converting <see cref="Characteristic"/> objects, including their 
     /// associated values, into a more comprehensive representation defined by the <see cref="IFullCharacteristic"/> interface.
     /// </remarks>
-    public class CharacteristicTransformer
+    internal static class CharacteristicTransformer
     {
         /// <summary>
         /// 

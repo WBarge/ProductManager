@@ -21,7 +21,7 @@ namespace ProductManager.Data.EF;
 /// Implements the <see cref="DbContext" />
 /// </summary>
 /// <seealso cref="DbContext" />
-public class ProductDbContext : DbContext
+internal class ProductDbContext : DbContext
 {
 
     /// <summary>

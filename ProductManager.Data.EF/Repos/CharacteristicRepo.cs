@@ -13,7 +13,7 @@ namespace ProductManager.Data.EF.Repos
     /// Represents a repository for managing <see cref="ICharacteristic"/> entities in the database.
     /// Provides methods for CRUD operations and other data access functionalities.
     /// </summary>
-    public class CharacteristicRepo : BaseEfRepo<Characteristic>, ICharacteristicRepo
+    internal class CharacteristicRepo : BaseEfRepo<Characteristic>, ICharacteristicRepo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CharacteristicRepo"/> class.

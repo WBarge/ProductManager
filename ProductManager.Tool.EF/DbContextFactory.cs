@@ -5,7 +5,7 @@ using ProductManager.Data.EF;
 
 namespace ProductManager.Tool.EF;
 
-public class DbContextFactory: IDesignTimeDbContextFactory<ProductDbContext>
+internal class DbContextFactory: IDesignTimeDbContextFactory<ProductDbContext>
 {
     public ProductDbContext CreateDbContext(string[] args)
     {

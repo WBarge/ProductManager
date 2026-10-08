@@ -7,7 +7,7 @@ namespace ProductManager.Data.EF.Model
     /// Represents a characteristic of a product, including its unique identifier, name, 
     /// and associated collection of possible values.
     /// </summary>
-    public class Characteristic : ICharacteristic
+    internal class Characteristic : ICharacteristic
     {
         /// <summary>
         /// Gets or sets the unique identifier for the characteristic.

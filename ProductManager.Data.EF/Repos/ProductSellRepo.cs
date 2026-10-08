@@ -8,7 +8,7 @@ namespace ProductManager.Data.EF.Repos
     /// <summary>
     /// provides a repository for managing product sells
     /// </summary>
-    public class ProductSellRepo:BaseEfRepo<ProductSell>, IProductSellRepo
+    internal class ProductSellRepo:BaseEfRepo<ProductSell>, IProductSellRepo
     {
         /// <summary>
         /// 

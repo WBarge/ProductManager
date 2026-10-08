@@ -10,7 +10,7 @@ namespace ProductManager.Data.EF.Model
     /// This class associates a unique identifier with a characteristic and its corresponding value.
     /// It ensures that the value does not exceed a predefined maximum size.
     /// </remarks>
-    public class CharacteristicValue : ICharacteristicValue
+    internal class CharacteristicValue : ICharacteristicValue
     {
         /// <summary>
         /// Gets or sets the unique identifier for the characteristic value.

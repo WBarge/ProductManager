@@ -30,12 +30,9 @@ namespace ProductManager.Service.Utilities
         /// <param name="configuration">The configuration.</param>
         public static void ConfigureDi(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContextPool<ProductDbContext>(builder =>
-            {
-                builder.UseSqlServer(configuration["ConnectionString"]);
-            });
+         
 
-            DataDi.ConfigureDi(services);
+            DataDi.ConfigureDi(services, configuration);
             BusinessDi.ConfigureDi(services);
         }
     }

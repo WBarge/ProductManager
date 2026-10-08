@@ -7,7 +7,7 @@ namespace ProductManager.Data.EF.Transformers
     /// <summary>
     /// Class ProductTransformer.
     /// </summary>
-    public static class ProductTransformer
+    internal static class ProductTransformer
     {
         /// <summary>
         /// 

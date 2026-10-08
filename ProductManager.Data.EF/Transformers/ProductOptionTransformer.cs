@@ -7,7 +7,7 @@ namespace ProductManager.Data.EF.Transformers
     /// <summary>
     /// Provides methods for transforming product options.
     /// </summary>
-    public static class ProductOptionTransformer
+    internal static class ProductOptionTransformer
     {
         /// <summary>
         /// Transforms a ProductOption to a IFullProductOption.

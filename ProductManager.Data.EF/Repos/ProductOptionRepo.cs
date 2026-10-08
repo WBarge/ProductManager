@@ -9,7 +9,7 @@ namespace ProductManager.Data.EF.Repos
     /// <summary>
     /// Represents a repository for managing product options.
     /// </summary>
-    public class ProductOptionRepo : BaseEfRepo<ProductOption>, IProductOptionRepo
+    internal class ProductOptionRepo : BaseEfRepo<ProductOption>, IProductOptionRepo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductOptionRepo"/> class.

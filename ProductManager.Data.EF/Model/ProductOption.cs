@@ -19,7 +19,7 @@ namespace ProductManager.Data.EF.Model;
 /// Class ProductOption.
 /// Represents an option for a product - can cost extra
 /// </summary>
-public class ProductOption : IProductOption
+internal class ProductOption : IProductOption
 {
     /// <summary>
     /// Gets or sets the identifier.
