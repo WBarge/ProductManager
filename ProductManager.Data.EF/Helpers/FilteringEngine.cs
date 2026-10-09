@@ -1,22 +1,9 @@
-﻿// ***********************************************************************
-// Author           : Bill Barge
-// Created          : 08-02-2024
-//
-// Last Modified By : Bill Barge
-// Last Modified On : 08-02-2024
-// ***********************************************************************
-// <copyright file="FilteringEngine.cs" company="N/A">
-//     Copyright (c) N/A. All rights reserved.
-// </copyright>
-// <summary></summary>
-// ***********************************************************************
-
+﻿using CrossCutting.Extensions;
+using Microsoft.EntityFrameworkCore;
+using ProductManager.Glue.Interfaces.Models;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using CrossCutting.Extensions;
-using Microsoft.EntityFrameworkCore;
-using ProductManager.Glue.Interfaces.Models;
 
 [assembly:InternalsVisibleTo("ProductManager.Data.EF.Tests")]
 
